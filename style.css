@@ -171,10 +171,6 @@ body {
               width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   z-index: 1;
-  opacity: 0;
-}
-
-.nav-indicator.ready {
   opacity: 1;
 }
 
@@ -198,7 +194,7 @@ body {
   text-decoration: none;
   cursor: pointer;
   outline: none;
-  transition: color 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.12s ease;
+  transition: color 0.18s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.18s ease, transform 0.12s ease;
   white-space: nowrap;
 }
 
@@ -216,22 +212,22 @@ body {
 
 .nav-btn:hover {
   color: #09090b;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .nav-btn:hover .nav-icon {
   stroke: #09090b;
 }
 
-/* Active State */
+/* Active State - Always high-contrast white on black capsule */
 .nav-btn.active {
-  color: #ffffff;
+  color: #ffffff !important;
   font-weight: 600;
-  background-color: transparent !important;
+  background-color: #09090b;
 }
 
 .nav-btn.active .nav-icon {
-  stroke: #ffffff;
+  stroke: #ffffff !important;
 }
 
 /* Right Balanced Spacer & Auth Profile Area */
