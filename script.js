@@ -438,6 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let liveCourses = [];
 
   async function loadLiveCoursesFromDatabase() {
+    // 1. Try Backend API
     try {
       const res = await fetch('/api/courses?level=all');
       if (res.ok) {
@@ -446,11 +447,26 @@ document.addEventListener('DOMContentLoaded', () => {
           liveCourses = data.courses;
           renderDynamicCourseCards(liveCourses);
           updateFilterPillCounts(liveCourses);
+          return;
         }
       }
-    } catch (e) {
-      bindStaticCardEvents();
-    }
+    } catch (e) {}
+
+    // 2. Fallback for Netlify / Static Hosting (Fetch data/courses.json)
+    try {
+      const res = await fetch('data/courses.json');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          liveCourses = data;
+          renderDynamicCourseCards(liveCourses);
+          updateFilterPillCounts(liveCourses);
+          return;
+        }
+      }
+    } catch (e) {}
+
+    bindStaticCardEvents();
   }
 
   function updateFilterPillCounts(courses) {

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260829_23">
+  <link rel="stylesheet" href="style.css?v=20260830_01">
   <style>
     .course-page-container {
       max-width: 1140px;
@@ -411,7 +411,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const courseCode = (urlParams.get('code') || 'STAT101').toUpperCase().trim();
+      const courseCode = (urlParams.get('code') || 'BSMA1001').toUpperCase().trim();
 
       const pageCourseCode = document.getElementById('pageCourseCode');
       const pageLevelBadge = document.getElementById('pageLevelBadge');
@@ -486,14 +486,32 @@
         localPdfMap = JSON.parse(localStorage.getItem('mghub_local_pdfs') || '{}');
       } catch (e) {}
 
-      // Fetch Course Data from API
+      // Multi-layer Resilient Course Fetcher (Works on Netlify, GitHub Pages, and Node backend)
+      let c = null;
+
+      // 1. Try Backend API
       try {
         const res = await fetch(`/api/course/${courseCode}`);
-        if (!res.ok) throw new Error('Course not found');
-        const data = await res.json();
-        const c = data.course;
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.course) c = data.course;
+        }
+      } catch (err) {}
 
-        if (c) {
+      // 2. Try Static JSON (for Netlify / Static Hosting)
+      if (!c) {
+        try {
+          const res = await fetch('data/courses.json');
+          if (res.ok) {
+            const list = await res.json();
+            if (Array.isArray(list)) {
+              c = list.find(item => (item.code || '').toUpperCase() === courseCode);
+            }
+          }
+        } catch (err) {}
+      }
+
+      if (c) {
           document.title = `${c.code} - ${c.title} | [Management Hub]`;
           pageCourseCode.textContent = c.code;
           pageCourseTitle.textContent = c.title;
