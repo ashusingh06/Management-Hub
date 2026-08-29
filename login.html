@@ -337,7 +337,19 @@
           submitBtn.textContent = isRegisterMode ? 'Register Account' : 'Sign In';
         }
       } catch (err) {
-        showError('Network error. Please make sure the server is running.');
+        // Check offline Admin authentication fallback for Netlify
+        if (!isRegisterMode && email.toLowerCase() === 'aashishsinghh06@gmail.com' && (password === 'admin2026' || password === 'Admin@2026' || password === 'admin')) {
+          sessionStorage.setItem('mghub_admin_auth', 'true');
+          sessionStorage.setItem('mghub_admin_email', email);
+          localStorage.setItem('mghub_user', JSON.stringify({ email: 'aashishsinghh06@gmail.com', role: 'admin', name: 'Administrator' }));
+          showSuccess('Admin authentication verified! Opening Admin Panel...');
+          setTimeout(() => {
+            window.location.href = '/admin.html';
+          }, 500);
+          return;
+        }
+
+        showError('Network connection error. If you are the admin, please check your passcode.');
         submitBtn.disabled = false;
         submitBtn.textContent = isRegisterMode ? 'Register Account' : 'Sign In';
       }

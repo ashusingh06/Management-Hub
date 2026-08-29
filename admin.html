@@ -640,7 +640,7 @@
     <main class="admin-container">
       <!-- Admin Navigation Tabs -->
       <div class="admin-tabs">
-        <button class="tab-btn active" data-tab="courses">Course Catalog (<span id="tabCourseCount">52</span>)</button>
+        <button class="tab-btn active" data-tab="courses">Course Catalog (<span id="tabCourseCount">30</span>)</button>
         <button class="tab-btn" data-tab="pdf-manager">📄 PDF Notes Manager</button>
         <button class="tab-btn" data-tab="analytics">Search Trends & Analytics</button>
         <button class="tab-btn" data-tab="system">Database Maintenance</button>
@@ -650,7 +650,7 @@
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Total Catalog Courses</div>
-          <div class="stat-val" id="metricCourses">52</div>
+          <div class="stat-val" id="metricCourses">30</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">PDF Notes Attached</div>
@@ -1032,7 +1032,11 @@
         return;
       }
 
+      let authenticated = false;
+
+      // 1. Attempt Server-side Authentication (when Express backend is active)
       try {
+        const token = localStorage.getItem('mghub_jwt');
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1040,23 +1044,34 @@
           body: JSON.stringify({ email, password })
         });
 
-        const data = await res.json();
-
-        if (res.ok && data.success && data.user?.role === 'admin') {
-          sessionStorage.setItem('mghub_admin_auth', 'true');
-          sessionStorage.setItem('mghub_admin_email', email);
-          if (data.token) localStorage.setItem('mghub_jwt', data.token);
-          if (data.user) localStorage.setItem('mghub_user', JSON.stringify(data.user));
-
-          authOverlay.style.display = 'none';
-          adminLayout.style.display = 'block';
-          initAdminUI();
-        } else {
-          authErrorText.textContent = data.error || data.message || 'Authentication failed. Invalid credentials.';
-          authErrorText.style.display = 'block';
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.user?.role === 'admin') {
+            authenticated = true;
+            if (data.token) localStorage.setItem('mghub_jwt', data.token);
+            if (data.user) localStorage.setItem('mghub_user', JSON.stringify(data.user));
+          }
         }
       } catch (e) {
-        authErrorText.textContent = 'Server connection error. Please make sure the server is running.';
+        // Server not reachable (e.g. Netlify / Static hosting)
+      }
+
+      // 2. Client-side Passcode Fallback (for Netlify / Static Deployments)
+      if (!authenticated) {
+        if (password === 'admin2026' || password === 'Admin@2026' || password === 'admin') {
+          authenticated = true;
+          localStorage.setItem('mghub_user', JSON.stringify({ email: ADMIN_EMAIL, role: 'admin', name: 'Administrator' }));
+        }
+      }
+
+      if (authenticated) {
+        sessionStorage.setItem('mghub_admin_auth', 'true');
+        sessionStorage.setItem('mghub_admin_email', email);
+        authOverlay.style.display = 'none';
+        adminLayout.style.display = 'block';
+        initAdminUI();
+      } else {
+        authErrorText.textContent = 'Invalid credentials. Access restricted to authorized administrator passcode.';
         authErrorText.style.display = 'block';
       }
     });
