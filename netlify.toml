@@ -1,0 +1,23 @@
+[build]
+  publish = "."
+  command = ""
+
+[[redirects]]
+  from = "/inmycontrol"
+  to = "/inmycontrol.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin"
+  to = "/inmycontrol.html"
+  status = 200
+
+[[redirects]]
+  from = "/course"
+  to = "/course.html"
+  status = 200
+
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
