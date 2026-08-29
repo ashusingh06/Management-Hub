@@ -1,0 +1,27 @@
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Build Output
+dist/
+build/
+
+# User Database & Private Uploads
+data/users.json
+data/analytics.json
+uploads/notes/*.pdf
+!uploads/notes/.gitkeep
+
+# OS / Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.db
+*.sqlite
+*.sqlite3

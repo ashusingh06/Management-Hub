@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Login & Registration | [Management Hub]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background-color: #fafafc;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #09090b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .auth-container {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 20px;
+      padding: 36px 40px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.08);
+      animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlide {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #09090b;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+
+    .auth-header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .auth-header p {
+      font-size: 13.5px;
+      color: #71717a;
+    }
+
+    /* Tabs */
+    .tab-switch {
+      display: flex;
+      background: #f4f4f5;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: #71717a;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: #09090b;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #71717a;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      color: #09090b;
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #09090b;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #09090b;
+      border: 1px solid #09090b;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-submit:hover {
+      background: #27272a;
+    }
+
+    .alert-box {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .alert-error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+    }
+
+    .alert-success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #f4f4f5;
+      font-size: 13px;
+    }
+
+    .auth-footer a {
+      color: #71717a;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .auth-footer a:hover {
+      color: #09090b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="brand-pill">[Management Hub]</div>
+      <h1 id="formHeading">Sign In</h1>
+      <p id="formSubheading">Access your personalized notes and calculators</p>
+    </div>
+
+    <!-- Toggle Tabs -->
+    <div class="tab-switch">
+      <button class="tab-btn active" id="tabLoginBtn" type="button">Sign In</button>
+      <button class="tab-btn" id="tabRegisterBtn" type="button">Create Account</button>
+    </div>
+
+    <!-- Notification Message Box -->
+    <div class="alert-box alert-error" id="errorBox"></div>
+    <div class="alert-box alert-success" id="successBox"></div>
+
+    <!-- Login & Registration Form -->
+    <form id="authForm">
+      <div class="form-group" id="nameGroup" style="display: none;">
+        <label>Full Name</label>
+        <input type="text" id="nameInput" placeholder="Enter your full name" />
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="emailInput" placeholder="name@example.com" required />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter your password" required />
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">Sign In</button>
+    </form>
+
+    <div class="auth-footer">
+      <a href="/index.html">← Return to Student Main Dashboard</a>
+    </div>
+  </div>
+
+  <script>
+    let isRegisterMode = false;
+
+    const tabLoginBtn = document.getElementById('tabLoginBtn');
+    const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+    const nameGroup = document.getElementById('nameGroup');
+    const formHeading = document.getElementById('formHeading');
+    const formSubheading = document.getElementById('formSubheading');
+    const submitBtn = document.getElementById('submitBtn');
+    const authForm = document.getElementById('authForm');
+    const errorBox = document.getElementById('errorBox');
+    const successBox = document.getElementById('successBox');
+
+    // Check if error passed via query params (e.g. ?error=unauthorized)
+    const urlParams = new URLSearchParams(window.location.search);
+    const errParam = urlParams.get('error');
+    if (errParam === 'unauthorized') {
+      showError('Please sign in with administrator credentials to access the Admin Dashboard.');
+    } else if (errParam === 'forbidden') {
+      showError('Access Denied: Your account does not have Administrator privileges.');
+    }
+
+    function setTab(registerMode) {
+      isRegisterMode = registerMode;
+      errorBox.style.display = 'none';
+      successBox.style.display = 'none';
+
+      if (isRegisterMode) {
+        tabRegisterBtn.classList.add('active');
+        tabLoginBtn.classList.remove('active');
+        nameGroup.style.display = 'block';
+        formHeading.textContent = 'Create Account';
+        formSubheading.textContent = 'Register as a Student on Management Hub';
+        submitBtn.textContent = 'Register Account';
+      } else {
+        tabLoginBtn.classList.add('active');
+        tabRegisterBtn.classList.remove('active');
+        nameGroup.style.display = 'none';
+        formHeading.textContent = 'Sign In';
+        formSubheading.textContent = 'Sign in to access your dashboard';
+        submitBtn.textContent = 'Sign In';
+      }
+    }
+
+    tabLoginBtn.addEventListener('click', () => setTab(false));
+    tabRegisterBtn.addEventListener('click', () => setTab(true));
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+      successBox.style.display = 'none';
+    }
+
+    function showSuccess(msg) {
+      successBox.textContent = msg;
+      successBox.style.display = 'block';
+      errorBox.style.display = 'none';
+    }
+
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.style.display = 'none';
+      successBox.style.display = 'none';
+
+      const email = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value.trim();
+      const name = document.getElementById('nameInput').value.trim();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verifying...';
+
+      try {
+        const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
+        const payload = isRegisterMode ? { name, email, password } : { email, password };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          // Store session info locally for fast client UX
+          if (data.token) localStorage.setItem('mghub_jwt', data.token);
+          if (data.user) localStorage.setItem('mghub_user', JSON.stringify(data.user));
+
+          showSuccess('Authentication successful! Redirecting...');
+          
+          setTimeout(() => {
+            if (data.user && data.user.role === 'admin') {
+              window.location.href = '/admin.html';
+            } else {
+              window.location.href = '/index.html';
+            }
+          }, 600);
+        } else {
+          showError(data.error || data.message || 'Authentication failed. Please check your credentials.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = isRegisterMode ? 'Register Account' : 'Sign In';
+        }
+      } catch (err) {
+        showError('Network error. Please make sure the server is running.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = isRegisterMode ? 'Register Account' : 'Sign In';
+      }
+    });
+  </script>
+</body>
+</html>

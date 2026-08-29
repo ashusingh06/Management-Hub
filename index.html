@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Management Hub] - IIT Madras B.S. in Management & Data Science</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20260829_23">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       Header & Floating Rounded Navigation Bar
+       ========================================================================== -->
+  <header class="site-header">
+    <div class="header-container">
+      <!-- Left Brand Tag -->
+      <div class="header-left">
+        <a href="#home" class="brand-link">
+          <span class="brand-badge">●</span>
+          <div class="brand-handwritten-wrap">
+            <span class="brand-text">[Management Hub]</span>
+            <svg class="brand-handwritten-underline" viewBox="0 0 150 8" fill="none" preserveAspectRatio="none">
+              <path d="M 2 4 C 40 2.5, 100 5, 148 3" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center Rounded Navbar (Floating Capsule) -->
+      <div class="header-center">
+        <nav class="navbar" id="navbar">
+          <div class="nav-indicator" id="navIndicator"></div>
+          <button class="nav-btn active" data-target="home">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+          </button>
+          <button class="nav-btn" data-target="calculators">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+            <span>Resources</span>
+          </button>
+          <button class="nav-btn" data-target="links">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span>Links</span>
+          </button>
+          <button class="nav-btn" data-target="notes">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+            <span>Notes</span>
+          </button>
+          <button class="nav-btn" data-target="about">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <span>About</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Right Balanced Spacer -->
+      <div class="header-right"></div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Main Layout & Continuous Sections
+       ========================================================================== -->
+  <main class="main-container">
+       <!-- 1. Home Section (Degree Program Hero) -->
+    <section class="page-section" id="home">
+      <div class="degree-hero">
+        <div class="heading-handdrawn-wrap" style="margin-bottom: 16px;">
+          <h1 class="degree-title">B.S. in Management and Data Science</h1>
+          <svg class="heading-underline-svg underline-amber" viewBox="0 0 340 8" fill="none" preserveAspectRatio="none">
+            <path d="M 2 4 C 75 2.5, 245 5.5, 338 3" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <p class="degree-description">
+          The BS program offers a rigorous, analytics-driven management education to equip candidates to pursue careers in the ever-evolving industry and in governmental and non-governmental organizations. The program's unique design leverages the managerial and technological expertise of the IIT Madras ecosystem to nurture professionals capable of driving transformative change for a better world.
+        </p>
+        <div class="degree-cta-row">
+          <a href="#notes" class="btn-primary-cta">
+            <span>Browse 30 Course Notes</span>
+            <svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="#calculators" class="btn-secondary-cta">
+            <svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/></svg>
+            <span>CGPA Calculator</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Program Pillars Grid -->
+      <div class="program-pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          </div>
+          <h3>30 Course Notes Catalog</h3>
+          <p>Structured study guides, lecture summaries, and direct downloadable PDF notes for Foundation, Diploma, and BS Degree tiers.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+          </div>
+          <h3>Academic Grade Calculators</h3>
+          <p>Precision CGPA calculation engine and target grade predictor to project future GPA based on credit weightings.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+          </div>
+          <h3>Prerequisite DAG Graph</h3>
+          <p>Directed Acyclic Graph traversal mapping every foundational prerequisite so you can plan course registration safely.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Academic Planning Calculators & Resources -->
+    <section class="page-section" id="calculators">
+      <div class="section-header" style="margin-bottom: 24px;">
+        <div class="heading-handdrawn-wrap">
+          <h1>Academic Grade Calculators</h1>
+          <svg class="heading-underline-svg underline-blue" viewBox="0 0 260 8" fill="none" preserveAspectRatio="none">
+            <path d="M 2 4 C 60 2.5, 190 5.5, 258 3" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="resources-grid">
+        <!-- 1. Cumulative CGPA Calculator -->
+        <div class="resource-card">
+          <div class="resource-card-header">
+            <div class="resource-icon-wrapper">
+              <svg class="resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+            </div>
+          </div>
+          <h3>CGPA Projection Calculator</h3>
+          <p>Calculate updated cumulative GPA by combining past earned credits with upcoming semester term predictions.</p>
+          
+          <div class="mini-tool">
+            <div class="input-row">
+              <div class="input-group">
+                <label>Current CGPA</label>
+                <input type="number" id="currentCgpa" step="0.01" min="0" max="10" placeholder="8.50" value="8.50">
+              </div>
+              <div class="input-group">
+                <label>Completed Credits</label>
+                <input type="number" id="totalCredits" step="1" min="1" max="142" placeholder="32" value="32">
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="input-group">
+                <label>New Term SGPA</label>
+                <input type="number" id="newGpa" step="0.01" min="0" max="10" placeholder="9.00" value="9.00">
+              </div>
+              <div class="input-group">
+                <label>New Term Credits</label>
+                <input type="number" id="newCredits" step="1" min="1" max="32" placeholder="16" value="16">
+              </div>
+            </div>
+            <div class="tool-result">
+              <span>Projected CGPA:</span>
+              <strong id="cgpaOutput">8.67</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Target Grade Forecaster -->
+        <div class="resource-card">
+          <div class="resource-card-header">
+            <div class="resource-icon-wrapper">
+              <svg class="resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+            </div>
+          </div>
+          <h3>End-Term Target Forecaster</h3>
+          <p>Estimate the required score in the End-Term Exam (out of 50) based on your continuous internal assessment marks.</p>
+          
+          <div class="mini-tool">
+            <div class="input-row">
+              <div class="input-group">
+                <label>Internal Score (/50)</label>
+                <input type="number" id="internalMarks" step="1" min="0" max="50" placeholder="38" value="38">
+              </div>
+              <div class="input-group">
+                <label>Target Grade</label>
+                <select id="targetGrade">
+                  <option value="90">S Grade (90+)</option>
+                  <option value="80" selected>A Grade (80+)</option>
+                  <option value="70">B Grade (70+)</option>
+                  <option value="60">C Grade (60+)</option>
+                  <option value="50">D Grade (50+)</option>
+                  <option value="40">E Grade (40+)</option>
+                </select>
+              </div>
+            </div>
+            <div class="tool-result">
+              <span>Required End-Term:</span>
+              <strong id="gradePredictorOutput">42 / 50</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Official External Portals & Ecosystem Links -->
+    <section class="page-section" id="links">
+      <div class="section-header" style="margin-bottom: 24px;">
+        <div class="heading-handdrawn-wrap">
+          <h1>Official IIT Madras Ecosystem Portals</h1>
+          <svg class="heading-underline-svg underline-teal" viewBox="0 0 310 8" fill="none" preserveAspectRatio="none">
+            <path d="M 2 4 C 70 2.5, 230 5.5, 308 3" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="links-grid">
+        <a href="https://study.iitm.ac.in/mg/index.html" target="_blank" rel="noopener noreferrer" class="portal-link-item">
+          <div>
+            <strong>Official Degree Website</strong>
+            <span>study.iitm.ac.in/mg</span>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+        </a>
+
+        <a href="https://docs.google.com/document/u/1/d/e/2PACX-1vTnw4G6smKsm_EJqeksqBE2qX9tFcn2PYkC2b4QH_TTInjUCQg5-jZjW-paQ4L3g6CLdTKj_zyyDs31/pub" target="_blank" rel="noopener noreferrer" class="portal-link-item">
+          <div>
+            <strong>MG Student Handbook</strong>
+            <span>Official Program Handbook</span>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+        </a>
+
+        <a href="https://lookerstudio.google.com/u/0/reporting/d02dac13-665b-49cc-8d51-0451268a6a3e/page/5sgkE" target="_blank" rel="noopener noreferrer" class="portal-link-item">
+          <div>
+            <strong>Looker Studio Dashboard</strong>
+            <span>Student Grade Insights</span>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+        </a>
+
+        <a href="https://score-checker-379619009600.asia-south1.run.app/" target="_blank" rel="noopener noreferrer" class="portal-link-item">
+          <div>
+            <strong>Score Checker App</strong>
+            <span>Official Criteria Engine</span>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- 4. Notes Section: Search & Tier Selection -->
+    <section class="page-section" id="notes">
+      <div class="section-header" style="margin-bottom: 24px;">
+        <div class="heading-handdrawn-wrap">
+          <h1>Course Notes & PYQs</h1>
+          <svg class="heading-underline-svg underline-purple" viewBox="0 0 210 8" fill="none" preserveAspectRatio="none">
+            <path d="M 2 4 C 45 2.5, 150 5.5, 208 3" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Search Input Bar -->
+      <div class="notes-controls">
+        <div class="search-bar-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" id="notesSearchInput" placeholder="Search 30 subjects by name, course code (e.g. BSMA1001, Python), or tier..." autocomplete="off">
+          <button id="clearSearchBtn" class="clear-btn" aria-label="Clear search">✕</button>
+        </div>
+
+        <!-- Academic Tier Category Selector Filter Pills -->
+        <div class="filter-pills-row" id="tierFilterPills">
+          <button class="filter-pill active" data-level="all">All Tiers <span class="count-badge" id="count-all">30</span></button>
+          <button class="filter-pill" data-level="foundation">Foundation <span class="count-badge" id="count-foundation">8</span></button>
+          <button class="filter-pill" data-level="diploma">Diploma <span class="count-badge" id="count-diploma">16</span></button>
+          <button class="filter-pill" data-level="bs">BS Degree <span class="count-badge" id="count-bs">6</span></button>
+          <button class="filter-pill" data-level="bookmarks">★ Saved <span class="count-badge" id="count-bookmarks">0</span></button>
+        </div>
+
+        <div class="search-status-bar" id="searchStatusBar" style="display: flex; align-items: center; justify-content: space-between;">
+          <span id="resultsCountText">Select an academic tier below to display notes</span>
+          <button id="resetTierBtn" style="display: none; background: #f4f4f5; border: 1px solid #e4e4e7; font-family: inherit; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; cursor: pointer; color: #09090b;">← Choose Different Tier</button>
+        </div>
+      </div>
+
+      <!-- 3 Category Cards Selector (Default Landing in Notes) -->
+      <div class="program-pillars-grid" id="tierCardsSelector" style="margin-bottom: 24px;">
+        <div class="pillar-card tier-select-card" data-select-tier="foundation" style="cursor: pointer; position: relative;">
+          <div class="pillar-icon-box">
+            <span style="font-weight: 800; font-size: 15px; color: #09090b;">01</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h3>Foundation Level</h3>
+            <span class="level-badge badge-foundation">8 Courses</span>
+          </div>
+          <div style="margin-top: 18px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #09090b;">
+            <span>Open Foundation Notes & PYQs</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="pillar-card tier-select-card" data-select-tier="diploma" style="cursor: pointer; position: relative;">
+          <div class="pillar-icon-box">
+            <span style="font-weight: 800; font-size: 15px; color: #09090b;">02</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h3>Diploma Level</h3>
+            <span class="level-badge badge-diploma">16 Courses</span>
+          </div>
+          <div style="margin-top: 18px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #09090b;">
+            <span>Open Diploma Notes & PYQs</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="pillar-card tier-select-card" data-select-tier="bs" style="cursor: pointer; position: relative;">
+          <div class="pillar-icon-box">
+            <span style="font-weight: 800; font-size: 15px; color: #09090b;">03</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h3>BS Degree Level</h3>
+            <span class="level-badge badge-bs">6 Courses</span>
+          </div>
+          <div style="margin-top: 18px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #09090b;">
+            <span>Open BS Notes & PYQs</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Notes Cards Grid (Only visible when a tier is selected or user searches) -->
+      <div class="notes-cards-grid" id="notesGrid" style="display: none;">
+        <!-- Dynamically rendered based on chosen tier -->
+      </div>
+    </section>
+
+    <!-- 5. About Us & Contributors Section -->
+    <section class="page-section" id="about">
+      <div class="section-header" style="margin-bottom: 22px;">
+        <div class="heading-handdrawn-wrap">
+          <h1>About Us</h1>
+          <svg class="heading-underline-svg underline-rose" viewBox="0 0 130 8" fill="none" preserveAspectRatio="none">
+            <path d="M 2 4 C 35 2.5, 90 5.5, 128 3" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- About Us Content Card -->
+      <div class="about-platform-card" style="background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 32px 34px; margin-bottom: 28px; box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.04);">
+        <p style="font-size: 15.5px; color: #27272a; line-height: 1.7; margin-bottom: 16px;">
+          <strong style="color: #09090b;">[Management Hub]</strong> is a student-focused platform created to make learning more organized, accessible, and effective. Our aim is to bring useful academic resources such as notes, previous year questions, study materials, and other learning resources together in one place.
+        </p>
+        <p style="font-size: 15.5px; color: #27272a; line-height: 1.7; margin-bottom: 24px;">
+          We believe students should spend less time searching for resources and more time focusing on their studies. Through this platform, we want to create a simple, reliable, and student-friendly learning experience.
+        </p>
+
+        <div style="background: #fafafc; border: 1px solid #e4e4e7; border-left: 4px solid #09090b; border-radius: 10px; padding: 18px 22px;">
+          <h3 style="font-size: 24px; margin-bottom: 6px;">Our Mission</h3>
+          <p style="font-size: 14.5px; color: #52525b; line-height: 1.6; margin: 0;">
+            To make quality educational resources easier to find, access, and use for every student.
+          </p>
+        </div>
+      </div>
+
+      <!-- Contributors Section -->
+      <div class="section-header" style="margin-top: 36px; margin-bottom: 18px;">
+        <div class="heading-handdrawn-wrap" style="margin-bottom: 8px;">
+          <h1>Our Contributors</h1>
+          <svg class="heading-underline-svg underline-cyan" viewBox="0 0 210 8" fill="none" preserveAspectRatio="none">
+            <path d="M 2 4 C 55 2.5, 150 5.5, 208 3" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="subtitle" style="font-size: 15px; color: #71717a; line-height: 1.6; max-width: 880px;">
+          This platform is made better through the contributions of students, educators, and individuals who share their knowledge and resources with the community.
+        </p>
+      </div>
+
+      <!-- Want to Contribute Callout -->
+      <div class="contribute-callout-card" style="background: #fafafc; border: 1.5px dashed #d4d4d8; border-radius: 16px; padding: 28px 32px; display: flex; align-items: flex-start; gap: 20px;">
+        <span style="font-size: 32px; line-height: 1;">🤝</span>
+        <div style="flex: 1;">
+          <h3 style="font-size: 26px; color: #09090b; margin-bottom: 8px;">Want to contribute?</h3>
+          <p style="font-size: 14.5px; color: #52525b; line-height: 1.6; margin-bottom: 16px;">
+            If you have useful notes, study materials, PYQs, or other academic resources, you can contribute and help fellow students learn better.
+          </p>
+          <a href="mailto:aashishsinghh06@gmail.com" style="display: inline-flex; align-items: center; gap: 8px; background: #09090b; color: #ffffff; padding: 9px 22px; border-radius: 9999px; font-weight: 600; text-decoration: none; font-size: 13.5px; transition: transform 0.15s ease;">
+            <span>✉️ Contact Us: aashishsinghh06@gmail.com</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       Site Footer
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-title">
+            <span class="brand-badge">●</span>
+            <div class="brand-handwritten-wrap">
+              <span class="brand-text" style="font-size: 26px;">[Management Hub]</span>
+              <svg class="brand-handwritten-underline underline-footer-teal" viewBox="0 0 150 8" fill="none" preserveAspectRatio="none">
+                <path d="M 2 4 C 40 2.5, 100 5, 148 3" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <p class="footer-tagline">
+            The independent curriculum and study notes companion built for IIT Madras B.S. in Management & Data Science students.
+          </p>
+        </div>
+
+        <div class="footer-links-group">
+          <div class="footer-col">
+            <h4>Curriculum Tiers</h4>
+            <ul>
+              <li><a href="#notes">Foundation (8 Courses)</a></li>
+              <li><a href="#notes">Diploma (16 Courses)</a></li>
+              <li><a href="#notes">BS Degree (6 Courses)</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Academic Tools</h4>
+            <ul>
+              <li><a href="#calculators">CGPA Predictor</a></li>
+              <li><a href="#calculators">Target Grade Forecaster</a></li>
+              <li><a href="#notes">Prerequisite Traversal</a></li>
+              <li><a href="#notes">PDF Study Notes</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Official Portals</h4>
+            <ul>
+              <li><a href="https://study.iitm.ac.in/mg/index.html" target="_blank" rel="noopener noreferrer">study.iitm.ac.in/mg ↗</a></li>
+              <li><a href="https://docs.google.com/document/u/1/d/e/2PACX-1vTnw4G6smKsm_EJqeksqBE2qX9tFcn2PYkC2b4QH_TTInjUCQg5-jZjW-paQ4L3g6CLdTKj_zyyDs31/pub" target="_blank" rel="noopener noreferrer">MG Student Handbook ↗</a></li>
+              <li><a href="https://lookerstudio.google.com/u/0/reporting/d02dac13-665b-49cc-8d51-0451268a6a3e/page/5sgkE" target="_blank" rel="noopener noreferrer">Looker Studio ↗</a></li>
+              <li><a href="https://score-checker-379619009600.asia-south1.run.app/" target="_blank" rel="noopener noreferrer">Score Checker ↗</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 [Management Hub] • IIT Madras B.S. in Management & Data Science Student Companion</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       Course Details Modal
+       ========================================================================== -->
+  <div class="course-modal" id="courseModal">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <span class="level-badge" id="modalLevelBadge">LEVEL</span>
+          <span class="course-code" id="modalCourseCode">CODE</span>
+        </div>
+        <button class="modal-close" id="modalClose" title="Close Window (Esc)">✕</button>
+      </div>
+
+      <!-- 1. Course Header -->
+      <h2 id="modalTitle" class="modal-title" style="margin-bottom: 20px;">Course Title</h2>
+
+      <!-- 2. Study Materials Section -->
+      <div class="modal-section" id="modalNotesSection">
+        <div class="modal-section-header">
+          <div class="modal-section-title">
+            <span>📄</span>
+            <span>Study Notes</span>
+          </div>
+          <span class="modal-section-count" id="modalNotesStatusBadge">Available</span>
+        </div>
+
+        <div id="modalNotesAvailableBox" class="resource-box">
+          <div class="resource-info-side">
+            <span class="resource-file-icon">📑</span>
+            <div class="resource-details">
+              <strong class="resource-title" id="modalNotesFileName">Course_Notes.pdf</strong>
+            </div>
+          </div>
+          <div class="resource-actions">
+            <a href="#" id="modalOpenNotesDirectBtn" target="_blank" rel="noopener noreferrer" class="btn-open-pdf">Open PDF ↗</a>
+            <a href="#" id="modalDownloadNotesDirectBtn" target="_blank" rel="noopener noreferrer" download class="btn-dl-pdf" title="Download Notes PDF">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div id="modalNotesEmptyBox" class="empty-resource-box" style="display: none;">
+          <span>📁</span>
+          <div>
+            <strong>No Study Notes Uploaded Yet</strong>
+            <p>Curriculum study notes for this course will be uploaded soon.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Previous Year Questions (PYQs) Section -->
+      <div class="modal-section" id="modalPyqSection">
+        <div class="modal-section-header">
+          <div class="modal-section-title">
+            <span>📝</span>
+            <span>Previous Year Questions (PYQs)</span>
+          </div>
+          <span class="modal-section-count" id="modalPyqCountBadge">0 Papers</span>
+        </div>
+
+        <!-- Dynamic PYQ list container -->
+        <div class="pyq-list-stack" id="modalPyqListStack">
+          <!-- Dynamically populated per subject -->
+        </div>
+
+        <!-- Empty PYQ state -->
+        <div id="modalPyqEmptyBox" class="empty-resource-box" style="display: none;">
+          <span>⏳</span>
+          <div>
+            <strong>No Previous Year Papers Available Yet</strong>
+            <p>Past examination question papers will be added soon.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" id="modalBookmarkBtn" class="btn-modal-bookmark">
+          <span id="modalBookmarkIcon">★</span> <span id="modalBookmarkText">Save to Bookmarks</span>
+        </button>
+        <button type="button" id="modalCloseFooterBtn" class="btn-open-pdf" style="padding: 9px 18px; border-radius: 9999px;">
+          <span>Close Details</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js?v=20260829_6"></script>
+</body>
+</html>
