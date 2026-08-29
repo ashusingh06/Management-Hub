@@ -448,9 +448,10 @@
         navIndicator.classList.add('ready');
       }
 
-      const activeNavBtn = document.querySelector('.nav-btn.active') || navButtons[2];
+      const activeNavBtn = document.querySelector('.nav-btn.active') || navButtons[3];
       if (activeNavBtn) {
-        setTimeout(() => updateNavIndicator(activeNavBtn), 60);
+        setTimeout(() => updateNavIndicator(activeNavBtn), 80);
+        window.addEventListener('load', () => updateNavIndicator(activeNavBtn));
       }
 
       window.addEventListener('resize', () => {
