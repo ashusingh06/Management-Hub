@@ -653,7 +653,7 @@
     <div class="auth-card">
       <div class="auth-badge">Management Hub Admin</div>
       <h2>Administrator Portal</h2>
-      <p>Authorized administrator access for <strong>aashishsinghh06@gmail.com</strong></p>
+      <p>Authorized administrator access only</p>
 
       <!-- 1-Click Google Sign In for Admin -->
       <button type="button" class="btn-google-auth" id="adminGoogleSignInBtn">
@@ -673,14 +673,14 @@
       <form id="adminLoginForm">
         <div class="form-group">
           <label>Admin Email</label>
-          <input type="email" id="adminEmailInput" value="aashishsinghh06@gmail.com" readonly required />
+          <input type="email" id="adminEmailInput" placeholder="Enter authorized admin email" required />
         </div>
         <div class="form-group">
           <label>Admin Passcode / Password</label>
-          <input type="password" id="adminPasswordInput" placeholder="Enter admin passcode (e.g. admin2026)" required autofocus />
+          <input type="password" id="adminPasswordInput" placeholder="Enter admin passcode" required autofocus />
         </div>
         <button type="submit" class="btn-auth-submit">Verify & Enter Dashboard</button>
-        <p class="auth-error" id="authErrorText">Invalid credentials. Access restricted to aashishsinghh06@gmail.com</p>
+        <p class="auth-error" id="authErrorText">Access Denied</p>
       </form>
     </div>
   </div>
@@ -1106,7 +1106,7 @@
             adminLayout.style.display = 'block';
             initAdminUI();
           } else {
-            authErrorText.textContent = `Access Denied: Logged in as ${user.email}. Administrator portal is restricted to ${ADMIN_EMAIL}.`;
+            authErrorText.textContent = 'Access Denied';
             authErrorText.style.display = 'block';
             adminGoogleSignInBtn.disabled = false;
             adminGoogleSignInBtn.innerHTML = `
@@ -1121,7 +1121,7 @@
           }
         } catch (err) {
           console.error(err);
-          authErrorText.textContent = err.message || 'Google sign-in was cancelled or encountered an error.';
+          authErrorText.textContent = 'Access Denied';
           authErrorText.style.display = 'block';
           adminGoogleSignInBtn.disabled = false;
           adminGoogleSignInBtn.innerHTML = `
@@ -1187,7 +1187,7 @@
         adminLayout.style.display = 'block';
         initAdminUI();
       } else {
-        authErrorText.textContent = 'Invalid credentials. Access restricted to authorized administrator passcode.';
+        authErrorText.textContent = 'Access Denied';
         authErrorText.style.display = 'block';
       }
     });
