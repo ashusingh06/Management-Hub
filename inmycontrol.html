@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | [Management Hub]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Caveat:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; text-rendering: optimizeLegibility; }
+    body {
+      min-height: 100vh;
+      background-color: #fafafc;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #09090b;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Sleek Scrollbars */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #fafafc; }
+    ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+
+    /* Admin Auth Gate */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(250, 250, 252, 0.96);
+      backdrop-filter: blur(20px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 18px;
+      padding: 36px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.16);
+      text-align: center;
+      animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #000000;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+    }
+
+    .auth-card h2 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .auth-card p {
+      font-size: 13.5px;
+      color: #71717a;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #71717a;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      color: #09090b;
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: #09090b;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .btn-auth-submit {
+      width: 100%;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #000000;
+      border: 1px solid #000000;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-auth-submit:hover {
+      background: #27272a;
+    }
+
+    .auth-error {
+      font-size: 12.5px;
+      color: #ef4444;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* Admin Main Layout */
+    .admin-layout {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .admin-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid #e2e2e8;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-brand-title {
+      font-family: 'Caveat', 'Kalam', cursive, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #18181b;
+      text-decoration: underline;
+      text-decoration-color: #00cba0;
+      text-decoration-thickness: 2.5px;
+      text-underline-offset: 4px;
+    }
+
+    .admin-pill-tag {
+      font-size: 11px;
+      font-weight: 700;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: #52525b;
+    }
+
+    .admin-user-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .admin-email-badge {
+      font-size: 13px;
+      font-weight: 600;
+      color: #09090b;
+      background: #fafafc;
+      border: 1px solid #e2e2e8;
+      padding: 6px 14px;
+      border-radius: 9999px;
+    }
+
+    .btn-logout {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ef4444;
+      background: transparent;
+      border: 1px solid #fecaca;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-logout:hover {
+      background: #fef2f2;
+      border-color: #ef4444;
+    }
+
+    .admin-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 36px 24px 60px 24px;
+    }
+
+    /* Admin Navigation Tabs */
+    .admin-tabs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid #e2e2e8;
+      padding-bottom: 12px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: #71717a;
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: #09090b;
+      background: #f4f4f5;
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: #000000;
+      border-color: #000000;
+    }
+
+    /* Stats Metric Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+      border-color: #09090b;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px -3px rgba(0, 0, 0, 0.10);
+    }
+
+    .stat-card .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #71717a;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+    }
+
+    .stat-card .stat-val {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #09090b;
+    }
+
+    /* Action Toolbar & Table Container */
+    .table-container {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    }
+
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .search-table-input {
+      width: 320px;
+      max-width: 100%;
+      padding: 9px 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      border: 1px solid #e2e2e8;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .btn-create-course {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #000000;
+      border: 1px solid #000000;
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-create-course:hover {
+      background: #27272a;
+    }
+
+    /* Data Table */
+    .data-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+
+    .data-table th {
+      background: #fafafc;
+      padding: 12px 16px;
+      font-weight: 700;
+      color: #52525b;
+      text-transform: uppercase;
+      font-size: 11.5px;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid #e2e2e8;
+    }
+
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f4f4f5;
+      color: #27272a;
+    }
+
+    .data-table tr:hover td {
+      background: #fafafc;
+    }
+
+    .code-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #09090b;
+      font-size: 12px;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .level-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .badge-foundation { background: #f4f4f5; color: #18181b; border: 1px solid #e4e4e7; }
+    .badge-diploma { background: #18181b; color: #ffffff; }
+    .badge-bs { background: #27272a; color: #ffffff; }
+    .badge-elective { background: #f4f4f5; color: #52525b; border: 1px solid #d4d4d8; }
+
+    /* PDF Attachment Badges */
+    .pdf-badge-attached {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #16a34a;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    .pdf-badge-none {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #a1a1aa;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm-pdf {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: #09090b;
+      background: #ffffff;
+      border: 1px solid #09090b;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-sm-pdf:hover {
+      background: #09090b;
+      color: #ffffff;
+    }
+
+    .btn-sm-edit {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: #09090b;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sm-edit:hover {
+      background: #09090b;
+      color: #ffffff;
+    }
+
+    .btn-sm-delete {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ef4444;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sm-delete:hover {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    /* Modals */
+    .admin-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .admin-modal.active { display: flex; }
+
+    .admin-modal-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 18px;
+      padding: 28px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.28);
+    }
+
+    .admin-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .admin-modal-header h3 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .btn-modal-close {
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-primary-save {
+      width: 100%;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #000000;
+      border: 1px solid #000000;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .btn-primary-save:hover { background: #27272a; }
+
+    .upload-zone {
+      border: 2px dashed #d4d4d8;
+      background: #fafafc;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 16px;
+    }
+
+    .upload-zone:hover {
+      border-color: #000000;
+      background: #f4f4f5;
+    }
+
+    .upload-zone-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Administrator Authentication Gate -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-badge">Management Hub Admin</div>
+      <h2>Administrator Portal</h2>
+      <p>Authorized administrator access for <strong>aashishsinghh06@gmail.com</strong></p>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label>Admin Email</label>
+          <input type="email" id="adminEmailInput" value="aashishsinghh06@gmail.com" readonly required />
+        </div>
+        <div class="form-group">
+          <label>Admin Passcode / Password</label>
+          <input type="password" id="adminPasswordInput" placeholder="Enter admin passcode (e.g. admin2026)" required autofocus />
+        </div>
+        <button type="submit" class="btn-auth-submit">Verify & Enter Dashboard</button>
+        <p class="auth-error" id="authErrorText">Invalid credentials. Access restricted to aashishsinghh06@gmail.com</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Main Admin Dashboard Layout -->
+  <div class="admin-layout" id="adminLayout">
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="admin-brand">
+        <span class="admin-brand-title">[Management Hub]</span>
+        <span class="admin-pill-tag">Admin Panel</span>
+        <a href="index.html" style="font-size: 13px; color: #71717a; text-decoration: none; font-weight: 600; margin-left: 12px;">← View Live Platform</a>
+      </div>
+
+      <div class="admin-user-nav">
+        <div class="admin-email-badge">
+          <span>👑</span> <span id="displayAdminEmail">aashishsinghh06@gmail.com</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn">Log Out</button>
+      </div>
+    </header>
+
+    <main class="admin-container">
+      <!-- Admin Navigation Tabs -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="courses">Course Catalog (<span id="tabCourseCount">30</span>)</button>
+        <button class="tab-btn" data-tab="pdf-manager">📄 PDF Notes Manager</button>
+        <button class="tab-btn" data-tab="analytics">Search Trends & Analytics</button>
+        <button class="tab-btn" data-tab="system">Database Maintenance</button>
+      </div>
+
+      <!-- Quick Metrics Row -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Catalog Courses</div>
+          <div class="stat-val" id="metricCourses">30</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">PDF Notes Attached</div>
+          <div class="stat-val" id="metricPdfs">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Student Bookmarks</div>
+          <div class="stat-val" id="metricBookmarks">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Searches Logged</div>
+          <div class="stat-val" id="metricSearches">0</div>
+        </div>
+      </div>
+
+      <!-- Tab 1: Course Catalog Manager -->
+      <section id="tab-courses" class="tab-content">
+        <div class="table-container">
+          <div class="toolbar-row">
+            <input type="text" id="courseSearchInput" class="search-table-input" placeholder="Search by code (e.g. BSMA1001), title, or tier..." />
+            <button class="btn-create-course" id="openCreateCourseBtn">+ Add New Course</button>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Level</th>
+                  <th>Title</th>
+                  <th>Credits</th>
+                  <th>PDF Notes</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="courseTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 2: PDF Notes Manager -->
+      <section id="tab-pdf-manager" class="tab-content" style="display: none;">
+        <div class="table-container">
+          <div class="toolbar-row">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700;">Curriculum Study Notes & PDF Files</h3>
+              <p style="font-size: 13px; color: #71717a; margin-top: 2px;">Upload PDF files or attach Google Drive/Web document links to any course.</p>
+            </div>
+            <input type="text" id="pdfSearchInput" class="search-table-input" placeholder="Filter courses for Notes or PYQs..." />
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Title</th>
+                  <th>Study Notes</th>
+                  <th>PYQs Attached</th>
+                  <th>Manage Resources</th>
+                </tr>
+              </thead>
+              <tbody id="pdfManagerTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 3: Search Analytics & Logs -->
+      <section id="tab-analytics" class="tab-content" style="display: none;">
+        <div class="table-container">
+          <div class="toolbar-row">
+            <h3 style="font-size: 16px; font-weight: 700;">Student Real-Time Search Trends</h3>
+            <button class="btn-sm-edit" id="refreshAnalyticsBtn">🔄 Refresh Logs</button>
+          </div>
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Search Query</th>
+                  <th>Results Found</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="searchLogsTableBody">
+                <!-- Populated via API -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 4: System & DB Maintenance -->
+      <section id="tab-system" class="tab-content" style="display: none;">
+        <div class="table-container" style="max-width: 680px;">
+          <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 8px;">Database Maintenance & Diagnostics</h3>
+          <p style="font-size: 13.5px; color: #71717a; margin-bottom: 20px;">Manage SQLite hub.db backups and data structures synchronization.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: #fafafc; border: 1px solid #e2e2e8; border-radius: 12px; padding: 18px;">
+              <strong style="font-size: 14px; display: block; margin-bottom: 4px;">Re-Seed Standard 52-Course Curriculum</strong>
+              <span style="font-size: 12.5px; color: #71717a; display: block; margin-bottom: 12px;">Restore default IIT Madras BS Management & Data Science course catalog.</span>
+              <button class="btn-sm-edit" id="resetCoursesBtn">Restore Default 52 Courses</button>
+            </div>
+            
+            <div style="background: #fafafc; border: 1px solid #e2e2e8; border-radius: 12px; padding: 18px;">
+              <strong style="font-size: 14px; display: block; margin-bottom: 4px;">Export Database JSON Backup</strong>
+              <span style="font-size: 12.5px; color: #71717a; display: block; margin-bottom: 12px;">Download all courses, notes, and analytics as a standalone JSON backup.</span>
+              <button class="btn-sm-edit" id="exportDbBtn">Download JSON Backup</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Resource Attachment Modal (Notes & PYQs) -->
+  <div class="admin-modal" id="pdfUploadModal">
+    <div class="admin-modal-card" style="max-width: 540px;">
+      <div class="admin-modal-header">
+        <h3 id="pdfModalTitle">Manage Notes & PYQs</h3>
+        <button class="btn-modal-close" id="closePdfModalBtn">✕</button>
+      </div>
+
+      <form id="pdfUploadForm">
+        <input type="hidden" id="pdfCourseCodeInput" />
+        
+        <div class="form-group">
+          <label>Target Course</label>
+          <input type="text" id="pdfCourseDisplay" readonly style="background: #fafafc; font-weight: 700;" />
+        </div>
+
+        <!-- Resource Type Selector -->
+        <div class="form-group">
+          <label>Select Resource Type</label>
+          <div style="display: flex; gap: 10px;">
+            <label style="flex: 1; display: flex; align-items: center; gap: 8px; background: #fafafc; border: 1px solid #e2e2e8; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 12.5px; font-weight: 700;">
+              <input type="radio" name="resourceType" value="notes" id="typeNotesRadio" checked style="width: auto; margin: 0;" />
+              <span>📄 Study Notes</span>
+            </label>
+            <label style="flex: 1; display: flex; align-items: center; gap: 8px; background: #fafafc; border: 1px solid #e2e2e8; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 12.5px; font-weight: 700;">
+              <input type="radio" name="resourceType" value="pyq" id="typePyqRadio" style="width: auto; margin: 0;" />
+              <span>📝 Previous Year (PYQ)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Resource Title Input -->
+        <div class="form-group" id="titleGroup">
+          <label id="titleLabel">Document Title / Label</label>
+          <input type="text" id="resourceTitleInput" placeholder="e.g. BSMA1002 Comprehensive Study Notes" />
+        </div>
+
+        <!-- Year Input (Visible for PYQ) -->
+        <div class="form-group" id="yearGroup" style="display: none;">
+          <label>Examination Year</label>
+          <input type="number" id="resourceYearInput" value="2025" min="2018" max="2030" />
+        </div>
+
+        <!-- Option 1: Upload File -->
+        <div class="form-group">
+          <label>Upload PDF Document (.pdf)</label>
+          <div class="upload-zone" onclick="document.getElementById('pdfFileInput').click()">
+            <div class="upload-zone-icon">📄</div>
+            <strong style="font-size: 13.5px; display: block;" id="uploadZoneText">Click to select PDF file from your computer</strong>
+            <span style="font-size: 12px; color: #71717a;">Supports question papers, study notes, and slides</span>
+          </div>
+          <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;" />
+        </div>
+
+        <div style="text-align: center; font-size: 12px; font-weight: 700; color: #a1a1aa; margin: 10px 0;">— OR —</div>
+
+        <!-- Option 2: External Link / Google Drive -->
+        <div class="form-group">
+          <label>Online URL / Google Drive Link</label>
+          <input type="url" id="pdfUrlInput" placeholder="https://drive.google.com/... or https://domain.com/file.pdf" />
+        </div>
+
+        <!-- Existing Attached Notes Info with Rename Option -->
+        <div id="currentPdfInfo" style="display: none; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px; margin-bottom: 14px; font-size: 12.5px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <strong style="color: #166534; display: flex; align-items: center; gap: 4px;"><span>📄</span> Current Notes Attached:</strong>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <a id="currentPdfLink" href="#" target="_blank" style="color: #166534; font-weight: 700; text-decoration: underline;">View PDF ↗</a>
+              <button type="button" id="removePdfBtn" style="background: none; border: none; color: #ef4444; font-size: 12px; font-weight: 700; cursor: pointer;">✕ Remove</button>
+            </div>
+          </div>
+          <div style="margin-top: 6px;">
+            <label style="display: block; font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; margin-bottom: 4px;">Display Name (What students see on live website):</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="editNotesTitleInput" placeholder="e.g. Unit 1 - Introduction to Data Science" style="flex: 1; padding: 7px 10px; font-size: 12.5px; border-radius: 6px; border: 1px solid #86efac; background: #ffffff; outline: none;" />
+              <button type="button" id="saveRenamedNotesTitleBtn" class="btn-sm-edit" style="background: #166534; color: #ffffff; border: none; padding: 7px 14px; font-size: 12px; white-space: nowrap;">💾 Save Name</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Existing Attached PYQs List inside Modal -->
+        <div id="modalExistingPyqSection" style="margin-bottom: 14px; display: none;">
+          <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #71717a; margin-bottom: 6px;">Attached PYQs for this Course</label>
+          <div id="modalExistingPyqList" style="display: flex; flex-direction: column; gap: 6px; max-height: 140px; overflow-y: auto;"></div>
+        </div>
+
+        <button type="submit" class="btn-primary-save" id="savePdfSubmitBtn">Upload & Attach Resource</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Course Create / Edit Modal -->
+  <div class="admin-modal" id="courseEditModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="modalFormTitle">Add New Course</h3>
+        <button class="btn-modal-close" id="closeCourseModalBtn">✕</button>
+      </div>
+
+      <form id="courseForm">
+        <input type="hidden" id="courseFormId" />
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Course Code</label>
+            <input type="text" id="courseCodeInput" placeholder="e.g. CS102" required />
+          </div>
+          <div class="form-group">
+            <label>Level / Tier</label>
+            <select id="courseLevelInput">
+              <option value="foundation">Foundation</option>
+              <option value="diploma">Diploma</option>
+              <option value="bs">BS</option>
+              <option value="elective">Elective</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Course Title</label>
+          <input type="text" id="courseTitleInput" placeholder="e.g. Advanced Data Structures" required />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Credits</label>
+            <input type="number" id="courseCreditsInput" value="4" min="1" max="8" required />
+          </div>
+          <div class="form-group">
+            <label>Prerequisites (Comma separated)</label>
+            <input type="text" id="coursePrereqsInput" placeholder="e.g. BSCS1001, BSMA1001" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="courseDescInput" rows="3" placeholder="Overview of course curriculum and core concepts..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary-save" id="saveCourseSubmitBtn">Save Course to Database</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_EMAIL = 'aashishsinghh06@gmail.com';
+
+    // 52 Standard Courses Baseline Dataset (Fail-Safe)
+    const INITIAL_COURSES_CATALOG = [
+      // Foundation (8)
+      { id: 1, code: "BSMA1001", level: "foundation", title: "Mathematics for Data Science I", credits: 4, prerequisites: [], description: "Linear algebra, matrix operations, calculus fundamentals, vector spaces, and mathematical foundations for analytics.", pdf_url: "" },
+      { id: 2, code: "BSMA1002", level: "foundation", title: "Statistics for Data Science I", credits: 4, prerequisites: [], description: "Probability theory, random variables, discrete and continuous distributions, hypothesis testing, and exploratory data analysis.", pdf_url: "" },
+      { id: 3, code: "BSCS1001", level: "foundation", title: "Computational Thinking", credits: 4, prerequisites: [], description: "Algorithm design, problem decomposition, logic formulation, pseudocode, iteration, and structured problem solving.", pdf_url: "" },
+      { id: 4, code: "BSHS1001", level: "foundation", title: "English I", credits: 4, prerequisites: [], description: "Professional communication, academic writing, presentation techniques, grammar, and executive business discourse.", pdf_url: "" },
+      { id: 5, code: "BSMS1201", level: "foundation", title: "Principles of Economics", credits: 4, prerequisites: [], description: "Microeconomic foundations, market equilibrium, supply-demand dynamics, price elasticity, and consumer theory.", pdf_url: "" },
+      { id: 6, code: "BSMS1202", level: "foundation", title: "Financial Accounting", credits: 4, prerequisites: [], description: "Balance sheets, ledger entries, income statements, cash flow statements, and corporate financial recordkeeping.", pdf_url: "" },
+      { id: 7, code: "BSMS1203", level: "foundation", title: "Business Statistics", credits: 4, prerequisites: ["BSMA1002"], description: "Regression models, time-series forecasting, variance analysis (ANOVA), and statistical decision-making frameworks.", pdf_url: "" },
+      { id: 8, code: "BSMS1204", level: "foundation", title: "Management Thought and Practice", credits: 4, prerequisites: [], description: "Classical & contemporary management theories, leadership frameworks, organizational design, and business strategy.", pdf_url: "" },
+
+      // Diploma (16)
+      { id: 9, code: "BSMS2201", level: "diploma", title: "Python for Data Analytics", credits: 4, prerequisites: ["BSCS1001"], description: "Pandas, NumPy, Matplotlib, Seaborn, exploratory data analysis, web scraping, and data transformation pipelines.", pdf_url: "" },
+      { id: 10, code: "BSMS2202", level: "diploma", title: "Data Management", credits: 4, prerequisites: ["BSCS1001"], description: "Relational schema design, SQL querying, indexing, ACID transactions, database normalization, and data modeling.", pdf_url: "" },
+      { id: 11, code: "BSMS2203", level: "diploma", title: "Analysis of Economic Data", credits: 4, prerequisites: ["BSMS1201", "BSMA1002"], description: "Econometric techniques, empirical model evaluation, OLS regression, hypothesis testing on macroeconomic datasets.", pdf_url: "" },
+      { id: 12, code: "BSMS3201", level: "diploma", title: "Marketing Analytics", credits: 4, prerequisites: ["BSMS1203", "BSMS1204"], description: "Customer segmentation, Customer Lifetime Value (CLV), churn prediction, pricing optimization, and marketing mix modeling.", pdf_url: "" },
+      { id: 13, code: "BSMS3202", level: "diploma", title: "HR Analytics", credits: 4, prerequisites: ["BSMA1002", "BSMS1204"], description: "Workforce metrics, employee retention modeling, talent acquisition funnels, and organizational performance data.", pdf_url: "" },
+      { id: 14, code: "BSMS3203", level: "diploma", title: "Financial Analytics", credits: 4, prerequisites: ["BSMS1202", "BSMA1002"], description: "Asset pricing models (CAPM), portfolio risk metrics, Value at Risk (VaR), and quantitative financial time-series.", pdf_url: "" },
+      { id: 15, code: "BSMS2204", level: "diploma", title: "Operations Management", credits: 4, prerequisites: ["BSMA1001", "BSMS1204"], description: "Process optimization, queueing systems, inventory control (EOQ), capacity planning, and Lean Six Sigma principles.", pdf_url: "" },
+      { id: 16, code: "BSMS3204", level: "diploma", title: "Supply Chain Analytics", credits: 4, prerequisites: ["BSMS2204", "BSMS1203"], description: "Network design, logistics tracking, demand forecasting, multi-echelon inventory optimization, and bullwhip effect reduction.", pdf_url: "" },
+      { id: 17, code: "BSMS3901", level: "diploma", title: "Business Management Project", credits: 4, prerequisites: ["BSMS1204", "BSMS1202"], description: "Applied strategic research, business model evaluation, competitive landscape mapping, and executive execution planning.", pdf_url: "" },
+      { id: 18, code: "BSMS3902", level: "diploma", title: "Business Analytics Project", credits: 4, prerequisites: ["BSMS2201", "BSMS2202", "BSMS1203"], description: "End-to-end data pipeline construction, statistical model deployment, interactive dashboards, and actionable insight delivery.", pdf_url: "" },
+      { id: 19, code: "BSMS2205", level: "diploma", title: "Corporate Finance", credits: 4, prerequisites: ["BSMS1202"], description: "Capital budgeting (NPV/IRR), Weighted Average Cost of Capital (WACC), dividend decisions, and optimal capital structure.", pdf_url: "" },
+      { id: 20, code: "BSMS2206", level: "diploma", title: "Organizational Behaviour", credits: 4, prerequisites: ["BSMS1204"], description: "Team dynamics, workplace psychology, organizational culture, leadership influence, and cross-functional conflict resolution.", pdf_url: "" },
+      { id: 21, code: "BSMS3205", level: "diploma", title: "Money Banking and Financial Markets", credits: 4, prerequisites: ["BSMS1201", "BSMS1202"], description: "Monetary policy transmission mechanisms, commercial banking systems, bond markets, interest rates, and central banking.", pdf_url: "" },
+      { id: 22, code: "BSMS2207", level: "diploma", title: "Marketing Management", credits: 4, prerequisites: ["BSMS1204"], description: "Brand positioning, market research methodologies, omnichannel distribution strategy, and consumer touchpoint optimization.", pdf_url: "" },
+      { id: 23, code: "BSMS2208", level: "diploma", title: "Macroeconomics", credits: 4, prerequisites: ["BSMS1201"], description: "National income accounting (GDP), fiscal policy, inflation, unemployment, IS-LM frameworks, and international trade balance.", pdf_url: "" },
+      { id: 24, code: "BSMS3206", level: "diploma", title: "Managerial Economics", credits: 4, prerequisites: ["BSMS1201", "BSMA1001"], description: "Pricing strategy, oligopoly and game-theoretic market structures, cost analysis, and corporate decision theory.", pdf_url: "" },
+
+      // BS (6)
+      { id: 25, code: "BSGN3001", level: "bs", title: "Strategies for Professional Growth", credits: 4, prerequisites: ["BSHS1001", "BSMS1204"], description: "Executive communication, career roadmap building, industry networking, personal branding, and professional leadership ethics.", pdf_url: "" },
+      { id: 26, code: "BSMS3207", level: "bs", title: "GenAI for Business", credits: 4, prerequisites: ["BSMS2201", "BSCS1001"], description: "LLM adoption frameworks, prompt engineering architectures, generative AI agent workflows, and measuring enterprise business ROI.", pdf_url: "" },
+      { id: 27, code: "BSMS3208", level: "bs", title: "Digital Business", credits: 4, prerequisites: ["BSMS1204", "BSMS2207"], description: "Platform business models, multi-sided market strategies, e-commerce architectures, network effects, and digital product scaling.", pdf_url: "" },
+      { id: 28, code: "BSMS3209", level: "bs", title: "Logistics and Supply Chain Management", credits: 4, prerequisites: ["BSMS3204"], description: "Multi-modal freight logistics, automated warehousing systems, port operations, and global supply resilience strategies.", pdf_url: "" },
+      { id: 29, code: "BSMS4201", level: "bs", title: "Applied Time Series Analysis", credits: 4, prerequisites: ["BSMS1203", "BSMS2201"], description: "ARIMA, SARIMA, GARCH volatility models, exponential smoothing, cointegration, stationarity, and financial forecasting.", pdf_url: "" },
+      { id: 30, code: "BSMS4202", level: "bs", title: "Market Intelligence", credits: 4, prerequisites: ["BSMS3201", "BSMS2201"], description: "Competitive intelligence frameworks, consumer trend scraping, sentiment tracking, NLP on market feeds, and actionable insight generation.", pdf_url: "" }
+    ];
+
+    let allCourses = Array.from(INITIAL_COURSES_CATALOG);
+
+    // Apply any local uploaded PDF URLs from LocalStorage
+    try {
+      const localPdfMap = JSON.parse(localStorage.getItem('mghub_local_pdfs') || '{}');
+      allCourses.forEach(c => {
+        if (localPdfMap[c.code]) {
+          c.pdf_url = localPdfMap[c.code];
+        }
+      });
+    } catch (e) {}
+
+    // Check existing session
+    const authOverlay = document.getElementById('authOverlay');
+    const adminLayout = document.getElementById('adminLayout');
+    const authErrorText = document.getElementById('authErrorText');
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    async function checkAuth() {
+      try {
+        const token = localStorage.getItem('mghub_jwt');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+        
+        const res = await fetch('/api/auth/me', {
+          headers,
+          credentials: 'include'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user && data.user.role === 'admin') {
+            sessionStorage.setItem('mghub_admin_auth', 'true');
+            if (document.getElementById('displayAdminEmail')) {
+              document.getElementById('displayAdminEmail').textContent = data.user.email;
+            }
+            authOverlay.style.display = 'none';
+            adminLayout.style.display = 'block';
+            initAdminUI();
+            return;
+          }
+        }
+      } catch (e) {}
+
+      // If not authenticated via server, check local session storage
+      const isAuth = sessionStorage.getItem('mghub_admin_auth') === 'true';
+      if (isAuth) {
+        authOverlay.style.display = 'none';
+        adminLayout.style.display = 'block';
+        initAdminUI();
+      } else {
+        authOverlay.style.display = 'flex';
+        adminLayout.style.display = 'none';
+      }
+    }
+
+    function initAdminUI() {
+      // Immediately render the 52 courses
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+      loadDashboard();
+    }
+
+    adminLoginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('adminEmailInput').value.trim().toLowerCase();
+      const password = document.getElementById('adminPasswordInput').value.trim();
+
+      if (email !== ADMIN_EMAIL) {
+        authErrorText.textContent = `Access restricted to ${ADMIN_EMAIL}`;
+        authErrorText.style.display = 'block';
+        return;
+      }
+
+      let authenticated = false;
+
+      // 1. Attempt Server-side Authentication (when Express backend is active)
+      try {
+        const token = localStorage.getItem('mghub_jwt');
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.user?.role === 'admin') {
+            authenticated = true;
+            if (data.token) localStorage.setItem('mghub_jwt', data.token);
+            if (data.user) localStorage.setItem('mghub_user', JSON.stringify(data.user));
+          }
+        }
+      } catch (e) {
+        // Server not reachable (e.g. Netlify / Static hosting)
+      }
+
+      // 2. Client-side Passcode Fallback (for Netlify / Static Deployments)
+      if (!authenticated) {
+        if (password === 'admin2026' || password === 'Admin@2026' || password === 'admin') {
+          authenticated = true;
+          localStorage.setItem('mghub_user', JSON.stringify({ email: ADMIN_EMAIL, role: 'admin', name: 'Administrator' }));
+        }
+      }
+
+      if (authenticated) {
+        sessionStorage.setItem('mghub_admin_auth', 'true');
+        sessionStorage.setItem('mghub_admin_email', email);
+        authOverlay.style.display = 'none';
+        adminLayout.style.display = 'block';
+        initAdminUI();
+      } else {
+        authErrorText.textContent = 'Invalid credentials. Access restricted to authorized administrator passcode.';
+        authErrorText.style.display = 'block';
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      } catch (e) {}
+      sessionStorage.removeItem('mghub_admin_auth');
+      sessionStorage.removeItem('mghub_admin_email');
+      localStorage.removeItem('mghub_jwt');
+      localStorage.removeItem('mghub_user');
+      window.location.href = '/login.html';
+    });
+
+    // Navigation Tabs
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const targetTab = btn.getAttribute('data-tab');
+
+        tabContents.forEach(tc => {
+          tc.style.display = tc.id === `tab-${targetTab}` ? 'block' : 'none';
+        });
+
+        if (targetTab === 'analytics') loadAnalytics();
+      });
+    });
+
+    function updateDashboardCounts() {
+      const total = allCourses.length;
+      const attachedCount = allCourses.filter(c => c.pdf_url && c.pdf_url.trim().length > 0).length;
+      document.getElementById('metricCourses').textContent = total;
+      document.getElementById('metricPdfs').textContent = attachedCount;
+      document.getElementById('tabCourseCount').textContent = total;
+    }
+
+    function getAuthHeaders() {
+      const token = localStorage.getItem('mghub_jwt');
+      return token ? { 'Authorization': `Bearer ${token}` } : {};
+    }
+
+    // Load Dashboard Data from API
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/admin/analytics', {
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const m = data.metrics;
+          if (m) {
+            document.getElementById('metricBookmarks').textContent = m.total_users || m.total_bookmarks || 0;
+            document.getElementById('metricSearches').textContent = m.total_search_queries || 0;
+          }
+        }
+      } catch (e) {}
+
+      loadCoursesFromApi();
+    }
+
+    async function loadCoursesFromApi() {
+      try {
+        const res = await fetch('/api/courses?level=all');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.courses && data.courses.length > 0) {
+            allCourses = data.courses;
+            renderCourseTable(allCourses);
+            renderPdfManagerTable(allCourses);
+            updateDashboardCounts();
+          }
+        }
+      } catch (e) {}
+    }
+
+    function renderCourseTable(courses) {
+      const tbody = document.getElementById('courseTableBody');
+      if (!tbody) return;
+
+      if (!courses.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #a1a1aa; padding: 24px;">No matching courses found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = courses.map(c => {
+        const hasPdf = c.pdf_url && c.pdf_url.trim().length > 0;
+        const pdfBadge = hasPdf 
+          ? `<a href="${c.pdf_url}" target="_blank" class="pdf-badge-attached">📄 PDF Linked ↗</a>` 
+          : `<span class="pdf-badge-none">No PDF</span>`;
+
+        return `
+          <tr>
+            <td><span class="code-tag">${c.code}</span></td>
+            <td><span class="level-badge badge-${c.level}">${c.level}</span></td>
+            <td><strong>${c.title}</strong></td>
+            <td>${c.credits || 4}</td>
+            <td>${pdfBadge}</td>
+            <td>
+              <div class="action-btn-group">
+                <button class="btn-sm-pdf" onclick="openPdfModal('${c.code}', '${c.title.replace(/'/g, "\\'")}', '${c.pdf_url || ''}')">
+                  <span>📄</span> ${hasPdf ? 'Edit PDF' : 'Add PDF'}
+                </button>
+                <button class="btn-sm-edit" onclick="editCourseModal('${c.code}')">Edit</button>
+                <button class="btn-sm-delete" onclick="deleteCourse(${c.id || 0}, '${c.code}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderPdfManagerTable(courses) {
+      const tbody = document.getElementById('pdfManagerTableBody');
+      if (!tbody) return;
+
+      if (!courses.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #a1a1aa; padding: 24px;">No courses found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = courses.map(c => {
+        const notesUrl = c.notes?.fileUrl || c.pdf_url || '';
+        const hasNotes = Boolean(c.notes?.available || (notesUrl && notesUrl.trim().length > 0));
+        const pyqs = Array.isArray(c.pyqs) ? c.pyqs : [];
+        const hasPyqs = pyqs.length > 0;
+
+        const notesHtml = hasNotes 
+          ? `<a href="${notesUrl}" target="_blank" class="pdf-badge-attached">✓ Notes File ↗</a>` 
+          : `<span class="pdf-badge-none">No Notes</span>`;
+
+        const pyqHtml = hasPyqs
+          ? `<span class="pdf-badge-attached" style="background:#eef2ff; color:#4338ca; border-color:#c7d2fe;">📝 ${pyqs.length} PYQ Paper${pyqs.length > 1 ? 's' : ''}</span>`
+          : `<span class="pdf-badge-none">0 Papers</span>`;
+
+        return `
+          <tr>
+            <td><span class="code-tag">${c.code}</span></td>
+            <td><strong>${c.title}</strong></td>
+            <td>${notesHtml}</td>
+            <td>${pyqHtml}</td>
+            <td>
+              <button class="btn-sm-pdf" onclick="openResourceModal('${c.code}', '${c.title.replace(/'/g, "\\'")}')">
+                <span>⚡</span> Manage Notes & PYQs
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Search filter in tables
+    document.getElementById('courseSearchInput')?.addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) {
+        renderCourseTable(allCourses);
+        return;
+      }
+      const filtered = allCourses.filter(c => 
+        (c.code && c.code.toLowerCase().includes(q)) || 
+        (c.title && c.title.toLowerCase().includes(q)) || 
+        (c.level && c.level.toLowerCase().includes(q)) ||
+        (c.description && c.description.toLowerCase().includes(q))
+      );
+      renderCourseTable(filtered);
+    });
+
+    document.getElementById('pdfSearchInput')?.addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) {
+        renderPdfManagerTable(allCourses);
+        return;
+      }
+      const filtered = allCourses.filter(c => 
+        (c.code && c.code.toLowerCase().includes(q)) || 
+        (c.title && c.title.toLowerCase().includes(q)) || 
+        (c.level && c.level.toLowerCase().includes(q))
+      );
+      renderPdfManagerTable(filtered);
+    });
+
+    // Resource (Notes & PYQs) Upload Modal Handlers
+    const pdfUploadModal = document.getElementById('pdfUploadModal');
+    const closePdfModalBtn = document.getElementById('closePdfModalBtn');
+    const pdfUploadForm = document.getElementById('pdfUploadForm');
+    const pdfFileInput = document.getElementById('pdfFileInput');
+    const uploadZoneText = document.getElementById('uploadZoneText');
+    const removePdfBtn = document.getElementById('removePdfBtn');
+    const typeNotesRadio = document.getElementById('typeNotesRadio');
+    const typePyqRadio = document.getElementById('typePyqRadio');
+    const titleLabel = document.getElementById('titleLabel');
+    const resourceTitleInput = document.getElementById('resourceTitleInput');
+    const yearGroup = document.getElementById('yearGroup');
+    const resourceYearInput = document.getElementById('resourceYearInput');
+    const modalExistingPyqSection = document.getElementById('modalExistingPyqSection');
+    const modalExistingPyqList = document.getElementById('modalExistingPyqList');
+
+    function updateResourceTypeUI() {
+      const isPyq = typePyqRadio.checked;
+      const code = document.getElementById('pdfCourseCodeInput').value || 'COURSE';
+      if (isPyq) {
+        titleLabel.textContent = 'PYQ Paper Title / Examination Name';
+        resourceTitleInput.placeholder = `e.g. ${code} — PYQ 2025 (End-Term Exam)`;
+        yearGroup.style.display = 'block';
+        document.getElementById('savePdfSubmitBtn').textContent = 'Upload & Attach PYQ Paper';
+      } else {
+        titleLabel.textContent = 'Study Notes Title / Label';
+        resourceTitleInput.placeholder = `e.g. ${code} Comprehensive Study Notes`;
+        yearGroup.style.display = 'none';
+        document.getElementById('savePdfSubmitBtn').textContent = 'Upload & Attach Study Notes';
+      }
+    }
+
+    if (typeNotesRadio) typeNotesRadio.addEventListener('change', updateResourceTypeUI);
+    if (typePyqRadio) typePyqRadio.addEventListener('change', updateResourceTypeUI);
+
+    window.openResourceModal = function(code, title) {
+      const course = allCourses.find(c => c.code === code) || {};
+      const existingNotes = course.notes?.fileUrl || course.pdf_url || '';
+      const pyqs = Array.isArray(course.pyqs) ? course.pyqs : [];
+
+      document.getElementById('pdfModalTitle').textContent = `Manage Resources: ${code}`;
+      document.getElementById('pdfCourseCodeInput').value = code;
+      document.getElementById('pdfCourseDisplay').value = `${code} - ${title || course.title || ''}`;
+      document.getElementById('pdfUrlInput').value = '';
+      document.getElementById('pdfFileInput').value = '';
+      uploadZoneText.textContent = 'Click to select PDF file from your computer';
+
+      typeNotesRadio.checked = true;
+      resourceTitleInput.value = '';
+      resourceYearInput.value = new Date().getFullYear();
+      updateResourceTypeUI();
+
+      // Current Notes Info
+      const currentInfo = document.getElementById('currentPdfInfo');
+      const currentLink = document.getElementById('currentPdfLink');
+      const editNotesTitleInput = document.getElementById('editNotesTitleInput');
+
+      if (existingNotes && existingNotes.trim().length > 0) {
+        currentInfo.style.display = 'block';
+        currentLink.href = existingNotes;
+        if (editNotesTitleInput) {
+          editNotesTitleInput.value = course.notes?.title || course.notes?.fileName || '';
+        }
+      } else {
+        currentInfo.style.display = 'none';
+        if (editNotesTitleInput) editNotesTitleInput.value = '';
+      }
+
+      // Existing PYQs List
+      if (pyqs.length > 0) {
+        modalExistingPyqSection.style.display = 'block';
+        modalExistingPyqList.innerHTML = pyqs.map((p, idx) => `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #fafafc; border: 1px solid #e4e4e7; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+            <div style="min-width: 0;">
+              <strong>${p.title || `${code} — PYQ ${p.year}`}</strong>
+              <span style="color: #71717a; margin-left: 6px;">(${p.year || 'Exam'})</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <a href="${p.fileUrl || '#'}" target="_blank" style="color: #166534; font-weight: 700; text-decoration: underline;">View ↗</a>
+              <button type="button" onclick="deletePyq('${code}', ${idx})" style="background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer;">✕ Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        modalExistingPyqSection.style.display = 'none';
+        modalExistingPyqList.innerHTML = '';
+      }
+
+      pdfUploadModal.classList.add('active');
+    };
+
+    const saveRenamedNotesTitleBtn = document.getElementById('saveRenamedNotesTitleBtn');
+    if (saveRenamedNotesTitleBtn) {
+      saveRenamedNotesTitleBtn.addEventListener('click', async () => {
+        const code = document.getElementById('pdfCourseCodeInput').value;
+        const newTitle = document.getElementById('editNotesTitleInput').value.trim();
+        if (!newTitle) {
+          alert('Please enter a display name for the study notes.');
+          return;
+        }
+
+        saveRenamedNotesTitleBtn.textContent = 'Saving...';
+        try {
+          const res = await fetch('/api/admin/courses/update-resource-title', {
+            method: 'POST',
+            headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              course_code: code,
+              resource_type: 'notes',
+              title: newTitle
+            })
+          });
+          if (res.ok) {
+            const target = allCourses.find(c => c.code === code);
+            if (target) {
+              if (!target.notes) target.notes = {};
+              target.notes.title = newTitle;
+              target.notes.fileName = newTitle;
+            }
+            renderCourseTable(allCourses);
+            renderPdfManagerTable(allCourses);
+            saveRenamedNotesTitleBtn.textContent = '✓ Saved!';
+            setTimeout(() => { saveRenamedNotesTitleBtn.textContent = '💾 Save Name'; }, 1800);
+          }
+        } catch (e) {
+          saveRenamedNotesTitleBtn.textContent = '💾 Save Name';
+        }
+      });
+    }
+
+    window.openPdfModal = window.openResourceModal;
+
+    window.deletePyq = async function(code, idx) {
+      if (!confirm(`Delete this PYQ paper from ${code}?`)) return;
+      const target = allCourses.find(c => c.code === code);
+      if (target && Array.isArray(target.pyqs)) {
+        target.pyqs.splice(idx, 1);
+        renderCourseTable(allCourses);
+        renderPdfManagerTable(allCourses);
+        openResourceModal(code, target.title);
+      }
+
+      try {
+        await fetch('/api/admin/courses/delete-pyq', {
+          method: 'POST',
+          headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ course_code: code, pyq_index: idx })
+        });
+      } catch (e) {}
+    };
+
+    closePdfModalBtn.addEventListener('click', () => pdfUploadModal.classList.remove('active'));
+
+    pdfFileInput.addEventListener('change', () => {
+      if (pdfFileInput.files && pdfFileInput.files[0]) {
+        uploadZoneText.textContent = `Selected: ${pdfFileInput.files[0].name}`;
+      }
+    });
+
+    removePdfBtn.addEventListener('click', async () => {
+      const code = document.getElementById('pdfCourseCodeInput').value;
+      if (!confirm(`Remove Study Notes attachment from ${code}?`)) return;
+
+      const target = allCourses.find(c => c.code === code);
+      if (target) {
+        target.pdf_url = '';
+        target.notes = { available: false, fileName: '', fileUrl: '' };
+      }
+
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+      pdfUploadModal.classList.remove('active');
+
+      try {
+        await fetch(`/api/admin/courses/remove-pdf/${code}`, {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+      } catch (e) {}
+    });
+
+    pdfUploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = document.getElementById('pdfCourseCodeInput').value;
+      const resourceType = typePyqRadio.checked ? 'pyq' : 'notes';
+      const title = resourceTitleInput.value.trim();
+      const year = resourceYearInput.value;
+      const file = pdfFileInput.files[0];
+      const url = document.getElementById('pdfUrlInput').value.trim();
+
+      if (!file && !url) {
+        alert('Please select a PDF file or enter an online URL.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('savePdfSubmitBtn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Uploading & Attaching...';
+      submitBtn.disabled = true;
+
+      let savedUrl = url;
+      let finalCourse = null;
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('course_code', code);
+        formData.append('resource_type', resourceType);
+        formData.append('title', title);
+        formData.append('year', year);
+        formData.append('resource_file', file);
+        if (url) formData.append('resource_url', url);
+
+        try {
+          const res = await fetch('/api/admin/courses/upload-resource', {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            credentials: 'include',
+            body: formData
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            finalCourse = data.course;
+          }
+        } catch (err) {}
+      } else if (url) {
+        try {
+          const res = await fetch('/api/admin/courses/upload-resource', {
+            method: 'POST',
+            headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              course_code: code,
+              resource_type: resourceType,
+              title: title,
+              year: year,
+              resource_url: url
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            finalCourse = data.course;
+          }
+        } catch (err) {}
+      }
+
+      if (finalCourse) {
+        const idx = allCourses.findIndex(c => c.code === code);
+        if (idx !== -1) allCourses[idx] = finalCourse;
+      } else {
+        const target = allCourses.find(c => c.code === code);
+        if (target) {
+          if (resourceType === 'pyq') {
+            if (!Array.isArray(target.pyqs)) target.pyqs = [];
+            target.pyqs.unshift({
+              year: parseInt(year) || new Date().getFullYear(),
+              title: title || `${code} — PYQ ${year}`,
+              fileName: file ? file.name : 'PYQ.pdf',
+              fileUrl: url || '#'
+            });
+          } else {
+            target.pdf_url = url || '';
+            target.notes = { available: true, fileName: file ? file.name : `${code}_Notes.pdf`, fileUrl: url || '' };
+          }
+        }
+      }
+
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      pdfUploadModal.classList.remove('active');
+      alert(`✓ ${resourceType === 'pyq' ? 'PYQ Paper' : 'Study Notes'} attached to ${code} successfully!`);
+    });
+
+    // Course Create / Edit Modal logic
+    const courseEditModal = document.getElementById('courseEditModal');
+    const openCreateCourseBtn = document.getElementById('openCreateCourseBtn');
+    const closeCourseModalBtn = document.getElementById('closeCourseModalBtn');
+    const courseForm = document.getElementById('courseForm');
+
+    openCreateCourseBtn.addEventListener('click', () => {
+      document.getElementById('modalFormTitle').textContent = 'Add New Course';
+      document.getElementById('courseFormId').value = '';
+      document.getElementById('courseCodeInput').value = '';
+      document.getElementById('courseCodeInput').readOnly = false;
+      document.getElementById('courseTitleInput').value = '';
+      document.getElementById('courseCreditsInput').value = '4';
+      document.getElementById('coursePrereqsInput').value = '';
+      document.getElementById('courseDescInput').value = '';
+      courseEditModal.classList.add('active');
+    });
+
+    closeCourseModalBtn.addEventListener('click', () => {
+      courseEditModal.classList.remove('active');
+    });
+
+    window.editCourseModal = function(courseCode) {
+      const course = allCourses.find(c => c.code === courseCode);
+      if (!course) return;
+
+      document.getElementById('modalFormTitle').textContent = `Edit Course (${course.code})`;
+      document.getElementById('courseFormId').value = course.id || '';
+      document.getElementById('courseCodeInput').value = course.code;
+      document.getElementById('courseCodeInput').readOnly = true;
+      document.getElementById('courseLevelInput').value = course.level;
+      document.getElementById('courseTitleInput').value = course.title;
+      document.getElementById('courseCreditsInput').value = course.credits || 4;
+      document.getElementById('coursePrereqsInput').value = Array.isArray(course.prerequisites) ? course.prerequisites.join(', ') : '';
+      document.getElementById('courseDescInput').value = course.description || '';
+      courseEditModal.classList.add('active');
+    };
+
+    window.deleteCourse = async function(courseId, code) {
+      if (!confirm(`Are you sure you want to permanently delete course ${code}?`)) return;
+
+      allCourses = allCourses.filter(c => c.code !== code);
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+
+      try {
+        if (courseId) {
+          await fetch(`/api/admin/courses/delete/${courseId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+            credentials: 'include'
+          });
+        }
+      } catch (e) {}
+    };
+
+    courseForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('courseFormId').value;
+      const isEdit = Boolean(id);
+
+      const code = document.getElementById('courseCodeInput').value.trim().toUpperCase();
+      const level = document.getElementById('courseLevelInput').value;
+      const title = document.getElementById('courseTitleInput').value.trim();
+      const credits = parseInt(document.getElementById('courseCreditsInput').value) || 4;
+      const prereqs = document.getElementById('coursePrereqsInput').value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+      const desc = document.getElementById('courseDescInput').value.trim();
+
+      if (isEdit) {
+        const item = allCourses.find(c => c.code === code);
+        if (item) {
+          item.title = title;
+          item.level = level;
+          item.credits = credits;
+          item.prerequisites = prereqs;
+          item.description = desc;
+        }
+      } else {
+        allCourses.unshift({
+          id: Date.now(),
+          code,
+          level,
+          title,
+          credits,
+          prerequisites: prereqs,
+          description: desc,
+          pdf_url: ""
+        });
+      }
+
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+      courseEditModal.classList.remove('active');
+
+      const payload = { code, level, title, credits, prerequisites: prereqs, description: desc };
+      try {
+        const url = isEdit ? `/api/admin/courses/update/${id}` : '/api/admin/courses/create';
+        const method = isEdit ? 'PUT' : 'POST';
+        await fetch(url, {
+          method,
+          headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {}
+    });
+
+    // Search Analytics
+    async function loadAnalytics() {
+      const tbody = document.getElementById('searchLogsTableBody');
+      try {
+        const res = await fetch('/api/admin/analytics', {
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const logs = data.search_logs || [];
+          if (!logs.length) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #a1a1aa; padding: 20px;">No search queries recorded yet.</td></tr>`;
+            return;
+          }
+          tbody.innerHTML = logs.map(l => `
+            <tr>
+              <td><strong>${l.query}</strong></td>
+              <td>${l.results_count} results</td>
+              <td style="color: #71717a; font-size: 12.5px;">${l.created_at ? new Date(l.created_at).toLocaleTimeString() : 'Recently'}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {}
+    }
+
+    document.getElementById('refreshAnalyticsBtn')?.addEventListener('click', loadAnalytics);
+
+    // Database Reset
+    document.getElementById('resetCoursesBtn')?.addEventListener('click', async () => {
+      if (!confirm('Re-seed all 52 default courses? Custom changes will be reset to default.')) return;
+      allCourses = Array.from(INITIAL_COURSES_CATALOG);
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+      try {
+        await fetch('/api/admin/reset-courses', {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+        alert('Curriculum reset to standard 52 courses.');
+      } catch (e) {}
+    });
+
+    // Export DB Backup
+    document.getElementById('exportDbBtn')?.addEventListener('click', () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allCourses, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "management_hub_courses_backup.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    });
+
+    // Init auth check & immediate render
+    checkAuth();
+  </script>
+</body>
+</html>

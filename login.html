@@ -326,7 +326,7 @@
           
           setTimeout(() => {
             if (data.user && data.user.role === 'admin') {
-              window.location.href = '/admin.html';
+              window.location.href = '/inmycontrol';
             } else {
               window.location.href = '/index.html';
             }
@@ -344,7 +344,7 @@
           localStorage.setItem('mghub_user', JSON.stringify({ email: 'aashishsinghh06@gmail.com', role: 'admin', name: 'Administrator' }));
           showSuccess('Admin authentication verified! Opening Admin Panel...');
           setTimeout(() => {
-            window.location.href = '/admin.html';
+            window.location.href = '/inmycontrol';
           }, 500);
           return;
         }

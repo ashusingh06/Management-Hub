@@ -702,6 +702,11 @@ if (fs.existsSync(path.join(__dirname, 'dist'))) {
   app.use(express.static(path.join(__dirname, 'dist')));
 }
 
+// Explicit Secret Admin Route
+app.get('/inmycontrol', (req, res) => {
+  res.sendFile(path.join(__dirname, 'inmycontrol.html'));
+});
+
 // Fallback to index.html for SPA routes
 app.get('*', (req, res) => {
   if (fs.existsSync(path.join(__dirname, 'dist', 'index.html'))) {

@@ -1,2 +1,9 @@
-# Netlify static routing rules
+# Secret Custom Admin Route
+/inmycontrol /inmycontrol.html 200
+/admin /inmycontrol 301!
+/admin.html /inmycontrol 301!
+
+# Static Page Clean URLs
 /index.html / 301
+/course /course.html 200
+/login /login.html 200
