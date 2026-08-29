@@ -4,6 +4,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const navLinks = document.querySelectorAll('.nav-btn');
   const sections = document.querySelectorAll('.page-section');
 
+  function renderHeaderAuth() {
+    const authBox = document.getElementById('headerAuthBox');
+    if (!authBox) return;
+
+    let user = null;
+    try {
+      user = JSON.parse(localStorage.getItem('mghub_user') || 'null');
+    } catch (e) {}
+
+    if (user && user.email) {
+      const displayName = user.name || user.email.split('@')[0];
+      const initial = displayName.charAt(0).toUpperCase();
+      const isAdmin = user.role === 'admin' || user.email.toLowerCase() === 'aashishsinghh06@gmail.com';
+      const avatarHtml = user.photoURL 
+        ? `<img src="${user.photoURL}" alt="${displayName}" class="header-user-avatar" />`
+        : `<div class="header-user-avatar">${initial}</div>`;
+
+      authBox.innerHTML = `
+        <div class="header-user-profile">
+          ${avatarHtml}
+          <span>${displayName}</span>
+          ${isAdmin ? `<a href="/inmycontrol" style="font-size: 11px; color: #166534; background: #f0fdf4; padding: 2px 6px; border-radius: 4px; text-decoration: none; font-weight: 800;">ADMIN</a>` : ''}
+          <button type="button" class="btn-header-logout" id="headerLogoutBtn" title="Sign Out">✕</button>
+        </div>
+      `;
+
+      document.getElementById('headerLogoutBtn')?.addEventListener('click', async () => {
+        if (typeof signOutUser === 'function') {
+          await signOutUser();
+        } else {
+          localStorage.removeItem('mghub_user');
+          sessionStorage.removeItem('mghub_admin_auth');
+          sessionStorage.removeItem('mghub_admin_email');
+        }
+        renderHeaderAuth();
+      });
+    } else {
+      authBox.innerHTML = `
+        <a href="login.html" class="btn-header-auth" id="headerLoginBtn">
+          <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Sign In</span>
+        </a>
+      `;
+    }
+  }
+
+  renderHeaderAuth();
+
   let isManualScrolling = false;
   let scrollTimeout = null;
 
