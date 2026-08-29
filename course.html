@@ -502,7 +502,20 @@
         }
       } catch (err) {}
 
-      // 2. Try Static JSON (for Netlify / Static Hosting)
+      // 2. Try Static JSON (Root path /data/courses.json)
+      if (!c) {
+        try {
+          const res = await fetch('/data/courses.json');
+          if (res.ok) {
+            const list = await res.json();
+            if (Array.isArray(list)) {
+              c = list.find(item => (item.code || '').toUpperCase() === courseCode);
+            }
+          }
+        } catch (err) {}
+      }
+
+      // 3. Try Static JSON (Relative data/courses.json)
       if (!c) {
         try {
           const res = await fetch('data/courses.json');
@@ -513,6 +526,28 @@
             }
           }
         } catch (err) {}
+      }
+
+      // 4. Default Catalog Fallback (Guaranteed to load instantly)
+      if (!c) {
+        const defaultMap = {
+          "BSMA1001": { code: "BSMA1001", level: "foundation", title: "Mathematics for Data Science I" },
+          "BSMA1002": { code: "BSMA1002", level: "foundation", title: "Statistics for Data Science I" },
+          "BSCS1001": { code: "BSCS1001", level: "foundation", title: "Computational Thinking" },
+          "BSCS1002": { code: "BSCS1002", level: "foundation", title: "Programming in Python" },
+          "BSHS1001": { code: "BSHS1001", level: "foundation", title: "English I" },
+          "BSHS1002": { code: "BSHS1002", level: "foundation", title: "English II" },
+          "BSMA1003": { code: "BSMA1003", level: "foundation", title: "Mathematics for Data Science II" },
+          "BSMA1004": { code: "BSMA1004", level: "foundation", title: "Statistics for Data Science II" },
+          "BSMS2001": { code: "BSMS2001", level: "diploma", title: "Principles of Management" },
+          "BSMS2002": { code: "BSMS2002", level: "diploma", title: "Marketing Management" },
+          "BSMS2003": { code: "BSMS2003", level: "diploma", title: "Financial Accounting" },
+          "BSMS2004": { code: "BSMS2004", level: "diploma", title: "Managerial Economics" },
+          "MGT101": { code: "MGT101", level: "foundation", title: "Principles of Management" }
+        };
+        if (defaultMap[courseCode]) {
+          c = defaultMap[courseCode];
+        }
       }
 
       if (c) {
