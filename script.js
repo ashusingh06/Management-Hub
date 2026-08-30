@@ -216,82 +216,72 @@ document.addEventListener('DOMContentLoaded', () => {
   // Formula: T = max(0.6*F + 0.3*max(Qz1, Qz2), 0.45*F + 0.25*Qz1 + 0.3*Qz2)
   const quiz1Input = document.getElementById('quiz1Score');
   const quiz2Input = document.getElementById('quiz2Score');
-  const targetGradeSelect = document.getElementById('targetGrade');
   const expectedFinalInput = document.getElementById('expectedFinalScore');
   const gradePredictorOutput = document.getElementById('gradePredictorOutput');
-  const forecastResultLabel = document.getElementById('forecastResultLabel');
   const forecastFormulaHint = document.getElementById('forecastFormulaHint');
+  const formulaScore1 = document.getElementById('formulaScore1');
+  const formulaScore2 = document.getElementById('formulaScore2');
+  const formulaCard1 = document.getElementById('formulaCard1');
+  const formulaCard2 = document.getElementById('formulaCard2');
+  const formulaTag1 = document.getElementById('formulaTag1');
+  const formulaTag2 = document.getElementById('formulaTag2');
 
   function calculateEndTermForecast() {
-    if (!quiz1Input || !quiz2Input || !targetGradeSelect || !gradePredictorOutput) return;
+    if (!quiz1Input || !quiz2Input || !expectedFinalInput || !gradePredictorOutput) return;
 
     const q1 = Math.max(0, Math.min(100, parseFloat(quiz1Input.value) || 0));
     const q2 = Math.max(0, Math.min(100, parseFloat(quiz2Input.value) || 0));
-    const target = parseFloat(targetGradeSelect.value) || 80;
-    const expectedF = expectedFinalInput && expectedFinalInput.value.trim() !== '' 
-      ? Math.max(0, Math.min(100, parseFloat(expectedFinalInput.value))) 
-      : null;
+    const f = Math.max(0, Math.min(100, parseFloat(expectedFinalInput.value) || 0));
 
     const maxQuiz = Math.max(q1, q2);
 
-    // If student provided an Expected Final Exam score (Simulator Mode)
-    if (expectedF !== null && !isNaN(expectedF)) {
-      const t1 = (0.6 * expectedF) + (0.3 * maxQuiz);
-      const t2 = (0.45 * expectedF) + (0.25 * q1) + (0.3 * q2);
-      const totalScore = Math.max(t1, t2);
-      const usedOption = t2 > t1 ? 'Both Quizzes (45% F + 25% Q1 + 30% Q2)' : 'Best Quiz (60% F + 30% Best Quiz)';
+    // Formula 1: 0.6F + 0.3max(Q1, Q2)
+    const t1 = (0.6 * f) + (0.3 * maxQuiz);
+    // Formula 2: 0.45F + 0.25Q1 + 0.3Q2
+    const t2 = (0.45 * f) + (0.25 * q1) + (0.3 * q2);
 
-      let letterGrade = 'U';
-      if (totalScore >= 90) letterGrade = 'S';
-      else if (totalScore >= 80) letterGrade = 'A';
-      else if (totalScore >= 70) letterGrade = 'B';
-      else if (totalScore >= 60) letterGrade = 'C';
-      else if (totalScore >= 50) letterGrade = 'D';
-      else if (totalScore >= 40) letterGrade = 'E (Pass)';
+    const totalScore = Math.max(t1, t2);
+    const diff = Math.abs(t1 - t2);
 
-      if (forecastResultLabel) forecastResultLabel.textContent = 'Projected Total (T / 100):';
-      gradePredictorOutput.textContent = `${totalScore.toFixed(1)} / 100 (${letterGrade})`;
-      gradePredictorOutput.style.color = totalScore >= target ? '#166534' : '#09090b';
+    if (formulaScore1) formulaScore1.textContent = t1.toFixed(2);
+    if (formulaScore2) formulaScore2.textContent = t2.toFixed(2);
 
-      if (forecastFormulaHint) {
-        forecastFormulaHint.textContent = `Opt 1: ${t1.toFixed(1)} | Opt 2: ${t2.toFixed(1)} ➔ Best: ${usedOption}`;
+    if (formulaCard1 && formulaCard2) {
+      if (t1 >= t2) {
+        formulaCard1.classList.add('winner');
+        formulaCard2.classList.remove('winner');
+        if (formulaTag1) formulaTag1.textContent = '★ Highest';
+        if (formulaTag2) formulaTag2.textContent = '';
+      } else {
+        formulaCard2.classList.add('winner');
+        formulaCard1.classList.remove('winner');
+        if (formulaTag2) formulaTag2.textContent = '★ Highest';
+        if (formulaTag1) formulaTag1.textContent = '';
       }
-      return;
     }
 
-    // Default Mode: Target Grade Requirement Calculator
-    if (forecastResultLabel) forecastResultLabel.textContent = 'Required End-Term (F):';
+    let letterGrade = 'U (Fail)';
+    if (totalScore >= 90) letterGrade = 'S Grade';
+    else if (totalScore >= 80) letterGrade = 'A Grade';
+    else if (totalScore >= 70) letterGrade = 'B Grade';
+    else if (totalScore >= 60) letterGrade = 'C Grade';
+    else if (totalScore >= 50) letterGrade = 'D Grade';
+    else if (totalScore >= 40) letterGrade = 'E Grade (Pass)';
 
-    // Calculate minimum required F from both formula options:
-    // Option 1: 0.6F + 0.3*max(Q1,Q2) >= target => F1 >= (target - 0.3*max(Q1,Q2)) / 0.6
-    // Option 2: 0.45F + 0.25*Q1 + 0.3*Q2 >= target => F2 >= (target - (0.25*Q1 + 0.3*Q2)) / 0.45
-    const f1 = (target - (0.3 * maxQuiz)) / 0.6;
-    const f2 = (target - (0.25 * q1 + 0.3 * q2)) / 0.45;
-    const minRequiredF = Math.min(f1, f2);
-    const bestOptionName = f2 < f1 ? 'Both Quizzes (45% F + 25% Q1 + 30% Q2)' : 'Best Quiz (60% F + 30% Best Quiz)';
+    gradePredictorOutput.textContent = `${totalScore.toFixed(1)} / 100 (${letterGrade})`;
 
-    if (minRequiredF <= 0) {
-      gradePredictorOutput.textContent = 'Achieved (0 / 100)';
-      gradePredictorOutput.style.color = '#166534';
-      if (forecastFormulaHint) {
-        forecastFormulaHint.textContent = 'Target already secured with quiz scores!';
-      }
-    } else if (minRequiredF > 100) {
-      gradePredictorOutput.textContent = `Need ${minRequiredF.toFixed(1)} (>100 max)`;
-      gradePredictorOutput.style.color = '#ef4444';
-      if (forecastFormulaHint) {
-        forecastFormulaHint.textContent = 'Target grade not mathematically possible with current quiz scores.';
-      }
-    } else {
-      gradePredictorOutput.textContent = `${minRequiredF.toFixed(1)} / 100`;
-      gradePredictorOutput.style.color = '#09090b';
-      if (forecastFormulaHint) {
-        forecastFormulaHint.textContent = `Strategy: ${bestOptionName}`;
+    if (forecastFormulaHint) {
+      if (t2 > t1) {
+        forecastFormulaHint.textContent = `Applied Formula 2: Boosted by +${diff.toFixed(2)} marks (Both Quizzes Weightage)`;
+      } else if (t1 > t2) {
+        forecastFormulaHint.textContent = `Applied Formula 1: Boosted by +${diff.toFixed(2)} marks (Best Quiz Weightage)`;
+      } else {
+        forecastFormulaHint.textContent = `Both formulas yield identical score (${t1.toFixed(2)})`;
       }
     }
   }
 
-  [quiz1Input, quiz2Input, targetGradeSelect, expectedFinalInput].forEach(elem => {
+  [quiz1Input, quiz2Input, expectedFinalInput].forEach(elem => {
     if (elem) {
       elem.addEventListener('input', calculateEndTermForecast);
       elem.addEventListener('change', calculateEndTermForecast);

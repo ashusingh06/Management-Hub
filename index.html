@@ -184,42 +184,50 @@
             </div>
           </div>
           <h3>End-Term Target Forecaster</h3>
-          <p>Official Score Formula: <code>T = max(0.6F + 0.3max(Q1,Q2), 0.45F + 0.25Q1 + 0.3Q2)</code></p>
+          <p>Official Formula: <code>T = max(0.6F + 0.3max(Q1,Q2), 0.45F + 0.25Q1 + 0.3Q2)</code></p>
           
           <div class="mini-tool">
-            <div class="input-row">
+            <div class="input-row" style="grid-template-columns: 1fr 1fr 1fr;">
               <div class="input-group">
-                <label>Quiz I (Qz1 /100)</label>
-                <input type="number" id="quiz1Score" step="1" min="0" max="100" placeholder="70" value="70">
+                <label>Quiz I (Qz1)</label>
+                <input type="number" id="quiz1Score" step="0.5" min="0" max="100" placeholder="70" value="70">
               </div>
               <div class="input-group">
-                <label>Quiz II (Qz2 /100)</label>
-                <input type="number" id="quiz2Score" step="1" min="0" max="100" placeholder="80" value="80">
-              </div>
-            </div>
-            <div class="input-row">
-              <div class="input-group">
-                <label>Target Grade</label>
-                <select id="targetGrade">
-                  <option value="90">S Grade (90+)</option>
-                  <option value="80" selected>A Grade (80+)</option>
-                  <option value="70">B Grade (70+)</option>
-                  <option value="60">C Grade (60+)</option>
-                  <option value="50">D Grade (50+)</option>
-                  <option value="40">E / Pass (40+)</option>
-                </select>
+                <label>Quiz II (Qz2)</label>
+                <input type="number" id="quiz2Score" step="0.5" min="0" max="100" placeholder="80" value="80">
               </div>
               <div class="input-group">
-                <label>Expected Final (F /100)</label>
-                <input type="number" id="expectedFinalScore" step="1" min="0" max="100" placeholder="Optional simulator" value="">
+                <label>End-Term (F)</label>
+                <input type="number" id="expectedFinalScore" step="0.5" min="0" max="100" placeholder="75" value="75">
               </div>
             </div>
+
+            <!-- Dual Formula Breakdown Comparison -->
+            <div class="formula-breakdown-grid">
+              <div class="formula-card" id="formulaCard1">
+                <div class="formula-card-title">
+                  <span>Formula 1</span>
+                  <span id="formulaTag1"></span>
+                </div>
+                <div class="formula-card-score" id="formulaScore1">69.0</div>
+                <div class="formula-card-eq">0.6F + 0.3·max(Q1,Q2)</div>
+              </div>
+              <div class="formula-card" id="formulaCard2">
+                <div class="formula-card-title">
+                  <span>Formula 2</span>
+                  <span id="formulaTag2"></span>
+                </div>
+                <div class="formula-card-score" id="formulaScore2">75.3</div>
+                <div class="formula-card-eq">0.45F + 0.25Q1 + 0.3Q2</div>
+              </div>
+            </div>
+
             <div class="tool-result">
-              <span id="forecastResultLabel">Required End-Term (F):</span>
-              <strong id="gradePredictorOutput">85.6 / 100</strong>
+              <span>Expected Final Score (T):</span>
+              <strong id="gradePredictorOutput">75.3 / 100 (B)</strong>
             </div>
             <div class="tool-subtext" id="forecastFormulaHint">
-              Best Strategy: 45% Final + 25% Q1 + 30% Q2
+              Applied: Formula 2 gives higher marks (+6.3)
             </div>
           </div>
         </div>
