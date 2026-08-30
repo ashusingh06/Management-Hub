@@ -2103,3 +2103,150 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
     font-size: 13.5px;
   }
 }
+
+/* ==========================================================================
+   Qualifier Criteria Cards & Mobile Responsive Rules
+   ========================================================================== */
+.criteria-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.criteria-card {
+  background: #ffffff;
+  border: 1.5px solid #e4e4e7;
+  border-radius: 16px;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.criteria-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+}
+
+.criteria-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.criteria-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.criteria-icon-box.phase-1 {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.criteria-icon-box.phase-2 {
+  background: #fdf2f8;
+  color: #db2777;
+}
+
+.criteria-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.criteria-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #09090b;
+  letter-spacing: -0.01em;
+}
+
+.criteria-intro {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #52525b;
+  line-height: 1.55;
+}
+
+.criteria-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.criteria-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fafafc;
+  border: 1px solid #e4e4e7;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  gap: 10px;
+}
+
+.criteria-item.highlight {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.criteria-item.success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.criteria-category-tag {
+  font-weight: 700;
+  color: #18181b;
+}
+
+.criteria-cutoff-value {
+  color: #3f3f46;
+  text-align: right;
+}
+
+.criteria-footnote {
+  margin: 14px 0 0 0;
+  font-size: 12.5px;
+  color: #166534;
+  background: #f0fdf4;
+  border: 1px solid #dcfce7;
+  padding: 8px 12px;
+  border-radius: 8px;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .criteria-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .criteria-card {
+    padding: 18px 16px;
+  }
+
+  .criteria-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 10px 12px;
+  }
+
+  .criteria-cutoff-value {
+    text-align: left;
+    font-size: 13px;
+  }
+}

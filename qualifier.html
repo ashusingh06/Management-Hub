@@ -7,9 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260830_03">
+  <link rel="stylesheet" href="style.css?v=20260830_04">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
 </head>
 <body>
@@ -236,43 +237,62 @@
         </div>
       </div>
 
-      <div class="resources-grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="criteria-grid">
         <!-- Phase 1: Hall Ticket Eligibility -->
-        <div class="resource-card">
-          <div class="resource-card-header">
-            <div class="resource-icon-wrapper">
-              <svg class="resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div class="criteria-card">
+          <div class="criteria-card-top">
+            <div class="criteria-icon-box phase-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="criteria-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
-            <span class="level-badge badge-foundation">Phase 1 (Weeks 1 to 4)</span>
+            <span class="level-badge badge-foundation">Phase 1 • Weeks 1 to 4</span>
           </div>
-          <h3>Weekly Assignment Cutoff (Hall Ticket)</h3>
-          <p style="font-size: 14px; color: #52525b; line-height: 1.6; margin-top: 10px;">
-            To be eligible to appear for the Qualifier Exam in-person, you must submit the graded weekly assignments for weeks 1–4:
+          <h3 class="criteria-title">Weekly Assignment Cutoff (Hall Ticket)</h3>
+          <p class="criteria-intro">
+            To be eligible to appear for the in-person Qualifier Exam, you must submit the graded weekly assignments for weeks 1–4:
           </p>
-          <ul style="font-size: 13.5px; color: #27272a; line-height: 1.8; margin-top: 10px; padding-left: 20px;">
-            <li><strong>General Category:</strong> Minimum <strong>40%</strong> average across best 3 out of 4 weekly assignments in each course.</li>
-            <li><strong>OBC-NCL / EWS:</strong> Minimum <strong>35%</strong> average.</li>
-            <li><strong>SC / ST / PwD:</strong> Minimum <strong>30%</strong> average.</li>
-          </ul>
+          
+          <div class="criteria-items-list">
+            <div class="criteria-item">
+              <span class="criteria-category-tag">General Category</span>
+              <span class="criteria-cutoff-value">Min <strong>40%</strong> avg (best 3 of 4)</span>
+            </div>
+            <div class="criteria-item">
+              <span class="criteria-category-tag">OBC-NCL / EWS</span>
+              <span class="criteria-cutoff-value">Min <strong>35%</strong> avg (best 3 of 4)</span>
+            </div>
+            <div class="criteria-item">
+              <span class="criteria-category-tag">SC / ST / PwD</span>
+              <span class="criteria-cutoff-value">Min <strong>30%</strong> avg (best 3 of 4)</span>
+            </div>
+          </div>
         </div>
 
         <!-- Phase 2: In-Person Qualifier Exam Passing -->
-        <div class="resource-card">
-          <div class="resource-card-header">
-            <div class="resource-icon-wrapper">
-              <svg class="resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15l-2 5l9-11h-6l2-5l-9 11h6z"/></svg>
+        <div class="criteria-card">
+          <div class="criteria-card-top">
+            <div class="criteria-icon-box phase-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="criteria-icon"><path d="M12 15l-2 5l9-11h-6l2-5l-9 11h6z"/></svg>
             </div>
-            <span class="level-badge badge-diploma">Phase 2 (In-Person Exam)</span>
+            <span class="level-badge badge-diploma">Phase 2 • In-Person Exam</span>
           </div>
-          <h3>Qualifier Exam Passing Cutoff</h3>
-          <p style="font-size: 14px; color: #52525b; line-height: 1.6; margin-top: 10px;">
+          <h3 class="criteria-title">Qualifier Exam Passing Cutoff</h3>
+          <p class="criteria-intro">
             In the 4-hour in-person center examination covering all 4 courses, you must satisfy:
           </p>
-          <ul style="font-size: 13.5px; color: #27272a; line-height: 1.8; margin-top: 10px; padding-left: 20px;">
-            <li><strong>Subject Cutoff:</strong> Minimum <strong>40 marks (40%)</strong> in each of the 4 individual subjects (Math 1, CT, English 1, Stats 1).</li>
-            <li><strong>Result:</strong> If you score <strong>≥ 40 in all 4 subjects</strong>, you are officially <strong>Qualified & Admitted</strong> to Foundation Level!</li>
-            <li>Once passed, you can register for up to 4 new Foundation Level courses in your first term.</li>
-          </ul>
+          
+          <div class="criteria-items-list">
+            <div class="criteria-item highlight">
+              <span class="criteria-category-tag">Subject Cutoff</span>
+              <span class="criteria-cutoff-value">Min <strong>40 marks (40%)</strong> in each subject</span>
+            </div>
+            <div class="criteria-item success">
+              <span class="criteria-category-tag">Final Result</span>
+              <span class="criteria-cutoff-value">Score <strong>≥ 40 in all 4 subjects</strong> = <strong>PASS</strong></span>
+            </div>
+          </div>
+          <p class="criteria-footnote">
+            🎉 Once qualified, you are admitted to IIT Madras BS Foundation Level and can register for up to 4 courses in Term 1.
+          </p>
         </div>
       </div>
     </section>
