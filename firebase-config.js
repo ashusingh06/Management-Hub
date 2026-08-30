@@ -1,4 +1,4 @@
-// Firebase Authentication Configuration for [Management Hub]
+// Firebase Authentication & Cloud Firestore Configuration for [Management Hub]
 const firebaseConfig = {
   apiKey: "AIzaSyBqjrdW8B7UR_QeQ-ADibYBNGzo4yIp0Mw",
   authDomain: "management-hub-1c14c.firebaseapp.com",
@@ -11,6 +11,7 @@ const firebaseConfig = {
 
 let authInstance = null;
 let googleAuthProv = null;
+let firestoreDb = null;
 
 function getFirebaseAuth() {
   if (typeof firebase === 'undefined') return null;
@@ -21,6 +22,41 @@ function getFirebaseAuth() {
     googleAuthProv.setCustomParameters({ prompt: 'select_account' });
   }
   return { auth: authInstance, provider: googleAuthProv };
+}
+
+function getFirebaseDb() {
+  if (typeof firebase === 'undefined') return null;
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  if (!firestoreDb && firebase.firestore) {
+    firestoreDb = firebase.firestore();
+  }
+  return firestoreDb;
+}
+
+async function fetchCoursesFromFirestore() {
+  const db = getFirebaseDb();
+  if (!db) return null;
+  try {
+    const doc = await db.collection('settings').doc('courses').get();
+    if (doc.exists && Array.isArray(doc.data()?.list) && doc.data().list.length > 0) {
+      return doc.data().list;
+    }
+  } catch (e) {}
+  return null;
+}
+
+async function saveCoursesToFirestore(coursesList) {
+  const db = getFirebaseDb();
+  if (!db) return false;
+  try {
+    await db.collection('settings').doc('courses').set({
+      list: coursesList,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 async function signInWithGoogle() {

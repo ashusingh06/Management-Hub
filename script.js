@@ -309,6 +309,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
   calculateEndTermForecast();
 
+  // 3. Official End-Term Passing Predictor
+  const passQuiz1Input = document.getElementById('passQuiz1');
+  const passQuiz2Input = document.getElementById('passQuiz2');
+  const passTargetScoreSelect = document.getElementById('passTargetScore');
+  const passRequiredOutput = document.getElementById('passRequiredOutput');
+  const passStrategyHint = document.getElementById('passStrategyHint');
+
+  function calculateEndTermPassingRequirement() {
+    if (!passQuiz1Input || !passQuiz2Input || !passTargetScoreSelect || !passRequiredOutput) return;
+
+    const q1Str = passQuiz1Input.value.trim();
+    const q2Str = passQuiz2Input.value.trim();
+
+    if (!q1Str && !q2Str) {
+      passRequiredOutput.textContent = '--';
+      passRequiredOutput.style.color = '#09090b';
+      if (passStrategyHint) {
+        passStrategyHint.textContent = 'Enter Quiz 1 & Quiz 2 scores to calculate passing requirement';
+      }
+      return;
+    }
+
+    const q1 = Math.max(0, Math.min(100, parseFloat(q1Str) || 0));
+    const q2 = Math.max(0, Math.min(100, parseFloat(q2Str) || 0));
+    const target = parseFloat(passTargetScoreSelect.value) || 40;
+    const maxQuiz = Math.max(q1, q2);
+
+    // Option 1: 0.6F + 0.3max(Q1,Q2) >= target => F1 >= (target - 0.3*max(Q1,Q2)) / 0.6
+    // Option 2: 0.45F + 0.25Q1 + 0.3Q2 >= target => F2 >= (target - (0.25Q1 + 0.3Q2)) / 0.45
+    const f1 = (target - (0.3 * maxQuiz)) / 0.6;
+    const f2 = (target - (0.25 * q1 + 0.3 * q2)) / 0.45;
+    const minRequiredF = Math.min(f1, f2);
+    const bestOptionName = f2 < f1 ? 'Both Quizzes Rule (45% F + 25% Q1 + 30% Q2)' : 'Best Quiz Rule (60% F + 30% Best Quiz)';
+
+    if (minRequiredF <= 0) {
+      passRequiredOutput.textContent = '0.0 / 100 (Pass Guaranteed! 🎉)';
+      passRequiredOutput.style.color = '#166534';
+      if (passStrategyHint) {
+        passStrategyHint.textContent = `Quiz marks alone guarantee securing T ≥ ${target}!`;
+      }
+    } else if (minRequiredF > 100) {
+      passRequiredOutput.textContent = `Need ${minRequiredF.toFixed(1)} (>100 max)`;
+      passRequiredOutput.style.color = '#ef4444';
+      if (passStrategyHint) {
+        passStrategyHint.textContent = `Target score of ${target} is not mathematically possible with current quiz scores.`;
+      }
+    } else {
+      passRequiredOutput.textContent = `${minRequiredF.toFixed(1)} / 100`;
+      passRequiredOutput.style.color = '#09090b';
+      if (passStrategyHint) {
+        passStrategyHint.textContent = `Min required via ${bestOptionName}`;
+      }
+    }
+  }
+
+  [passQuiz1Input, passQuiz2Input, passTargetScoreSelect].forEach(elem => {
+    if (elem) {
+      elem.addEventListener('input', calculateEndTermPassingRequirement);
+      elem.addEventListener('change', calculateEndTermPassingRequirement);
+    }
+  });
+
+  calculateEndTermPassingRequirement();
+
   /* ==========================================================================
      Bookmarks Storage & State Manager
      ========================================================================== */
@@ -404,7 +468,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     courseModal.classList.add('active');
 
-    // 2. Fetch fresh course details (with notes & pyqs) from API
+    // 2. Fetch fresh course details (with notes & pyqs) from Firestore, API, or LocalStorage
+    if (typeof fetchCoursesFromFirestore === 'function') {
+      try {
+        const cloudCourses = await fetchCoursesFromFirestore();
+        if (Array.isArray(cloudCourses) && cloudCourses.length > 0) {
+          const match = cloudCourses.find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
+          if (match) {
+            targetCourse = match;
+            populateModalData(targetCourse);
+            return;
+          }
+        }
+      } catch (e) {}
+    }
+
     try {
       const res = await fetch(`/api/course/${activeModalCourseCode}`);
       if (res.ok) {
@@ -412,7 +490,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.course) {
           targetCourse = data.course;
           populateModalData(targetCourse);
+          return;
         }
+      }
+    } catch (e) {}
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('mghub_courses') || '[]');
+      const localMatch = saved.find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
+      if (localMatch) {
+        targetCourse = localMatch;
+        populateModalData(targetCourse);
       }
     } catch (e) {}
   }
@@ -556,7 +644,23 @@ document.addEventListener('DOMContentLoaded', () => {
   let liveCourses = [];
 
   async function loadLiveCoursesFromDatabase() {
-    // 1. Try Backend API
+    // 1. Try Firebase Cloud Firestore (Global Realtime Database)
+    if (typeof fetchCoursesFromFirestore === 'function') {
+      try {
+        const cloudCourses = await fetchCoursesFromFirestore();
+        if (Array.isArray(cloudCourses) && cloudCourses.length > 0) {
+          liveCourses = cloudCourses;
+          try {
+            localStorage.setItem('mghub_courses', JSON.stringify(liveCourses));
+          } catch(e){}
+          renderDynamicCourseCards(liveCourses);
+          updateFilterPillCounts(liveCourses);
+          return;
+        }
+      } catch (e) {}
+    }
+
+    // 2. Try Backend API
     try {
       const res = await fetch('/api/courses?level=all');
       if (res.ok) {
@@ -570,7 +674,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (e) {}
 
-    // 2. Fallback for Netlify / Static Hosting (Fetch data/courses.json)
+    // 3. Try LocalStorage (Netlify / Offline Admin Updates)
+    try {
+      const saved = JSON.parse(localStorage.getItem('mghub_courses') || 'null');
+      if (Array.isArray(saved) && saved.length > 0) {
+        liveCourses = saved;
+        renderDynamicCourseCards(liveCourses);
+        updateFilterPillCounts(liveCourses);
+        return;
+      }
+    } catch (e) {}
+
+    // 4. Fallback for Netlify / Static Hosting (Fetch data/courses.json)
     try {
       const res = await fetch('data/courses.json');
       if (res.ok) {

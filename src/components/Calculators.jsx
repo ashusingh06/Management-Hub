@@ -54,6 +54,38 @@ export default function Calculators() {
     ? `Applied Formula 1: Boosted by +${diff.toFixed(2)} marks (Best Quiz Weightage)`
     : `Both formulas yield identical score (${t1.toFixed(2)})`;
 
+  // Passing Marks Predictor State
+  const [passQ1, setPassQ1] = useState('');
+  const [passQ2, setPassQ2] = useState('');
+  const [passTarget, setPassTarget] = useState('40');
+
+  const isPassEmpty = !passQ1.trim() && !passQ2.trim();
+  const pq1 = Math.max(0, Math.min(100, parseFloat(passQ1) || 0));
+  const pq2 = Math.max(0, Math.min(100, parseFloat(passQ2) || 0));
+  const pTarget = parseFloat(passTarget) || 40;
+  const pMaxQuiz = Math.max(pq1, pq2);
+
+  const pf1 = (pTarget - (0.3 * pMaxQuiz)) / 0.6;
+  const pf2 = (pTarget - (0.25 * pq1 + 0.3 * pq2)) / 0.45;
+  const minPassF = Math.min(pf1, pf2);
+  const bestPassOption = pf2 < pf1 ? 'Both Quizzes Rule (45% F + 25% Q1 + 30% Q2)' : 'Best Quiz Rule (60% F + 30% Best Quiz)';
+
+  let passResultText = '--';
+  let passSubText = 'Enter Quiz 1 & Quiz 2 scores to calculate passing requirement';
+
+  if (!isPassEmpty) {
+    if (minPassF <= 0) {
+      passResultText = '0.0 / 100 (Pass Guaranteed! 🎉)';
+      passSubText = `Quiz marks alone guarantee securing T ≥ ${pTarget}!`;
+    } else if (minPassF > 100) {
+      passResultText = `Need ${minPassF.toFixed(1)} (>100 max)`;
+      passSubText = `Target score of ${pTarget} is not mathematically possible with current quiz scores.`;
+    } else {
+      passResultText = `${minPassF.toFixed(1)} / 100`;
+      passSubText = `Min required via ${bestPassOption}`;
+    }
+  }
+
   return (
     <section className="page-section alt-bg" id="calculators">
       <div className="content-wrapper">
@@ -82,6 +114,7 @@ export default function Calculators() {
                   step="0.01" 
                   min="0" 
                   max="10" 
+                  placeholder="e.g. 8.50"
                   value={currentCgpa} 
                   onChange={(e) => setCurrentCgpa(e.target.value)} 
                 />
@@ -93,6 +126,7 @@ export default function Calculators() {
                   type="number" 
                   min="1" 
                   max="142" 
+                  placeholder="e.g. 32"
                   value={currentCredits} 
                   onChange={(e) => setCurrentCredits(e.target.value)} 
                 />
@@ -107,6 +141,7 @@ export default function Calculators() {
                   step="0.01" 
                   min="0" 
                   max="10" 
+                  placeholder="e.g. 9.00"
                   value={newGpa} 
                   onChange={(e) => setNewGpa(e.target.value)} 
                 />
@@ -118,6 +153,7 @@ export default function Calculators() {
                   type="number" 
                   min="1" 
                   max="32" 
+                  placeholder="e.g. 16"
                   value={newCredits} 
                   onChange={(e) => setNewCredits(e.target.value)} 
                 />
@@ -148,6 +184,7 @@ export default function Calculators() {
                   step="0.5" 
                   min="0" 
                   max="100" 
+                  placeholder="0 - 100"
                   value={quiz1} 
                   onChange={(e) => setQuiz1(e.target.value)} 
                 />
@@ -160,6 +197,7 @@ export default function Calculators() {
                   step="0.5" 
                   min="0" 
                   max="100" 
+                  placeholder="0 - 100"
                   value={quiz2} 
                   onChange={(e) => setQuiz2(e.target.value)} 
                 />
@@ -172,6 +210,7 @@ export default function Calculators() {
                   step="0.5" 
                   min="0" 
                   max="100" 
+                  placeholder="0 - 100"
                   value={endTermF} 
                   onChange={(e) => setEndTermF(e.target.value)} 
                 />
@@ -217,6 +256,71 @@ export default function Calculators() {
                 {isForecasterEmpty ? '--' : `${totalScore.toFixed(1)} / 100 (${letterGrade})`}
               </div>
               <div style={{ fontSize: '11.5px', color: '#71717a', marginTop: '6px' }}>{winningMessage}</div>
+            </div>
+          </div>
+
+          {/* 3. End-Term Passing Marks Predictor */}
+          <div className="calculator-card">
+            <div className="calc-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                <Sparkles size={20} />
+                <h3>End-Term Passing Predictor</h3>
+              </div>
+              <p>Calculate minimum marks needed in End-Term (F /100) to pass the course (T &ge; 40).</p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div className="form-group-calc">
+                <label>Quiz I (Qz1 /100)</label>
+                <input 
+                  type="number" 
+                  step="0.5" 
+                  min="0" 
+                  max="100" 
+                  placeholder="0 - 100"
+                  value={passQ1} 
+                  onChange={(e) => setPassQ1(e.target.value)} 
+                />
+              </div>
+
+              <div className="form-group-calc">
+                <label>Quiz II (Qz2 /100)</label>
+                <input 
+                  type="number" 
+                  step="0.5" 
+                  min="0" 
+                  max="100" 
+                  placeholder="0 - 100"
+                  value={passQ2} 
+                  onChange={(e) => setPassQ2(e.target.value)} 
+                />
+              </div>
+            </div>
+
+            <div style={{ marginTop: '12px' }}>
+              <div className="form-group-calc">
+                <label>Target Passing Level</label>
+                <select 
+                  value={passTarget} 
+                  onChange={(e) => setPassTarget(e.target.value)}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #e4e4e7' }}
+                >
+                  <option value="40">Minimum Passing Score (T &ge; 40 / E Grade)</option>
+                  <option value="50">D Grade (T &ge; 50)</option>
+                  <option value="60">C Grade (T &ge; 60)</option>
+                  <option value="70">B Grade (T &ge; 70)</option>
+                  <option value="80">A Grade (T &ge; 80)</option>
+                  <option value="90">S Grade (T &ge; 90)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="calc-result-box" style={{ marginTop: '16px' }}>
+              <div className="calc-result-label">Required in End-Term (F):</div>
+              <div className="calc-result-val" style={{ color: minPassF <= 0 ? '#166534' : minPassF > 100 ? '#ef4444' : '#09090b' }}>
+                {passResultText}
+              </div>
+              <div style={{ fontSize: '11.5px', color: '#71717a', marginTop: '6px' }}>{passSubText}</div>
             </div>
           </div>
         </div>
