@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260830_07">
+  <link rel="stylesheet" href="style.css?v=20260830_08">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -154,66 +154,20 @@
 
         <!-- Academic Tier Category Selector Filter Tabs -->
         <div class="filter-pills-row" id="tierFilterPills">
-          <button class="filter-pill" data-level="foundation">Foundation <span class="count-badge" id="count-foundation">8</span></button>
+          <button class="filter-pill active" data-level="foundation">Foundation <span class="count-badge" id="count-foundation">8</span></button>
           <button class="filter-pill" data-level="diploma">Diploma <span class="count-badge" id="count-diploma">16</span></button>
           <button class="filter-pill" data-level="bs">BS Degree <span class="count-badge" id="count-bs">6</span></button>
           <button class="filter-pill" data-level="bookmarks">★ Saved <span class="count-badge" id="count-bookmarks">0</span></button>
         </div>
 
-        <div class="search-status-bar" id="searchStatusBar" style="display: flex; align-items: center; justify-content: space-between;">
-          <span id="resultsCountText">Select an academic tier below to display notes</span>
-          <button id="resetTierBtn" style="display: none; background: #f4f4f5; border: 1px solid #e4e4e7; font-family: inherit; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; cursor: pointer; color: #09090b;">← Back to Tiers</button>
+        <div class="search-status-bar" id="searchStatusBar" style="display: flex; align-items: center; justify-content: space-between; margin-top: 14px; margin-bottom: 8px;">
+          <span id="resultsCountText">Showing 8 Foundation courses</span>
         </div>
       </div>
 
-      <!-- 3 Category Cards Selector (Default Landing in Notes) -->
-      <div class="program-pillars-grid" id="tierCardsSelector" style="margin-bottom: 24px;">
-        <div class="pillar-card tier-select-card" data-select-tier="foundation" style="cursor: pointer; position: relative;">
-          <div class="pillar-icon-box">
-            <span style="font-weight: 800; font-size: 15px; color: #09090b;">01</span>
-          </div>
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <h3>Foundation Level</h3>
-            <span class="level-badge badge-foundation">8 Courses</span>
-          </div>
-          <div style="margin-top: 18px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #09090b;">
-            <span>Open Foundation Notes & PYQs</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </div>
-        </div>
-
-        <div class="pillar-card tier-select-card" data-select-tier="diploma" style="cursor: pointer; position: relative;">
-          <div class="pillar-icon-box">
-            <span style="font-weight: 800; font-size: 15px; color: #09090b;">02</span>
-          </div>
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <h3>Diploma Level</h3>
-            <span class="level-badge badge-diploma">16 Courses</span>
-          </div>
-          <div style="margin-top: 18px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #09090b;">
-            <span>Open Diploma Notes & PYQs</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </div>
-        </div>
-
-        <div class="pillar-card tier-select-card" data-select-tier="bs" style="cursor: pointer; position: relative;">
-          <div class="pillar-icon-box">
-            <span style="font-weight: 800; font-size: 15px; color: #09090b;">03</span>
-          </div>
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <h3>BS Degree Level</h3>
-            <span class="level-badge badge-bs">6 Courses</span>
-          </div>
-          <div style="margin-top: 18px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #09090b;">
-            <span>Open BS Notes & PYQs</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Course Notes Cards Grid (Only visible when a tier is selected or user searches) -->
-      <div class="notes-cards-grid" id="notesGrid" style="display: none;">
-        <!-- Dynamically rendered based on chosen tier -->
+      <!-- Course Notes Cards Grid (Directly displays selected tier courses) -->
+      <div class="notes-cards-grid" id="notesGrid">
+        <!-- Dynamically rendered courses -->
       </div>
     </section>
 
@@ -630,6 +584,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=20260829_6"></script>
+  <script src="script.js?v=20260830_08"></script>
 </body>
 </html>

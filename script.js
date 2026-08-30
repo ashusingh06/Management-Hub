@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tierCardsSelector = document.getElementById('tierCardsSelector');
   const quickTagButtons = document.querySelectorAll('.tag-btn');
 
-  let activeLevelFilter = 'select';
+  let activeLevelFilter = 'foundation';
   let liveCourses = [];
 
   async function loadLiveCoursesFromDatabase() {
@@ -833,24 +833,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const pLevel = p.getAttribute('data-level');
       p.classList.toggle('active', pLevel === tierKey);
     });
+    if (searchInput) searchInput.value = '';
     filterCourses();
-  }
-
-  // Bind 4 Category Cards in Notes Hub
-  document.querySelectorAll('.tier-select-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const tier = card.getAttribute('data-select-tier');
-      if (tier) {
-        setTier(tier);
-      }
-    });
-  });
-
-  if (resetTierBtn) {
-    resetTierBtn.addEventListener('click', () => {
-      if (searchInput) searchInput.value = '';
-      setTier('select');
-    });
   }
 
   function filterCourses() {
@@ -859,26 +843,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const query = (searchInput?.value || '').trim().toLowerCase();
     const isSearching = query.length > 0;
-    const isTierChosen = activeLevelFilter !== 'select' && activeLevelFilter !== 'all';
     const isBookmarksFilter = activeLevelFilter === 'bookmarks';
 
     if (clearSearchBtn) {
       clearSearchBtn.style.display = isSearching ? 'block' : 'none';
     }
 
-    // If on default "Select Tier" mode and not searching, show 4 category cards
-    if (activeLevelFilter === 'select' && !isSearching) {
-      if (tierCardsSelector) tierCardsSelector.style.display = 'grid';
-      if (notesGrid) notesGrid.style.display = 'none';
-      if (resetTierBtn) resetTierBtn.style.display = 'none';
-      if (resultsCountText) resultsCountText.textContent = 'Select an academic tier below to display notes';
-      return;
-    }
-
-    // Hide tier selector cards and show matching courses grid
-    if (tierCardsSelector) tierCardsSelector.style.display = 'none';
     if (notesGrid) notesGrid.style.display = 'grid';
-    if (resetTierBtn) resetTierBtn.style.display = 'inline-block';
 
     let visibleCount = 0;
 
@@ -889,10 +860,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const cardCode = (card.querySelector('.course-code')?.textContent || '').toUpperCase().trim();
 
       let matchesLevel = false;
-      if (isBookmarksFilter) {
-        matchesLevel = userBookmarks.has(cardCode);
-      } else if (activeLevelFilter === 'all' || !isTierChosen) {
+      if (isSearching) {
         matchesLevel = true;
+      } else if (isBookmarksFilter) {
+        matchesLevel = userBookmarks.has(cardCode);
       } else {
         matchesLevel = cardLevel === activeLevelFilter;
       }
@@ -914,7 +885,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (isBookmarksFilter) {
         resultsCountText.textContent = `Showing ${visibleCount} saved course${visibleCount === 1 ? '' : 's'}`;
       } else {
-        const tierName = activeLevelFilter.charAt(0).toUpperCase() + activeLevelFilter.slice(1);
+        const tierName = activeLevelFilter === 'bs' ? 'BS Degree' : (activeLevelFilter.charAt(0).toUpperCase() + activeLevelFilter.slice(1));
         resultsCountText.textContent = `Showing ${visibleCount} ${tierName} courses`;
       }
     }
