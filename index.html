@@ -184,14 +184,20 @@
             </div>
           </div>
           <h3>End-Term Target Forecaster</h3>
-          <p>Estimate the required score in the End-Term Exam (out of 50) based on your continuous internal assessment marks.</p>
+          <p>Official Score Formula: <code>T = max(0.6F + 0.3max(Q1,Q2), 0.45F + 0.25Q1 + 0.3Q2)</code></p>
           
           <div class="mini-tool">
             <div class="input-row">
               <div class="input-group">
-                <label>Internal Score (/50)</label>
-                <input type="number" id="internalMarks" step="1" min="0" max="50" placeholder="38" value="38">
+                <label>Quiz I (Qz1 /100)</label>
+                <input type="number" id="quiz1Score" step="1" min="0" max="100" placeholder="70" value="70">
               </div>
+              <div class="input-group">
+                <label>Quiz II (Qz2 /100)</label>
+                <input type="number" id="quiz2Score" step="1" min="0" max="100" placeholder="80" value="80">
+              </div>
+            </div>
+            <div class="input-row">
               <div class="input-group">
                 <label>Target Grade</label>
                 <select id="targetGrade">
@@ -200,13 +206,20 @@
                   <option value="70">B Grade (70+)</option>
                   <option value="60">C Grade (60+)</option>
                   <option value="50">D Grade (50+)</option>
-                  <option value="40">E Grade (40+)</option>
+                  <option value="40">E / Pass (40+)</option>
                 </select>
+              </div>
+              <div class="input-group">
+                <label>Expected Final (F /100)</label>
+                <input type="number" id="expectedFinalScore" step="1" min="0" max="100" placeholder="Optional simulator" value="">
               </div>
             </div>
             <div class="tool-result">
-              <span>Required End-Term:</span>
-              <strong id="gradePredictorOutput">42 / 50</strong>
+              <span id="forecastResultLabel">Required End-Term (F):</span>
+              <strong id="gradePredictorOutput">85.6 / 100</strong>
+            </div>
+            <div class="tool-subtext" id="forecastFormulaHint">
+              Best Strategy: 45% Final + 25% Q1 + 30% Q2
             </div>
           </div>
         </div>

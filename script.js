@@ -212,32 +212,93 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 2. Grade Predictor with Backend API Sync
-  const internalMarksInput = document.getElementById('internalMarks');
+  // 2. Official End-Term Target Forecaster (IIT Madras BS Formula)
+  // Formula: T = max(0.6*F + 0.3*max(Qz1, Qz2), 0.45*F + 0.25*Qz1 + 0.3*Qz2)
+  const quiz1Input = document.getElementById('quiz1Score');
+  const quiz2Input = document.getElementById('quiz2Score');
   const targetGradeSelect = document.getElementById('targetGrade');
+  const expectedFinalInput = document.getElementById('expectedFinalScore');
   const gradePredictorOutput = document.getElementById('gradePredictorOutput');
+  const forecastResultLabel = document.getElementById('forecastResultLabel');
+  const forecastFormulaHint = document.getElementById('forecastFormulaHint');
 
-  function calculateGradeRequirement() {
-    if (!internalMarksInput || !targetGradeSelect || !gradePredictorOutput) return;
+  function calculateEndTermForecast() {
+    if (!quiz1Input || !quiz2Input || !targetGradeSelect || !gradePredictorOutput) return;
 
-    const internal = parseFloat(internalMarksInput.value) || 0;
+    const q1 = Math.max(0, Math.min(100, parseFloat(quiz1Input.value) || 0));
+    const q2 = Math.max(0, Math.min(100, parseFloat(quiz2Input.value) || 0));
     const target = parseFloat(targetGradeSelect.value) || 80;
+    const expectedF = expectedFinalInput && expectedFinalInput.value.trim() !== '' 
+      ? Math.max(0, Math.min(100, parseFloat(expectedFinalInput.value))) 
+      : null;
 
-    const requiredEndTerm = target - internal;
+    const maxQuiz = Math.max(q1, q2);
 
-    if (requiredEndTerm <= 0) {
-      gradePredictorOutput.textContent = 'Achieved (0 / 50)';
-    } else if (requiredEndTerm > 50) {
-      gradePredictorOutput.textContent = `Need ${Math.ceil(requiredEndTerm)} (>50 max)`;
+    // If student provided an Expected Final Exam score (Simulator Mode)
+    if (expectedF !== null && !isNaN(expectedF)) {
+      const t1 = (0.6 * expectedF) + (0.3 * maxQuiz);
+      const t2 = (0.45 * expectedF) + (0.25 * q1) + (0.3 * q2);
+      const totalScore = Math.max(t1, t2);
+      const usedOption = t2 > t1 ? 'Both Quizzes (45% F + 25% Q1 + 30% Q2)' : 'Best Quiz (60% F + 30% Best Quiz)';
+
+      let letterGrade = 'U';
+      if (totalScore >= 90) letterGrade = 'S';
+      else if (totalScore >= 80) letterGrade = 'A';
+      else if (totalScore >= 70) letterGrade = 'B';
+      else if (totalScore >= 60) letterGrade = 'C';
+      else if (totalScore >= 50) letterGrade = 'D';
+      else if (totalScore >= 40) letterGrade = 'E (Pass)';
+
+      if (forecastResultLabel) forecastResultLabel.textContent = 'Projected Total (T / 100):';
+      gradePredictorOutput.textContent = `${totalScore.toFixed(1)} / 100 (${letterGrade})`;
+      gradePredictorOutput.style.color = totalScore >= target ? '#166534' : '#09090b';
+
+      if (forecastFormulaHint) {
+        forecastFormulaHint.textContent = `Opt 1: ${t1.toFixed(1)} | Opt 2: ${t2.toFixed(1)} ➔ Best: ${usedOption}`;
+      }
+      return;
+    }
+
+    // Default Mode: Target Grade Requirement Calculator
+    if (forecastResultLabel) forecastResultLabel.textContent = 'Required End-Term (F):';
+
+    // Calculate minimum required F from both formula options:
+    // Option 1: 0.6F + 0.3*max(Q1,Q2) >= target => F1 >= (target - 0.3*max(Q1,Q2)) / 0.6
+    // Option 2: 0.45F + 0.25*Q1 + 0.3*Q2 >= target => F2 >= (target - (0.25*Q1 + 0.3*Q2)) / 0.45
+    const f1 = (target - (0.3 * maxQuiz)) / 0.6;
+    const f2 = (target - (0.25 * q1 + 0.3 * q2)) / 0.45;
+    const minRequiredF = Math.min(f1, f2);
+    const bestOptionName = f2 < f1 ? 'Both Quizzes (45% F + 25% Q1 + 30% Q2)' : 'Best Quiz (60% F + 30% Best Quiz)';
+
+    if (minRequiredF <= 0) {
+      gradePredictorOutput.textContent = 'Achieved (0 / 100)';
+      gradePredictorOutput.style.color = '#166534';
+      if (forecastFormulaHint) {
+        forecastFormulaHint.textContent = 'Target already secured with quiz scores!';
+      }
+    } else if (minRequiredF > 100) {
+      gradePredictorOutput.textContent = `Need ${minRequiredF.toFixed(1)} (>100 max)`;
+      gradePredictorOutput.style.color = '#ef4444';
+      if (forecastFormulaHint) {
+        forecastFormulaHint.textContent = 'Target grade not mathematically possible with current quiz scores.';
+      }
     } else {
-      gradePredictorOutput.textContent = `${Math.ceil(requiredEndTerm)} / 50`;
+      gradePredictorOutput.textContent = `${minRequiredF.toFixed(1)} / 100`;
+      gradePredictorOutput.style.color = '#09090b';
+      if (forecastFormulaHint) {
+        forecastFormulaHint.textContent = `Strategy: ${bestOptionName}`;
+      }
     }
   }
 
-  if (internalMarksInput && targetGradeSelect) {
-    internalMarksInput.addEventListener('input', calculateGradeRequirement);
-    targetGradeSelect.addEventListener('change', calculateGradeRequirement);
-  }
+  [quiz1Input, quiz2Input, targetGradeSelect, expectedFinalInput].forEach(elem => {
+    if (elem) {
+      elem.addEventListener('input', calculateEndTermForecast);
+      elem.addEventListener('change', calculateEndTermForecast);
+    }
+  });
+
+  calculateEndTermForecast();
 
   /* ==========================================================================
      Bookmarks Storage & State Manager

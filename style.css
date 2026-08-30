@@ -743,6 +743,18 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   color: #09090b;
 }
 
+.tool-subtext {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #71717a;
+  background: #f4f4f5;
+  border-radius: 6px;
+  padding: 4px 8px;
+  margin-top: 8px;
+  text-align: center;
+  line-height: 1.35;
+}
+
 /* Important Links Portal Grid */
 .links-grid {
   display: grid;
