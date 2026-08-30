@@ -333,24 +333,56 @@ body {
   display: none !important;
 }
 
-/* --- Global Headings (Handwritten Caveat) --- */
+/* --- Global Headings (Clean, Modern, Professional Typography) --- */
 h1, h2, h3, h4, .degree-title, .section-header h1 {
-  font-family: 'Caveat', 'Kalam', cursive, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   color: #09090b;
+}
+
+.hero-degree-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fafafc;
+  border: 1px solid #e4e4e7;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #18181b;
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+}
+
+.pill-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.degree-title {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #09090b;
+  line-height: 1.18;
+  margin-bottom: 6px;
 }
 
 .section-header h1 {
-  font-size: 38px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
   color: #09090b;
   margin-bottom: 4px;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
-/* --- Hand-Drawn Heading Underline Wrappers & Colors --- */
+/* --- Heading Underline & Accents --- */
 .heading-handdrawn-wrap {
   display: inline-flex;
   flex-direction: column;
@@ -366,9 +398,9 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
 .heading-underline-svg {
   width: 100%;
-  height: 9px;
+  height: 6px;
   display: block;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 /* Distinct Vibrant Colors for Underlines */
@@ -629,18 +661,18 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 }
 
 .resource-card h3 {
-  font-family: 'Caveat', 'Kalam', cursive, sans-serif;
-  font-size: 28px;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 19px;
   font-weight: 700;
   color: #09090b;
   margin-bottom: 8px;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
 }
 
 .full-width-card h3 {
-  font-size: 34px;
-  margin-bottom: 16px;
+  font-size: 24px;
+  margin-bottom: 12px;
 }
 
 .resource-card p {
@@ -1081,13 +1113,13 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 }
 
 .course-title {
-  font-family: 'Caveat', 'Kalam', cursive, sans-serif;
-  font-size: 24px;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16.5px;
   font-weight: 700;
   color: #09090b;
-  line-height: 1.2;
+  line-height: 1.35;
   margin-bottom: 8px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 .course-desc {
