@@ -1955,3 +1955,151 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
     padding: 40px 16px 28px 16px;
   }
 }
+
+/* ==========================================================================
+   Qualifier Banner Card Styles & Responsive Optimization
+   ========================================================================== */
+.qualifier-banner-wrap {
+  margin-top: 28px;
+  width: 100%;
+}
+
+.qualifier-highlight-card {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 26px;
+  border: 1.5px solid #e4e4e7;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.qualifier-highlight-card:hover {
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -4px rgba(245, 158, 11, 0.12);
+}
+
+.qualifier-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.qualifier-icon-box {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: #09090b;
+  color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.qualifier-text-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.qualifier-heading-wrap {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.qualifier-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  color: #09090b;
+  letter-spacing: -0.02em;
+  font-family: inherit;
+}
+
+.qualifier-desc {
+  margin: 0;
+  font-size: 14px;
+  color: #52525b;
+  line-height: 1.55;
+  margin-top: 4px;
+}
+
+.qualifier-action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #09090b;
+  white-space: nowrap;
+  background: #f4f4f5;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  border: 1px solid #e4e4e7;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.qualifier-highlight-card:hover .qualifier-action-badge {
+  background: #09090b;
+  color: #ffffff;
+  border-color: #09090b;
+}
+
+.qualifier-badge-icon {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s ease;
+}
+
+.qualifier-highlight-card:hover .qualifier-badge-icon {
+  transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+  .qualifier-highlight-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 18px 18px;
+  }
+
+  .qualifier-card-left {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .qualifier-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  .qualifier-title {
+    font-size: 17px;
+  }
+
+  .qualifier-desc {
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .qualifier-action-badge {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    font-size: 13.5px;
+  }
+}

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260830_02">
+  <link rel="stylesheet" href="style.css?v=20260830_03">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -100,25 +100,27 @@
       </div>
 
       <!-- Qualifier Student Highlight Banner -->
-      <div class="qualifier-banner-wrap" style="margin-top: 28px;">
-        <div class="pillar-card qualifier-highlight-card" style="cursor: pointer; display: flex; align-items: center; gap: 22px; padding: 24px 28px; border: 1.5px solid #e4e4e7; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);" onclick="window.location.href='qualifier.html';">
-          <div class="pillar-icon-box" style="margin-bottom: 0; flex-shrink: 0; width: 48px; height: 48px; background: #09090b; color: #ffffff; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-          </div>
-          <div style="flex-grow: 1;">
-            <div class="heading-handdrawn-wrap" style="display: inline-block; margin-bottom: 6px; position: relative;">
-              <h3 style="margin: 0; font-size: 20px; font-weight: 800; color: #09090b; letter-spacing: -0.02em;">“Are you a Qualifier student?”</h3>
-              <svg class="heading-underline-svg underline-amber" viewBox="0 0 240 8" fill="none" preserveAspectRatio="none" style="position: absolute; bottom: -4px; left: 0; width: 100%; height: 6px;">
-                <path d="M 2 4 C 55 2.5, 170 5.5, 238 3" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
-              </svg>
+      <div class="qualifier-banner-wrap">
+        <div class="qualifier-highlight-card" onclick="window.location.href='qualifier.html';">
+          <div class="qualifier-card-left">
+            <div class="qualifier-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
             </div>
-            <p style="margin: 0; font-size: 14.5px; color: #52525b; line-height: 1.55; margin-top: 4px;">
-              Here’s something for you — Access curated Foundation Level qualifier notes, video guides, and PYQs tailored specifically for qualifier preparation.
-            </p>
+            <div class="qualifier-text-content">
+              <div class="heading-handdrawn-wrap qualifier-heading-wrap">
+                <h3 class="qualifier-title">“Are you a Qualifier student?”</h3>
+                <svg class="heading-underline-svg underline-amber" viewBox="0 0 240 8" fill="none" preserveAspectRatio="none" style="position: absolute; bottom: -4px; left: 0; width: 100%; height: 6px;">
+                  <path d="M 2 4 C 55 2.5, 170 5.5, 238 3" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p class="qualifier-desc">
+                Here’s something for you — Access curated Foundation Level qualifier notes, video guides, and PYQs tailored specifically for qualifier preparation.
+              </p>
+            </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: #09090b; white-space: nowrap; background: #f4f4f5; padding: 10px 18px; border-radius: 9999px; border: 1px solid #e4e4e7; transition: all 0.2s ease;">
+          <div class="qualifier-action-badge">
             <span>Explore Hub</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="qualifier-badge-icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </div>
         </div>
       </div>
