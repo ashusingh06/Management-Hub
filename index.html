@@ -152,26 +152,26 @@
             <div class="input-row">
               <div class="input-group">
                 <label>Current CGPA</label>
-                <input type="number" id="currentCgpa" step="0.01" min="0" max="10" placeholder="8.50" value="8.50">
+                <input type="number" id="currentCgpa" step="0.01" min="0" max="10" placeholder="e.g. 8.50">
               </div>
               <div class="input-group">
                 <label>Completed Credits</label>
-                <input type="number" id="totalCredits" step="1" min="1" max="142" placeholder="32" value="32">
+                <input type="number" id="totalCredits" step="1" min="1" max="142" placeholder="e.g. 32">
               </div>
             </div>
             <div class="input-row">
               <div class="input-group">
                 <label>New Term SGPA</label>
-                <input type="number" id="newGpa" step="0.01" min="0" max="10" placeholder="9.00" value="9.00">
+                <input type="number" id="newGpa" step="0.01" min="0" max="10" placeholder="e.g. 9.00">
               </div>
               <div class="input-group">
                 <label>New Term Credits</label>
-                <input type="number" id="newCredits" step="1" min="1" max="32" placeholder="16" value="16">
+                <input type="number" id="newCredits" step="1" min="1" max="32" placeholder="e.g. 16">
               </div>
             </div>
             <div class="tool-result">
               <span>Projected CGPA:</span>
-              <strong id="cgpaOutput">8.67</strong>
+              <strong id="cgpaOutput">--</strong>
             </div>
           </div>
         </div>
@@ -190,15 +190,15 @@
             <div class="input-row" style="grid-template-columns: 1fr 1fr 1fr;">
               <div class="input-group">
                 <label>Quiz I (Qz1)</label>
-                <input type="number" id="quiz1Score" step="0.5" min="0" max="100" placeholder="70" value="70">
+                <input type="number" id="quiz1Score" step="0.5" min="0" max="100" placeholder="0 - 100">
               </div>
               <div class="input-group">
                 <label>Quiz II (Qz2)</label>
-                <input type="number" id="quiz2Score" step="0.5" min="0" max="100" placeholder="80" value="80">
+                <input type="number" id="quiz2Score" step="0.5" min="0" max="100" placeholder="0 - 100">
               </div>
               <div class="input-group">
                 <label>End-Term (F)</label>
-                <input type="number" id="expectedFinalScore" step="0.5" min="0" max="100" placeholder="75" value="75">
+                <input type="number" id="expectedFinalScore" step="0.5" min="0" max="100" placeholder="0 - 100">
               </div>
             </div>
 
@@ -209,7 +209,7 @@
                   <span>Formula 1</span>
                   <span id="formulaTag1"></span>
                 </div>
-                <div class="formula-card-score" id="formulaScore1">69.0</div>
+                <div class="formula-card-score" id="formulaScore1">--</div>
                 <div class="formula-card-eq">0.6F + 0.3·max(Q1,Q2)</div>
               </div>
               <div class="formula-card" id="formulaCard2">
@@ -217,17 +217,17 @@
                   <span>Formula 2</span>
                   <span id="formulaTag2"></span>
                 </div>
-                <div class="formula-card-score" id="formulaScore2">75.3</div>
+                <div class="formula-card-score" id="formulaScore2">--</div>
                 <div class="formula-card-eq">0.45F + 0.25Q1 + 0.3Q2</div>
               </div>
             </div>
 
             <div class="tool-result">
               <span>Expected Final Score (T):</span>
-              <strong id="gradePredictorOutput">75.3 / 100 (B)</strong>
+              <strong id="gradePredictorOutput">--</strong>
             </div>
             <div class="tool-subtext" id="forecastFormulaHint">
-              Applied: Formula 2 gives higher marks (+6.3)
+              Enter Quiz & End-Term scores above to calculate
             </div>
           </div>
         </div>

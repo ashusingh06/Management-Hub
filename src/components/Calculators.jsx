@@ -3,15 +3,15 @@ import { Calculator, Target, Sparkles } from 'lucide-react';
 
 export default function Calculators() {
   // CGPA State
-  const [currentCgpa, setCurrentCgpa] = useState('8.5');
-  const [currentCredits, setCurrentCredits] = useState('32');
-  const [newGpa, setNewGpa] = useState('9.0');
-  const [newCredits, setNewCredits] = useState('16');
+  const [currentCgpa, setCurrentCgpa] = useState('');
+  const [currentCredits, setCurrentCredits] = useState('');
+  const [newGpa, setNewGpa] = useState('');
+  const [newCredits, setNewCredits] = useState('');
 
   // End-Term Forecaster State (IIT Madras BS Formula)
-  const [quiz1, setQuiz1] = useState('70');
-  const [quiz2, setQuiz2] = useState('80');
-  const [endTermF, setEndTermF] = useState('75');
+  const [quiz1, setQuiz1] = useState('');
+  const [quiz2, setQuiz2] = useState('');
+  const [endTermF, setEndTermF] = useState('');
 
   // Calculate Cumulative CGPA
   const currC = parseFloat(currentCgpa) || 0;
@@ -20,11 +20,12 @@ export default function Calculators() {
   const nCr = parseFloat(newCredits) || 0;
 
   const totalCredits = currCr + nCr;
-  const calculatedCgpa = totalCredits > 0
+  const calculatedCgpa = (currentCgpa || currentCredits || newGpa || newCredits) && totalCredits > 0
     ? (((currC * currCr) + (nG * nCr)) / totalCredits).toFixed(2)
-    : '0.00';
+    : '--';
 
   // Calculate End-Term Forecast
+  const isForecasterEmpty = !quiz1.trim() && !quiz2.trim() && !endTermF.trim();
   const q1 = Math.max(0, Math.min(100, parseFloat(quiz1) || 0));
   const q2 = Math.max(0, Math.min(100, parseFloat(quiz2) || 0));
   const f = Math.max(0, Math.min(100, parseFloat(endTermF) || 0));
@@ -45,7 +46,9 @@ export default function Calculators() {
   else if (totalScore >= 50) letterGrade = 'D Grade';
   else if (totalScore >= 40) letterGrade = 'E Grade (Pass)';
 
-  const winningMessage = t2 > t1
+  const winningMessage = isForecasterEmpty
+    ? 'Enter Quiz & End-Term scores above to calculate'
+    : t2 > t1
     ? `Applied Formula 2: Boosted by +${diff.toFixed(2)} marks (Both Quizzes Weightage)`
     : t1 > t2
     ? `Applied Formula 1: Boosted by +${diff.toFixed(2)} marks (Best Quiz Weightage)`
@@ -178,31 +181,31 @@ export default function Calculators() {
             {/* Formula Comparison Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', margin: '10px 0' }}>
               <div style={{
-                background: t1 >= t2 ? '#f0fdf4' : '#ffffff',
-                border: `1px solid ${t1 >= t2 ? '#86efac' : '#e4e4e7'}`,
+                background: !isForecasterEmpty && t1 >= t2 ? '#f0fdf4' : '#ffffff',
+                border: `1px solid ${!isForecasterEmpty && t1 >= t2 ? '#86efac' : '#e4e4e7'}`,
                 borderRadius: '8px',
                 padding: '8px 10px'
               }}>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: t1 >= t2 ? '#166534' : '#71717a' }}>
-                  Formula 1 {t1 >= t2 && '★ Highest'}
+                <div style={{ fontSize: '11px', fontWeight: 700, color: !isForecasterEmpty && t1 >= t2 ? '#166534' : '#71717a' }}>
+                  Formula 1 {!isForecasterEmpty && t1 >= t2 && '★ Highest'}
                 </div>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: t1 >= t2 ? '#166534' : '#09090b' }}>
-                  {t1.toFixed(2)}
+                <div style={{ fontSize: '14px', fontWeight: 800, color: !isForecasterEmpty && t1 >= t2 ? '#166534' : '#09090b' }}>
+                  {isForecasterEmpty ? '--' : t1.toFixed(2)}
                 </div>
                 <div style={{ fontSize: '10px', color: '#71717a' }}>0.6F + 0.3·max(Q1,Q2)</div>
               </div>
 
               <div style={{
-                background: t2 >= t1 ? '#f0fdf4' : '#ffffff',
-                border: `1px solid ${t2 >= t1 ? '#86efac' : '#e4e4e7'}`,
+                background: !isForecasterEmpty && t2 >= t1 ? '#f0fdf4' : '#ffffff',
+                border: `1px solid ${!isForecasterEmpty && t2 >= t1 ? '#86efac' : '#e4e4e7'}`,
                 borderRadius: '8px',
                 padding: '8px 10px'
               }}>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: t2 >= t1 ? '#166534' : '#71717a' }}>
-                  Formula 2 {t2 >= t1 && '★ Highest'}
+                <div style={{ fontSize: '11px', fontWeight: 700, color: !isForecasterEmpty && t2 >= t1 ? '#166534' : '#71717a' }}>
+                  Formula 2 {!isForecasterEmpty && t2 >= t1 && '★ Highest'}
                 </div>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: t2 >= t1 ? '#166534' : '#09090b' }}>
-                  {t2.toFixed(2)}
+                <div style={{ fontSize: '14px', fontWeight: 800, color: !isForecasterEmpty && t2 >= t1 ? '#166534' : '#09090b' }}>
+                  {isForecasterEmpty ? '--' : t2.toFixed(2)}
                 </div>
                 <div style={{ fontSize: '10px', color: '#71717a' }}>0.45F + 0.25Q1 + 0.3Q2</div>
               </div>
@@ -211,7 +214,7 @@ export default function Calculators() {
             <div className="calc-result-box">
               <div className="calc-result-label">Expected Final Course Score (T):</div>
               <div className="calc-result-val">
-                {totalScore.toFixed(1)} / 100 ({letterGrade})
+                {isForecasterEmpty ? '--' : `${totalScore.toFixed(1)} / 100 (${letterGrade})`}
               </div>
               <div style={{ fontSize: '11.5px', color: '#71717a', marginTop: '6px' }}>{winningMessage}</div>
             </div>

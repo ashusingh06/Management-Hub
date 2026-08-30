@@ -177,33 +177,29 @@ document.addEventListener('DOMContentLoaded', () => {
   async function calculateCGPA() {
     if (!currentCgpaInput || !totalCreditsInput || !newGpaInput || !newCreditsInput || !cgpaOutput) return;
 
-    const curCgpa = parseFloat(currentCgpaInput.value) || 0;
-    const curCredits = parseFloat(totalCreditsInput.value) || 0;
-    const nGpa = parseFloat(newGpaInput.value) || 0;
-    const nCredits = parseFloat(newCreditsInput.value) || 0;
+    const curCgpaStr = currentCgpaInput.value.trim();
+    const curCreditsStr = totalCreditsInput.value.trim();
+    const nGpaStr = newGpaInput.value.trim();
+    const nCreditsStr = newCreditsInput.value.trim();
+
+    if (!curCgpaStr && !curCreditsStr && !nGpaStr && !nCreditsStr) {
+      cgpaOutput.textContent = '--';
+      return;
+    }
+
+    const curCgpa = parseFloat(curCgpaStr) || 0;
+    const curCredits = parseFloat(curCreditsStr) || 0;
+    const nGpa = parseFloat(nGpaStr) || 0;
+    const nCredits = parseFloat(nCreditsStr) || 0;
 
     const sumCredits = curCredits + nCredits;
     if (sumCredits <= 0) {
-      cgpaOutput.textContent = '0.00';
+      cgpaOutput.textContent = '--';
       return;
     }
 
     const predicted = ((curCgpa * curCredits) + (nGpa * nCredits)) / sumCredits;
     cgpaOutput.textContent = Math.min(10, Math.max(0, predicted)).toFixed(2);
-
-    // Optional background sync with Backend SQLite DB
-    try {
-      fetch('/api/cgpa', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          current_cgpa: curCgpa,
-          current_credits: curCredits,
-          new_gpa: nGpa,
-          new_credits: nCredits
-        })
-      }).catch(() => {});
-    } catch (e) {}
   }
 
   [currentCgpaInput, totalCreditsInput, newGpaInput, newCreditsInput].forEach((input) => {
@@ -229,9 +225,32 @@ document.addEventListener('DOMContentLoaded', () => {
   function calculateEndTermForecast() {
     if (!quiz1Input || !quiz2Input || !expectedFinalInput || !gradePredictorOutput) return;
 
-    const q1 = Math.max(0, Math.min(100, parseFloat(quiz1Input.value) || 0));
-    const q2 = Math.max(0, Math.min(100, parseFloat(quiz2Input.value) || 0));
-    const f = Math.max(0, Math.min(100, parseFloat(expectedFinalInput.value) || 0));
+    const q1Str = quiz1Input.value.trim();
+    const q2Str = quiz2Input.value.trim();
+    const fStr = expectedFinalInput.value.trim();
+
+    // If all inputs are blank, show clean empty placeholder state
+    if (!q1Str && !q2Str && !fStr) {
+      if (formulaScore1) formulaScore1.textContent = '--';
+      if (formulaScore2) formulaScore2.textContent = '--';
+      if (formulaCard1) {
+        formulaCard1.classList.remove('winner');
+        if (formulaTag1) formulaTag1.textContent = '';
+      }
+      if (formulaCard2) {
+        formulaCard2.classList.remove('winner');
+        if (formulaTag2) formulaTag2.textContent = '';
+      }
+      gradePredictorOutput.textContent = '--';
+      if (forecastFormulaHint) {
+        forecastFormulaHint.textContent = 'Enter Quiz & End-Term scores above to calculate';
+      }
+      return;
+    }
+
+    const q1 = Math.max(0, Math.min(100, parseFloat(q1Str) || 0));
+    const q2 = Math.max(0, Math.min(100, parseFloat(q2Str) || 0));
+    const f = Math.max(0, Math.min(100, parseFloat(fStr) || 0));
 
     const maxQuiz = Math.max(q1, q2);
 
