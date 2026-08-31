@@ -722,6 +722,174 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   margin-top: auto;
 }
 
+/* Dynamic Subject-Based CGPA Calculator */
+.cgpa-subjects-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 2px;
+  margin-bottom: 12px;
+}
+
+.cgpa-subjects-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.cgpa-subjects-container::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 4px;
+}
+
+.cgpa-subject-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.subject-name-col input,
+.subject-gp-col input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  color: #09090b;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  padding: 6px 10px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.subject-name-col input:focus,
+.subject-gp-col input:focus {
+  border-color: #09090b;
+}
+
+.btn-remove-subject {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  color: #71717a;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.btn-remove-subject svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-remove-subject:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fca5a5;
+}
+
+.cgpa-controls-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-add-subject {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #09090b;
+  background: #ffffff;
+  border: 1px dashed #a1a1aa;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-add-subject:hover {
+  border-color: #09090b;
+  background: #f4f4f5;
+}
+
+.btn-add-subject .icon-plus {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-reset-subjects {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #71717a;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-reset-subjects:hover {
+  color: #09090b;
+  border-color: #71717a;
+}
+
+.cgpa-stats-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f4f4f5;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.cgpa-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cgpa-stat-label {
+  color: #71717a;
+  font-weight: 500;
+}
+
+.cgpa-stat-value {
+  color: #09090b;
+  font-weight: 700;
+}
+
+.cgpa-final-result {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #09090b;
+}
+
+.cgpa-output-badge {
+  font-size: 18px !important;
+  font-weight: 800;
+  color: #09090b;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
 .input-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

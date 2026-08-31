@@ -167,46 +167,118 @@ document.addEventListener('DOMContentLoaded', () => {
      Live Interactive Calculators (CGPA Calculator & Grade Predictor)
      ========================================================================== */
   
-  // 1. CGPA Calculator with Backend API Sync
-  const currentCgpaInput = document.getElementById('currentCgpa');
-  const totalCreditsInput = document.getElementById('totalCredits');
-  const newGpaInput = document.getElementById('newGpa');
-  const newCreditsInput = document.getElementById('newCredits');
+  // 1. Dynamic Subject-Based CGPA Calculator
+  // Formula: CGPA = Total Grade Points of All Subjects ÷ Total Number of Subjects
+  const cgpaSubjectsContainer = document.getElementById('cgpaSubjectsContainer');
+  const addSubjectBtn = document.getElementById('addSubjectBtn');
+  const resetSubjectsBtn = document.getElementById('resetSubjectsBtn');
+  const cgpaTotalPointsEl = document.getElementById('cgpaTotalPoints');
+  const cgpaTotalSubjectsEl = document.getElementById('cgpaTotalSubjects');
   const cgpaOutput = document.getElementById('cgpaOutput');
 
-  async function calculateCGPA() {
-    if (!currentCgpaInput || !totalCreditsInput || !newGpaInput || !newCreditsInput || !cgpaOutput) return;
+  let subjectCounter = 0;
 
-    const curCgpaStr = currentCgpaInput.value.trim();
-    const curCreditsStr = totalCreditsInput.value.trim();
-    const nGpaStr = newGpaInput.value.trim();
-    const nCreditsStr = newCreditsInput.value.trim();
+  function createSubjectRow(name = '', gradePoint = '') {
+    subjectCounter++;
+    const row = document.createElement('div');
+    row.className = 'cgpa-subject-row';
+    row.dataset.id = subjectCounter;
+    const defaultPlaceholder = `Subject ${subjectCounter}`;
+    const initialName = name || defaultPlaceholder;
 
-    if (!curCgpaStr && !curCreditsStr && !nGpaStr && !nCreditsStr) {
-      cgpaOutput.textContent = '--';
-      return;
-    }
+    row.innerHTML = `
+      <div class="subject-name-col">
+        <input type="text" class="subject-name-input" placeholder="${defaultPlaceholder}" value="${initialName}">
+      </div>
+      <div class="subject-gp-col">
+        <input type="number" class="subject-gp-input" step="0.1" min="0" max="10" placeholder="Grade Point (0-10)" value="${gradePoint}">
+      </div>
+      <button type="button" class="btn-remove-subject" title="Remove Subject" aria-label="Remove Subject">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    `;
 
-    const curCgpa = parseFloat(curCgpaStr) || 0;
-    const curCredits = parseFloat(curCreditsStr) || 0;
-    const nGpa = parseFloat(nGpaStr) || 0;
-    const nCredits = parseFloat(nCreditsStr) || 0;
+    const gpInput = row.querySelector('.subject-gp-input');
+    const nameInput = row.querySelector('.subject-name-input');
+    const removeBtn = row.querySelector('.btn-remove-subject');
 
-    const sumCredits = curCredits + nCredits;
-    if (sumCredits <= 0) {
-      cgpaOutput.textContent = '--';
-      return;
-    }
+    gpInput.addEventListener('input', calculateCGPA);
+    nameInput.addEventListener('input', calculateCGPA);
 
-    const predicted = ((curCgpa * curCredits) + (nGpa * nCredits)) / sumCredits;
-    cgpaOutput.textContent = Math.min(10, Math.max(0, predicted)).toFixed(2);
+    removeBtn.addEventListener('click', () => {
+      row.remove();
+      calculateCGPA();
+    });
+
+    return row;
   }
 
-  [currentCgpaInput, totalCreditsInput, newGpaInput, newCreditsInput].forEach((input) => {
-    if (input) {
-      input.addEventListener('input', calculateCGPA);
+  function initDefaultSubjects() {
+    if (!cgpaSubjectsContainer) return;
+    cgpaSubjectsContainer.innerHTML = '';
+    subjectCounter = 0;
+    // Start with 3 default subject rows (empty grade points)
+    for (let i = 1; i <= 3; i++) {
+      cgpaSubjectsContainer.appendChild(createSubjectRow(`Subject ${i}`, ''));
     }
-  });
+    calculateCGPA();
+  }
+
+  function calculateCGPA() {
+    if (!cgpaSubjectsContainer) return;
+    const gpInputs = cgpaSubjectsContainer.querySelectorAll('.subject-gp-input');
+
+    let totalGradePoints = 0;
+    let validSubjectsCount = 0;
+
+    gpInputs.forEach(input => {
+      const valStr = input.value.trim();
+      if (valStr !== '') {
+        const val = parseFloat(valStr);
+        if (!isNaN(val) && val >= 0) {
+          const gradePoint = Math.min(10, Math.max(0, val));
+          totalGradePoints += gradePoint;
+          validSubjectsCount++;
+        }
+      }
+    });
+
+    if (cgpaTotalPointsEl) {
+      cgpaTotalPointsEl.textContent = totalGradePoints.toFixed(2);
+    }
+    if (cgpaTotalSubjectsEl) {
+      cgpaTotalSubjectsEl.textContent = validSubjectsCount.toString();
+    }
+
+    if (cgpaOutput) {
+      if (validSubjectsCount === 0) {
+        cgpaOutput.textContent = '--';
+      } else {
+        const cgpa = totalGradePoints / validSubjectsCount;
+        cgpaOutput.textContent = cgpa.toFixed(2);
+      }
+    }
+  }
+
+  if (addSubjectBtn && cgpaSubjectsContainer) {
+    addSubjectBtn.addEventListener('click', () => {
+      const newRow = createSubjectRow('', '');
+      cgpaSubjectsContainer.appendChild(newRow);
+      const newGpInput = newRow.querySelector('.subject-gp-input');
+      if (newGpInput) newGpInput.focus();
+      calculateCGPA();
+    });
+  }
+
+  if (resetSubjectsBtn) {
+    resetSubjectsBtn.addEventListener('click', () => {
+      initDefaultSubjects();
+    });
+  }
+
+  if (cgpaSubjectsContainer) {
+    initDefaultSubjects();
+  }
 
   // 2. Official End-Term Target Forecaster (IIT Madras BS Formula)
   // Formula: T = max(0.6*F + 0.3*max(Qz1, Qz2), 0.45*F + 0.25*Qz1 + 0.3*Qz2)

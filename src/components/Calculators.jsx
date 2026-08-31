@@ -2,27 +2,33 @@ import React, { useState } from 'react';
 import { Calculator, Target, Sparkles } from 'lucide-react';
 
 export default function Calculators() {
-  // CGPA State
-  const [currentCgpa, setCurrentCgpa] = useState('');
-  const [currentCredits, setCurrentCredits] = useState('');
-  const [newGpa, setNewGpa] = useState('');
-  const [newCredits, setNewCredits] = useState('');
+  // Dynamic Subjects CGPA State
+  const [subjects, setSubjects] = useState([
+    { id: 1, name: 'Subject 1', gradePoint: '' },
+    { id: 2, name: 'Subject 2', gradePoint: '' },
+    { id: 3, name: 'Subject 3', gradePoint: '' }
+  ]);
 
-  // End-Term Forecaster State (IIT Madras BS Formula)
-  const [quiz1, setQuiz1] = useState('');
-  const [quiz2, setQuiz2] = useState('');
-  const [endTermF, setEndTermF] = useState('');
+  const addSubject = () => {
+    setSubjects(prev => [
+      ...prev,
+      { id: Date.now(), name: `Subject ${prev.length + 1}`, gradePoint: '' }
+    ]);
+  };
 
-  // Calculate Cumulative CGPA
-  const currC = parseFloat(currentCgpa) || 0;
-  const currCr = parseFloat(currentCredits) || 0;
-  const nG = parseFloat(newGpa) || 0;
-  const nCr = parseFloat(newCredits) || 0;
+  const removeSubject = (id) => {
+    setSubjects(prev => prev.filter(s => s.id !== id));
+  };
 
-  const totalCredits = currCr + nCr;
-  const calculatedCgpa = (currentCgpa || currentCredits || newGpa || newCredits) && totalCredits > 0
-    ? (((currC * currCr) + (nG * nCr)) / totalCredits).toFixed(2)
-    : '--';
+  const updateSubject = (id, field, value) => {
+    setSubjects(prev => prev.map(s => s.id === id ? { ...s, [field]: value } : s));
+  };
+
+  // Calculate Cumulative CGPA = Total Grade Points ÷ Total Subjects
+  const validSubjects = subjects.filter(s => s.gradePoint !== '' && !isNaN(parseFloat(s.gradePoint)) && parseFloat(s.gradePoint) >= 0);
+  const totalGradePoints = validSubjects.reduce((sum, s) => sum + Math.min(10, Math.max(0, parseFloat(s.gradePoint))), 0);
+  const totalValidSubjects = validSubjects.length;
+  const calculatedCgpa = totalValidSubjects > 0 ? (totalGradePoints / totalValidSubjects).toFixed(2) : '--';
 
   // Calculate End-Term Forecast
   const isForecasterEmpty = !quiz1.trim() && !quiz2.trim() && !endTermF.trim();
@@ -96,72 +102,72 @@ export default function Calculators() {
         </div>
 
         <div className="calculators-grid">
-          {/* 1. CGPA Calculator */}
+          {/* 1. Dynamic Subject-Based CGPA Calculator */}
           <div className="calculator-card">
             <div className="calc-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                 <Calculator size={20} />
                 <h3>CGPA Calculator</h3>
               </div>
-              <p>Calculate your updated cumulative GPA after completing a new term.</p>
+              <p>Official Formula: <code>CGPA = Total Grade Points ÷ Total Subjects</code></p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-              <div className="form-group-calc">
-                <label>Current CGPA</label>
-                <input 
-                  type="number" 
-                  step="0.01" 
-                  min="0" 
-                  max="10" 
-                  placeholder="e.g. 8.50"
-                  value={currentCgpa} 
-                  onChange={(e) => setCurrentCgpa(e.target.value)} 
-                />
-              </div>
-
-              <div className="form-group-calc">
-                <label>Completed Credits</label>
-                <input 
-                  type="number" 
-                  min="1" 
-                  max="142" 
-                  placeholder="e.g. 32"
-                  value={currentCredits} 
-                  onChange={(e) => setCurrentCredits(e.target.value)} 
-                />
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '200px', overflowY: 'auto', marginBottom: '10px' }}>
+              {subjects.map((subj, index) => (
+                <div key={subj.id} style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr auto', gap: '8px', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    placeholder={`Subject ${index + 1}`}
+                    value={subj.name}
+                    onChange={(e) => updateSubject(subj.id, 'name', e.target.value)}
+                    style={{ padding: '6px 10px', fontSize: '13px', borderRadius: '6px', border: '1px solid #e4e4e7', outline: 'none' }}
+                  />
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    placeholder="Grade (0-10)"
+                    value={subj.gradePoint}
+                    onChange={(e) => updateSubject(subj.id, 'gradePoint', e.target.value)}
+                    style={{ padding: '6px 10px', fontSize: '13px', borderRadius: '6px', border: '1px solid #e4e4e7', outline: 'none' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeSubject(subj.id)}
+                    style={{ background: '#f4f4f5', border: '1px solid #e4e4e7', borderRadius: '6px', width: '32px', height: '32px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#71717a' }}
+                    title="Remove Subject"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-              <div className="form-group-calc">
-                <label>New Term SGPA</label>
-                <input 
-                  type="number" 
-                  step="0.01" 
-                  min="0" 
-                  max="10" 
-                  placeholder="e.g. 9.00"
-                  value={newGpa} 
-                  onChange={(e) => setNewGpa(e.target.value)} 
-                />
-              </div>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+              <button
+                type="button"
+                onClick={addSubject}
+                style={{ flex: 1, padding: '6px 12px', fontSize: '12.5px', fontWeight: '700', background: '#fff', border: '1px dashed #a1a1aa', borderRadius: '6px', cursor: 'pointer' }}
+              >
+                + Add Subject
+              </button>
+              <button
+                type="button"
+                onClick={() => setSubjects([{ id: 1, name: 'Subject 1', gradePoint: '' }, { id: 2, name: 'Subject 2', gradePoint: '' }, { id: 3, name: 'Subject 3', gradePoint: '' }])}
+                style={{ padding: '6px 12px', fontSize: '12px', fontWeight: '600', background: '#f4f4f5', border: '1px solid #e4e4e7', borderRadius: '6px', cursor: 'pointer', color: '#71717a' }}
+              >
+                Reset
+              </button>
+            </div>
 
-              <div className="form-group-calc">
-                <label>New Term Credits</label>
-                <input 
-                  type="number" 
-                  min="1" 
-                  max="32" 
-                  placeholder="e.g. 16"
-                  value={newCredits} 
-                  onChange={(e) => setNewCredits(e.target.value)} 
-                />
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', background: '#f4f4f5', borderRadius: '6px', fontSize: '12px', marginBottom: '10px' }}>
+              <span>Total Points: <strong>{totalGradePoints.toFixed(2)}</strong></span>
+              <span>Total Subjects: <strong>{totalValidSubjects}</strong></span>
             </div>
 
             <div className="calc-result-box">
-              <div className="calc-result-label">Predicted Cumulative CGPA</div>
+              <div className="calc-result-label">Cumulative CGPA</div>
               <div className="calc-result-val">{calculatedCgpa}</div>
             </div>
           </div>

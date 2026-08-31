@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260830_08">
+  <link rel="stylesheet" href="style.css?v=20260831_09">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -183,40 +183,46 @@
       </div>
 
       <div class="resources-grid">
-        <!-- 1. Cumulative CGPA Calculator -->
+        <!-- 1. CGPA Calculator (Dynamic Subject-Based: Total Grade Points ÷ Total Subjects) -->
         <div class="resource-card">
           <div class="resource-card-header">
             <div class="resource-icon-wrapper">
               <svg class="resource-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
             </div>
           </div>
-          <h3>CGPA Projection Calculator</h3>
-          <p>Calculate updated cumulative GPA by combining past earned credits with upcoming semester term predictions.</p>
+          <h3>CGPA Calculator</h3>
+          <p>Official Formula: <code>CGPA = Total Grade Points ÷ Total Subjects</code></p>
           
           <div class="mini-tool">
-            <div class="input-row">
-              <div class="input-group">
-                <label>Current CGPA</label>
-                <input type="number" id="currentCgpa" step="0.01" min="0" max="10" placeholder="e.g. 8.50">
+            <div class="cgpa-subjects-container" id="cgpaSubjectsContainer">
+              <!-- Dynamically populated subject rows -->
+            </div>
+
+            <div class="cgpa-controls-row">
+              <button type="button" class="btn-add-subject" id="addSubjectBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="icon-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Add Subject</span>
+              </button>
+              <button type="button" class="btn-reset-subjects" id="resetSubjectsBtn" title="Reset all subjects">
+                <span>Reset</span>
+              </button>
+            </div>
+
+            <!-- Stats & Final CGPA Result -->
+            <div class="cgpa-stats-summary">
+              <div class="cgpa-stat-item">
+                <span class="cgpa-stat-label">Total Points:</span>
+                <strong class="cgpa-stat-value" id="cgpaTotalPoints">0.00</strong>
               </div>
-              <div class="input-group">
-                <label>Completed Credits</label>
-                <input type="number" id="totalCredits" step="1" min="1" max="142" placeholder="e.g. 32">
+              <div class="cgpa-stat-item">
+                <span class="cgpa-stat-label">Total Subjects:</span>
+                <strong class="cgpa-stat-value" id="cgpaTotalSubjects">0</strong>
               </div>
             </div>
-            <div class="input-row">
-              <div class="input-group">
-                <label>New Term SGPA</label>
-                <input type="number" id="newGpa" step="0.01" min="0" max="10" placeholder="e.g. 9.00">
-              </div>
-              <div class="input-group">
-                <label>New Term Credits</label>
-                <input type="number" id="newCredits" step="1" min="1" max="32" placeholder="e.g. 16">
-              </div>
-            </div>
-            <div class="tool-result">
-              <span>Projected CGPA:</span>
-              <strong id="cgpaOutput">--</strong>
+
+            <div class="tool-result cgpa-final-result">
+              <span>Cumulative CGPA:</span>
+              <strong id="cgpaOutput" class="cgpa-output-badge">--</strong>
             </div>
           </div>
         </div>
@@ -584,6 +590,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=20260830_08"></script>
+  <script src="script.js?v=20260831_09"></script>
 </body>
 </html>
