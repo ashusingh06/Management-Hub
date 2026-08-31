@@ -1,7 +1,8 @@
-# Environment Variables
+# Environment Variables & Secrets
 .env
 .env.local
 .env.*.local
+firebase-config.js
 
 # Dependencies
 node_modules/

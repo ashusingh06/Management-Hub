@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = ""
+  command = "node build-config.js"
 
 [[redirects]]
   from = "/inmycontrol"
