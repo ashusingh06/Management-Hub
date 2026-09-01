@@ -1138,18 +1138,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
   // Live Contributors Rendering & Firestore Sync
   // =========================================================================
-  const DEFAULT_CONTRIBUTORS = [
-    {
-      id: 'contrib-1',
-      name: "Aashish Singh",
-      role: "Lead Maintainer & Developer",
-      branch: "IIT Madras BS Degree",
-      avatar: "",
-      github: "https://github.com/ashusingh06",
-      linkedin: "https://www.linkedin.com/in/ashusingh06",
-      email: "aashishsinghh06@gmail.com"
-    }
-  ];
+  const DEFAULT_CONTRIBUTORS = [];
 
   function getInitials(name) {
     if (!name) return 'MG';
@@ -1157,7 +1146,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadAndRenderContributors() {
-    let contributors = null;
+    let contributors = [];
 
     try {
       const cached = localStorage.getItem('mghub_contributors');
@@ -1182,9 +1171,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) {}
     }
 
-    if (contributors === null) {
-      contributors = DEFAULT_CONTRIBUTORS;
-    }
     renderContributorsDOM(contributors);
   }
 

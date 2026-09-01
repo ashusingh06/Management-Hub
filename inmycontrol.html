@@ -11,7 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js?v=20260901_20"></script>
+  <script src="firebase-config.js?v=20260901_21"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; text-rendering: optimizeLegibility; }
@@ -2267,20 +2267,9 @@
     // ==========================================
     // Contributors Management Logic
     // ==========================================
-    const DEFAULT_CONTRIBUTORS = [
-      {
-        id: 'contrib-1',
-        name: "Aashish Singh",
-        role: "Lead Maintainer & Developer",
-        branch: "IIT Madras BS Degree",
-        avatar: "",
-        github: "https://github.com/ashusingh06",
-        linkedin: "https://www.linkedin.com/in/ashusingh06",
-        email: "aashishsinghh06@gmail.com"
-      }
-    ];
+    const DEFAULT_CONTRIBUTORS = [];
 
-    let allContributors = Array.from(DEFAULT_CONTRIBUTORS);
+    let allContributors = [];
 
     async function loadContributors() {
       if (typeof fetchContributorsFromFirestore === 'function') {
