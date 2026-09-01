@@ -85,6 +85,32 @@ async function savePortalLinksToFirestore(linksList) {
   }
 }
 
+async function fetchContributorsFromFirestore() {
+  const db = getFirebaseDb();
+  if (!db) return null;
+  try {
+    const doc = await db.collection('settings').doc('contributors').get();
+    if (doc.exists && Array.isArray(doc.data()?.list) && doc.data().list.length > 0) {
+      return doc.data().list;
+    }
+  } catch (e) {}
+  return null;
+}
+
+async function saveContributorsToFirestore(contributorsList) {
+  const db = getFirebaseDb();
+  if (!db) return false;
+  try {
+    await db.collection('settings').doc('contributors').set({
+      list: contributorsList,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 async function signInWithGoogle() {
   const fb = getFirebaseAuth();
   if (!fb) throw new Error('Firebase SDK not loaded');

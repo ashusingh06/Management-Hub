@@ -11,7 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js?v=20260901_17"></script>
+  <script src="firebase-config.js?v=20260901_18"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; text-rendering: optimizeLegibility; }
@@ -711,6 +711,7 @@
         <button class="tab-btn active" data-tab="courses">Course Catalog (<span id="tabCourseCount">30</span>)</button>
         <button class="tab-btn" data-tab="pdf-manager">📄 PDF Notes Manager</button>
         <button class="tab-btn" data-tab="links-manager">🔗 Portal Links (<span id="tabLinksCount">5</span>)</button>
+        <button class="tab-btn" data-tab="contributors-manager">👥 Contributors (<span id="tabContributorsCount">1</span>)</button>
         <button class="tab-btn" data-tab="analytics">Search Trends & Analytics</button>
         <button class="tab-btn" data-tab="system">Database Maintenance</button>
       </div>
@@ -867,7 +868,83 @@
           </div>
         </div>
       </section>
+
+      <!-- Tab 6: Contributors Manager -->
+      <section id="tab-contributors-manager" class="tab-content" style="display: none;">
+        <div class="table-container">
+          <div class="toolbar-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700;">Platform Contributors</h3>
+              <p style="font-size: 12.5px; color: #71717a; margin-top: 2px;">Manage students, creators & developers displayed on the main platform.</p>
+            </div>
+            <button class="btn-create-course" id="openAddContributorModalBtn">+ Add New Contributor</button>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Contributor Name</th>
+                  <th style="width: 25%;">Role / Contribution</th>
+                  <th style="width: 25%;">Branch / Affiliation</th>
+                  <th style="width: 15%;">Social Links</th>
+                  <th style="width: 10%;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="contributorsTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
+  </div>
+
+  <!-- Contributor Add / Edit Modal -->
+  <div class="admin-modal" id="contributorModal" style="display: none;">
+    <div class="admin-modal-card" style="max-width: 520px;">
+      <div class="admin-modal-header">
+        <h3 id="contributorModalTitle">Add Contributor</h3>
+        <button class="btn-modal-close" id="closeContributorModalBtn">✕</button>
+      </div>
+
+      <form id="contributorForm">
+        <input type="hidden" id="contributorIdInput" />
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="contributorNameInput" placeholder="e.g. Aashish Singh" required />
+        </div>
+        <div class="form-group">
+          <label>Role / Badge (e.g. Lead Maintainer, Notes Creator, Developer) *</label>
+          <input type="text" id="contributorRoleInput" placeholder="e.g. Lead Maintainer & Notes Curator" required />
+        </div>
+        <div class="form-group">
+          <label>Branch / Affiliation</label>
+          <input type="text" id="contributorBranchInput" placeholder="e.g. IIT Madras BS Degree" />
+        </div>
+        <div class="form-group">
+          <label>Avatar Photo URL (Optional - leave blank for auto-initials)</label>
+          <input type="url" id="contributorAvatarInput" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>GitHub Profile URL (Optional)</label>
+          <input type="url" id="contributorGithubInput" placeholder="https://github.com/username" />
+        </div>
+        <div class="form-group">
+          <label>LinkedIn Profile URL (Optional)</label>
+          <input type="url" id="contributorLinkedinInput" placeholder="https://linkedin.com/in/username" />
+        </div>
+        <div class="form-group">
+          <label>Contact Email (Optional)</label>
+          <input type="email" id="contributorEmailInput" placeholder="e.g. name@example.com" />
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-sm-edit" id="cancelContributorBtn" style="padding: 10px 18px;">Cancel</button>
+          <button type="submit" class="btn-primary-save" id="saveContributorSubmitBtn" style="padding: 10px 20px;">Save Contributor</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Portal Link Add / Edit Modal -->
@@ -2182,9 +2259,204 @@
       } catch (e) {}
     });
 
+    // ==========================================
+    // Contributors Management Logic
+    // ==========================================
+    const DEFAULT_CONTRIBUTORS = [
+      {
+        id: 'contrib-1',
+        name: "Aashish Singh",
+        role: "Lead Maintainer & Developer",
+        branch: "IIT Madras BS Degree",
+        avatar: "",
+        github: "https://github.com/ashusingh06",
+        linkedin: "https://www.linkedin.com/in/ashusingh06",
+        email: "aashishsinghh06@gmail.com"
+      }
+    ];
+
+    let allContributors = Array.from(DEFAULT_CONTRIBUTORS);
+
+    async function loadContributors() {
+      if (typeof fetchContributorsFromFirestore === 'function') {
+        try {
+          const cloudContributors = await fetchContributorsFromFirestore();
+          if (Array.isArray(cloudContributors) && cloudContributors.length > 0) {
+            allContributors = cloudContributors;
+            try { localStorage.setItem('mghub_contributors', JSON.stringify(allContributors)); } catch(e){}
+            renderContributorsTable(allContributors);
+            return;
+          }
+        } catch (e) {}
+      }
+
+      try {
+        const local = localStorage.getItem('mghub_contributors');
+        if (local) {
+          allContributors = JSON.parse(local);
+        }
+      } catch (e) {}
+
+      renderContributorsTable(allContributors);
+    }
+
+    function getInitials(name) {
+      if (!name) return 'MG';
+      return name.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
+    }
+
+    function renderContributorsTable(contributors) {
+      const tbody = document.getElementById('contributorsTableBody');
+      const countEl = document.getElementById('tabContributorsCount');
+      if (countEl) countEl.textContent = contributors.length;
+      if (!tbody) return;
+
+      if (!contributors.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #a1a1aa; padding: 24px;">No contributors added yet. Click "+ Add New Contributor" to acknowledge contributors.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = contributors.map(c => {
+        const avatarHtml = c.avatar && c.avatar.trim()
+          ? `<img src="${c.avatar}" alt="${c.name}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />`
+          : `<div style="width: 32px; height: 32px; border-radius: 50%; background: #09090b; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;">${getInitials(c.name)}</div>`;
+
+        const socialLinks = [];
+        if (c.github) socialLinks.push(`<a href="${c.github}" target="_blank" style="color: #09090b; text-decoration: underline;">GitHub</a>`);
+        if (c.linkedin) socialLinks.push(`<a href="${c.linkedin}" target="_blank" style="color: #0284c7; text-decoration: underline;">LinkedIn</a>`);
+        if (c.email) socialLinks.push(`<a href="mailto:${c.email}" style="color: #166534; text-decoration: underline;">Email</a>`);
+
+        return `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                ${avatarHtml}
+                <strong style="color: #09090b;">${c.name}</strong>
+              </div>
+            </td>
+            <td><span class="level-badge badge-diploma" style="background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd;">${c.role}</span></td>
+            <td><span style="color: #71717a; font-size: 13px;">${c.branch || 'IIT Madras'}</span></td>
+            <td><span style="font-size: 12.5px; display: flex; gap: 8px;">${socialLinks.length ? socialLinks.join(' • ') : '—'}</span></td>
+            <td>
+              <div class="action-btn-group">
+                <button class="btn-sm-edit" onclick="openEditContributorModal('${c.id}')">✏️ Edit</button>
+                <button class="btn-sm-edit" style="color: #ef4444; border-color: #fecaca;" onclick="deleteContributor('${c.id}')">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    const contributorModal = document.getElementById('contributorModal');
+    const contributorForm = document.getElementById('contributorForm');
+
+    document.getElementById('openAddContributorModalBtn')?.addEventListener('click', () => {
+      document.getElementById('contributorModalTitle').textContent = 'Add Contributor';
+      document.getElementById('contributorIdInput').value = '';
+      document.getElementById('contributorNameInput').value = '';
+      document.getElementById('contributorRoleInput').value = '';
+      document.getElementById('contributorBranchInput').value = 'IIT Madras BS Degree';
+      document.getElementById('contributorAvatarInput').value = '';
+      document.getElementById('contributorGithubInput').value = '';
+      document.getElementById('contributorLinkedinInput').value = '';
+      document.getElementById('contributorEmailInput').value = '';
+      contributorModal.style.display = 'flex';
+      document.getElementById('contributorNameInput').focus();
+    });
+
+    document.getElementById('closeContributorModalBtn')?.addEventListener('click', () => {
+      contributorModal.style.display = 'none';
+    });
+
+    document.getElementById('cancelContributorBtn')?.addEventListener('click', () => {
+      contributorModal.style.display = 'none';
+    });
+
+    window.openEditContributorModal = function(id) {
+      const c = allContributors.find(item => String(item.id) === String(id));
+      if (!c) return;
+
+      document.getElementById('contributorModalTitle').textContent = `Edit Contributor (${c.name})`;
+      document.getElementById('contributorIdInput').value = c.id;
+      document.getElementById('contributorNameInput').value = c.name;
+      document.getElementById('contributorRoleInput').value = c.role;
+      document.getElementById('contributorBranchInput').value = c.branch || '';
+      document.getElementById('contributorAvatarInput').value = c.avatar || '';
+      document.getElementById('contributorGithubInput').value = c.github || '';
+      document.getElementById('contributorLinkedinInput').value = c.linkedin || '';
+      document.getElementById('contributorEmailInput').value = c.email || '';
+      contributorModal.style.display = 'flex';
+    };
+
+    window.deleteContributor = async function(id) {
+      const c = allContributors.find(item => String(item.id) === String(id));
+      if (!c) return;
+      if (!confirm(`Delete contributor "${c.name}"? This will immediately remove them from the student home page.`)) return;
+
+      allContributors = allContributors.filter(item => String(item.id) !== String(id));
+      renderContributorsTable(allContributors);
+
+      try {
+        localStorage.setItem('mghub_contributors', JSON.stringify(allContributors));
+        if (typeof saveContributorsToFirestore === 'function') {
+          await saveContributorsToFirestore(allContributors);
+        }
+      } catch (e) {}
+    };
+
+    contributorForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('contributorIdInput').value.trim();
+      const name = document.getElementById('contributorNameInput').value.trim();
+      const role = document.getElementById('contributorRoleInput').value.trim();
+      const branch = document.getElementById('contributorBranchInput').value.trim();
+      const avatar = document.getElementById('contributorAvatarInput').value.trim();
+      const github = document.getElementById('contributorGithubInput').value.trim();
+      const linkedin = document.getElementById('contributorLinkedinInput').value.trim();
+      const email = document.getElementById('contributorEmailInput').value.trim();
+
+      if (!name || !role) return;
+
+      if (id) {
+        const item = allContributors.find(c => String(c.id) === String(id));
+        if (item) {
+          item.name = name;
+          item.role = role;
+          item.branch = branch;
+          item.avatar = avatar;
+          item.github = github;
+          item.linkedin = linkedin;
+          item.email = email;
+        }
+      } else {
+        allContributors.push({
+          id: 'contrib-' + Date.now(),
+          name,
+          role,
+          branch,
+          avatar,
+          github,
+          linkedin,
+          email
+        });
+      }
+
+      renderContributorsTable(allContributors);
+      contributorModal.style.display = 'none';
+
+      try {
+        localStorage.setItem('mghub_contributors', JSON.stringify(allContributors));
+        if (typeof saveContributorsToFirestore === 'function') {
+          await saveContributorsToFirestore(allContributors);
+        }
+      } catch (e) {}
+    });
+
     // Init auth check & immediate render
     checkAuth();
     loadPortalLinks();
+    loadContributors();
   </script>
 </body>
 </html>
