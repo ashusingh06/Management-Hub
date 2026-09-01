@@ -5,7 +5,7 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const apiKey = process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || '';
+const apiKey = process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || 'AIzaSyBqjrdW8B7UR_QeQ-ADibYBNGzo4yIp0Mw';
 const authDomain = process.env.VITE_FIREBASE_AUTH_DOMAIN || 'management-hub-1c14c.firebaseapp.com';
 const projectId = process.env.VITE_FIREBASE_PROJECT_ID || 'management-hub-1c14c';
 const storageBucket = process.env.VITE_FIREBASE_STORAGE_BUCKET || 'management-hub-1c14c.firebasestorage.app';
