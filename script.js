@@ -623,14 +623,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (modalOpenNotesDirectBtn) {
         modalOpenNotesDirectBtn.href = notesUrl;
-        modalOpenNotesDirectBtn.target = '_blank';
-        modalOpenNotesDirectBtn.rel = 'noopener noreferrer';
+        modalOpenNotesDirectBtn.onclick = (e) => {
+          e.preventDefault();
+          if (typeof openPdfSecurely === 'function') openPdfSecurely(notesUrl, fileName);
+          else window.open(notesUrl, '_blank');
+        };
       }
       if (modalDownloadNotesDirectBtn) {
         modalDownloadNotesDirectBtn.href = notesUrl;
-        modalDownloadNotesDirectBtn.target = '_blank';
-        modalDownloadNotesDirectBtn.rel = 'noopener noreferrer';
-        modalDownloadNotesDirectBtn.setAttribute('download', fileName);
+        modalDownloadNotesDirectBtn.onclick = (e) => {
+          e.preventDefault();
+          if (typeof downloadPdfSecurely === 'function') downloadPdfSecurely(notesUrl, fileName);
+          else window.open(notesUrl, '_blank');
+        };
       }
     } else {
       if (modalNotesAvailableBox) modalNotesAvailableBox.style.display = 'none';
@@ -656,6 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const title = pyq.title || `${course.code} — PYQ ${pyq.year || ''}`;
           const fileUrl = pyq.fileUrl || notesUrl || '#';
           const yearTag = pyq.year ? `Year ${pyq.year}` : 'Question Paper';
+          const safeTitle = (pyq.fileName || 'PYQ.pdf').replace(/'/g, "\\'");
 
           return `
             <div class="pyq-item-card">
@@ -669,10 +675,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
               </div>
               <div class="resource-actions">
-                <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="btn-open-pdf">Open PDF ↗</a>
-                <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" download="${pyq.fileName || 'PYQ.pdf'}" class="btn-dl-pdf" title="Download ${title}">
+                <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeTitle}');}else{window.open('${fileUrl}', '_blank');}" class="btn-open-pdf" style="cursor:pointer; background:none; border:1px solid #e4e4e7; font-family:inherit;">Open PDF ↗</button>
+                <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeTitle}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="Download ${title}" style="cursor:pointer; background:none; border:1px solid #e4e4e7;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                </a>
+                </button>
               </div>
             </div>
           `;
@@ -931,7 +937,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const href = dlBtn.getAttribute('href');
           if (href && href !== '#' && href !== '') {
             e.preventDefault();
-            window.open(href, '_blank', 'noopener,noreferrer');
+            if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`);
+            else window.open(href, '_blank');
           } else {
             window.location.href = `course.html?code=${code}`;
           }
@@ -971,7 +978,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const href = dlBtn.getAttribute('href');
           if (href && href !== '#' && href !== '') {
             e.preventDefault();
-            window.open(href, '_blank', 'noopener,noreferrer');
+            if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`);
+            else window.open(href, '_blank');
           } else {
             window.location.href = `course.html?code=${code}`;
           }

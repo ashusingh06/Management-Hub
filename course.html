@@ -7,11 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260830_02">
+  <link rel="stylesheet" href="style.css?v=20260901_17">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+  <script src="firebase-config.js?v=20260901_17"></script>
   <style>
     .course-page-container {
       max-width: 1140px;
@@ -588,8 +589,17 @@
           const name = notesData.title || notesData.fileName || notesUrl.split('/').pop().replace(/_/g, ' ') || `${c.code}_Notes.pdf`;
           notesFileName.textContent = name;
           openNotesBtn.href = notesUrl;
+          openNotesBtn.onclick = (e) => {
+            e.preventDefault();
+            if (typeof openPdfSecurely === 'function') openPdfSecurely(notesUrl, name);
+            else window.open(notesUrl, '_blank');
+          };
           downloadNotesBtn.href = notesUrl;
-          downloadNotesBtn.setAttribute('download', name.endsWith('.pdf') ? name : `${name}.pdf`);
+          downloadNotesBtn.onclick = (e) => {
+            e.preventDefault();
+            if (typeof downloadPdfSecurely === 'function') downloadPdfSecurely(notesUrl, name);
+            else window.open(notesUrl, '_blank');
+          };
         } else {
           notesAvailableContainer.style.display = 'none';
           notesEmptyContainer.style.display = 'flex';
@@ -620,10 +630,10 @@
                   </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-                  <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-open">Open PDF ↗</a>
-                  <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" download="${p.fileName || 'PYQ.pdf'}" class="btn-action-dl" title="Download ${title}">
+                  <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${(p.fileName || 'PYQ.pdf').replace(/'/g, "\\'")}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; border: 1px solid #e4e4e7; background: #fff; font-family: inherit;">Open PDF ↗</button>
+                  <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${(p.fileName || 'PYQ.pdf').replace(/'/g, "\\'")}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="Download ${title}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #fff;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  </a>
+                  </button>
                 </div>
               </div>
             `;

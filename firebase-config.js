@@ -115,3 +115,98 @@ async function signOutUser() {
   sessionStorage.removeItem('mghub_admin_email');
   localStorage.removeItem('mghub_jwt');
 }
+
+function openPdfSecurely(url, filename = 'document.pdf') {
+  if (!url || url === '#' || url === '') return;
+
+  if (url.startsWith('data:')) {
+    try {
+      const arr = url.split(',');
+      const mimeMatch = arr[0].match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : 'application/pdf';
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      const blob = new Blob([u8arr], { type: mime });
+      const blobUrl = URL.createObjectURL(blob);
+      const win = window.open(blobUrl, '_blank');
+      if (!win) {
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+      return;
+    } catch (e) {
+      console.error('Error opening data URL:', e);
+    }
+  }
+
+  // Normal HTTP/HTTPS / Relative URL
+  const win = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!win) {
+    window.location.href = url;
+  }
+}
+
+function downloadPdfSecurely(url, filename = 'document.pdf') {
+  if (!url || url === '#' || url === '') return;
+
+  if (url.startsWith('data:')) {
+    try {
+      const arr = url.split(',');
+      const mimeMatch = arr[0].match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : 'application/pdf';
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      const blob = new Blob([u8arr], { type: mime });
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+      return;
+    } catch (e) {
+      console.error('Error downloading data URL:', e);
+    }
+  }
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+async function uploadPdfToFirebaseStorage(file, courseCode) {
+  if (typeof firebase === 'undefined') return null;
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  if (!firebase.storage) return null;
+  try {
+    const storage = firebase.storage();
+    const timestamp = Date.now();
+    const cleanFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const storageRef = storage.ref(`notes/${courseCode}/${timestamp}_${cleanFileName}`);
+    const snapshot = await storageRef.put(file);
+    const downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
+  } catch (e) {
+    console.warn('Firebase storage upload fallback:', e);
+    return null;
+  }
+}
