@@ -780,9 +780,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ...c,
             title: c.title || base.title,
             level: c.level || base.level,
-            pdf_url: c.pdf_url !== undefined ? c.pdf_url : (base.pdf_url || ''),
-            notes: c.notes !== undefined ? c.notes : (base.notes || null),
-            pyqs: Array.isArray(c.pyqs) ? c.pyqs : (base.pyqs || [])
+            pdf_url: c.pdf_url !== undefined ? c.pdf_url : '',
+            notes: c.notes !== undefined ? c.notes : { available: false, fileName: '', fileUrl: '' },
+            pyqs: Array.isArray(c.pyqs) ? c.pyqs : []
           });
         } else {
           map.set(code, c);

@@ -11,7 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js?v=20260901_19"></script>
+  <script src="firebase-config.js?v=20260901_20"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; text-rendering: optimizeLegibility; }
@@ -1422,9 +1422,9 @@
               ...c,
               title: c.title || base.title,
               level: c.level || base.level,
-              pdf_url: c.pdf_url !== undefined ? c.pdf_url : (base.pdf_url || ''),
-              notes: c.notes !== undefined ? c.notes : (base.notes || null),
-              pyqs: Array.isArray(c.pyqs) ? c.pyqs : (base.pyqs || [])
+              pdf_url: c.pdf_url !== undefined ? c.pdf_url : '',
+              notes: c.notes !== undefined ? c.notes : { available: false, fileName: '', fileUrl: '' },
+              pyqs: Array.isArray(c.pyqs) ? c.pyqs : []
             });
           } else {
             map.set(code, c);
@@ -2093,18 +2093,23 @@
 
     // Database Reset
     document.getElementById('resetCoursesBtn')?.addEventListener('click', async () => {
-      if (!confirm('Re-seed all 52 default courses? Custom changes will be reset to default.')) return;
-      allCourses = Array.from(INITIAL_COURSES_CATALOG);
+      if (!confirm('Restore default clean course catalog? All unattached sample notes & PYQs will be cleared.')) return;
+      allCourses = INITIAL_COURSES_CATALOG.map(c => ({
+        ...c,
+        pdf_url: '',
+        notes: { available: false, fileName: '', fileUrl: '' },
+        pyqs: []
+      }));
       renderCourseTable(allCourses);
       renderPdfManagerTable(allCourses);
       updateDashboardCounts();
       try {
-        await fetch('/api/admin/reset-courses', {
-          method: 'POST',
-          headers: getAuthHeaders(),
-          credentials: 'include'
-        });
-        alert('Curriculum reset to standard 52 courses.');
+        localStorage.setItem('mghub_courses', JSON.stringify(allCourses));
+        localStorage.removeItem('mghub_local_pdfs');
+        if (typeof saveCoursesToFirestore === 'function') {
+          await saveCoursesToFirestore(allCourses);
+        }
+        alert('Curriculum reset to clean 30 courses successfully.');
       } catch (e) {}
     });
 

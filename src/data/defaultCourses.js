@@ -8,39 +8,13 @@ export const DEFAULT_COURSES = [
     "description": "Linear algebra, matrix operations, calculus fundamentals, vector spaces, and mathematical foundations for analytics.",
     "prerequisites": [],
     "syllabus": "Module 1: Vector Spaces & Matrices | Module 2: Systems of Linear Equations | Module 3: Eigenvalues & PCA Foundations | Module 4: Differential Calculus",
-    "pdf_url": "/uploads/notes/MATH101_Notes_1788007492112_2sihppt.pdf",
+    "pdf_url": "",
     "notes": {
-      "available": true,
-      "fileName": "Week 1",
-      "fileUrl": "/uploads/notes/MATH101_Notes_1788007492112_2sihppt.pdf",
-      "title": "Week 1"
+      "available": false,
+      "fileName": "",
+      "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2026,
-        "title": "pyq 2025",
-        "fileName": "Maths1_Quiz_1 (1).pdf",
-        "fileUrl": "/uploads/notes/MATH101_Notes_1788017899931_Maths1_Quiz_1__1_.pdf"
-      },
-      {
-        "year": 2025,
-        "title": "MATH101 — PYQ 2025",
-        "fileName": "MATH101_PYQ_2025.pdf",
-        "fileUrl": "/uploads/notes/MATH101_PYQ_2025.pdf"
-      },
-      {
-        "year": 2024,
-        "title": "MATH101 — PYQ 2024",
-        "fileName": "MATH101_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/MATH101_PYQ_2024.pdf"
-      },
-      {
-        "year": 2023,
-        "title": "MATH101 — PYQ 2023",
-        "fileName": "MATH101_PYQ_2023.pdf",
-        "fileUrl": "/uploads/notes/MATH101_PYQ_2023.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 2,
@@ -51,33 +25,13 @@ export const DEFAULT_COURSES = [
     "description": "Probability theory, random variables, discrete and continuous distributions, hypothesis testing, and exploratory data analysis.",
     "prerequisites": [],
     "syllabus": "Module 1: Probability Basics & Bayes Theorem | Module 2: Probability Distributions | Module 3: Sampling Theory | Module 4: Hypothesis Testing & Confidence Intervals",
-    "pdf_url": "/uploads/notes/STAT101_Notes_1788007090424_1._Prehistoric_Period__1_.pdf",
+    "pdf_url": "",
     "notes": {
-      "available": true,
-      "fileName": "Complete Probability & Inference Notes",
-      "fileUrl": "/uploads/notes/STAT101_Notes_1788007090424_1._Prehistoric_Period__1_.pdf",
-      "title": "Complete Probability & Inference Notes"
+      "available": false,
+      "fileName": "",
+      "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2025,
-        "title": "STAT101 — PYQ 2025",
-        "fileName": "STAT101_PYQ_2025.pdf",
-        "fileUrl": "/uploads/notes/STAT101_PYQ_2025.pdf"
-      },
-      {
-        "year": 2024,
-        "title": "STAT101 — PYQ 2024",
-        "fileName": "STAT101_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/STAT101_PYQ_2024.pdf"
-      },
-      {
-        "year": 2023,
-        "title": "STAT101 — PYQ 2023",
-        "fileName": "STAT101_PYQ_2023.pdf",
-        "fileUrl": "/uploads/notes/STAT101_PYQ_2023.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 3,
@@ -90,24 +44,11 @@ export const DEFAULT_COURSES = [
     "syllabus": "Module 1: Logic & Flowcharts | Module 2: Algorithmic Complexity Basics | Module 3: Pattern Recognition | Module 4: Sorting & Searching Logic",
     "pdf_url": "",
     "notes": {
-      "available": true,
-      "fileName": "CS101_Algorithms_and_Logic_Notes.pdf",
-      "fileUrl": "/uploads/notes/CS101_Notes_Sample.pdf"
+      "available": false,
+      "fileName": "",
+      "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2025,
-        "title": "CS101 — PYQ 2025",
-        "fileName": "CS101_PYQ_2025.pdf",
-        "fileUrl": "/uploads/notes/CS101_PYQ_2025.pdf"
-      },
-      {
-        "year": 2024,
-        "title": "CS101 — PYQ 2024",
-        "fileName": "CS101_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/CS101_PYQ_2024.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 4,
@@ -124,14 +65,7 @@ export const DEFAULT_COURSES = [
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2024,
-        "title": "ENG101 — PYQ 2024",
-        "fileName": "ENG101_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/ENG101_PYQ_2024.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 5,
@@ -144,24 +78,11 @@ export const DEFAULT_COURSES = [
     "syllabus": "Module 1: Supply & Demand Equilibrium | Module 2: Elasticity of Demand | Module 3: Production & Cost Functions | Module 4: Market Structures & Pricing",
     "pdf_url": "",
     "notes": {
-      "available": true,
-      "fileName": "ECON101_Microeconomics_Lecture_Summary.pdf",
-      "fileUrl": "/uploads/notes/ECON101_Notes_Sample.pdf"
+      "available": false,
+      "fileName": "",
+      "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2025,
-        "title": "ECON101 — PYQ 2025",
-        "fileName": "ECON101_PYQ_2025.pdf",
-        "fileUrl": "/uploads/notes/ECON101_PYQ_2025.pdf"
-      },
-      {
-        "year": 2024,
-        "title": "ECON101 — PYQ 2024",
-        "fileName": "ECON101_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/ECON101_PYQ_2024.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 6,
@@ -174,18 +95,11 @@ export const DEFAULT_COURSES = [
     "syllabus": "Module 1: Accounting Principles & Dual Aspect | Module 2: Journal & Ledger Balancing | Module 3: Trial Balance & P&L Statement | Module 4: Cash Flow & Balance Sheet Analysis",
     "pdf_url": "",
     "notes": {
-      "available": true,
-      "fileName": "ACC101_Financial_Statements_Guide.pdf",
-      "fileUrl": "/uploads/notes/ACC101_Notes_Sample.pdf"
+      "available": false,
+      "fileName": "",
+      "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2025,
-        "title": "ACC101 — PYQ 2025",
-        "fileName": "ACC101_PYQ_2025.pdf",
-        "fileUrl": "/uploads/notes/ACC101_PYQ_2025.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 7,
@@ -204,20 +118,7 @@ export const DEFAULT_COURSES = [
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2024,
-        "title": "STAT102 — PYQ 2024",
-        "fileName": "STAT102_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/STAT102_PYQ_2024.pdf"
-      },
-      {
-        "year": 2023,
-        "title": "STAT102 — PYQ 2023",
-        "fileName": "STAT102_PYQ_2023.pdf",
-        "fileUrl": "/uploads/notes/STAT102_PYQ_2023.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 8,
@@ -249,24 +150,11 @@ export const DEFAULT_COURSES = [
     "syllabus": "Module 1: NumPy Array Manipulation | Module 2: Pandas DataFrames & Cleaning | Module 3: Data Visualization | Module 4: Exploratory Data Projects",
     "pdf_url": "",
     "notes": {
-      "available": true,
-      "fileName": "PY201_Python_Data_Pipelines.pdf",
-      "fileUrl": "/uploads/notes/PY201_Notes_Sample.pdf"
+      "available": false,
+      "fileName": "",
+      "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2025,
-        "title": "PY201 — PYQ 2025",
-        "fileName": "PY201_PYQ_2025.pdf",
-        "fileUrl": "/uploads/notes/PY201_PYQ_2025.pdf"
-      },
-      {
-        "year": 2024,
-        "title": "PY201 — PYQ 2024",
-        "fileName": "PY201_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/PY201_PYQ_2024.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 10,
@@ -285,14 +173,7 @@ export const DEFAULT_COURSES = [
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2024,
-        "title": "DB201 — PYQ 2024",
-        "fileName": "DB201_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/DB201_PYQ_2024.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 11,
@@ -372,14 +253,7 @@ export const DEFAULT_COURSES = [
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2024,
-        "title": "FIN201 — PYQ 2024",
-        "fileName": "FIN201_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/FIN201_PYQ_2024.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 15,
@@ -612,24 +486,11 @@ export const DEFAULT_COURSES = [
     "syllabus": "Module 1: LLM Architectures & Foundations | Module 2: Prompt Engineering & RAG Systems | Module 3: Autonomous AI Agents | Module 4: Enterprise ROI & Governance",
     "pdf_url": "",
     "notes": {
-      "available": true,
-      "fileName": "AI301_GenAI_Enterprise_Framework.pdf",
-      "fileUrl": "/uploads/notes/AI301_Notes_Sample.pdf"
+      "available": false,
+      "fileName": "",
+      "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2025,
-        "title": "AI301 — PYQ 2025",
-        "fileName": "AI301_PYQ_2025.pdf",
-        "fileUrl": "/uploads/notes/AI301_PYQ_2025.pdf"
-      },
-      {
-        "year": 2024,
-        "title": "AI301 — PYQ 2024",
-        "fileName": "AI301_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/AI301_PYQ_2024.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 27,
@@ -688,14 +549,7 @@ export const DEFAULT_COURSES = [
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": [
-      {
-        "year": 2024,
-        "title": "TSA301 — PYQ 2024",
-        "fileName": "TSA301_PYQ_2024.pdf",
-        "fileUrl": "/uploads/notes/TSA301_PYQ_2024.pdf"
-      }
-    ]
+    "pyqs": []
   },
   {
     "id": 30,
