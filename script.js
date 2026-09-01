@@ -153,18 +153,20 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', onScroll, { passive: true });
 
   // Initial indicator positioning
-  const initialActive = document.querySelector('.nav-btn.active') || navLinks[0];
-  if (initialActive) {
-    updateIndicator(initialActive);
-  }
-
-  // Handle window resizing
-  window.addEventListener('resize', () => {
-    const currentActive = document.querySelector('.nav-btn.active');
+  function refreshActiveNavIndicator() {
+    const currentActive = document.querySelector('.nav-btn.active') || navLinks[0];
     if (currentActive) {
       updateIndicator(currentActive);
     }
-  });
+  }
+
+  refreshActiveNavIndicator();
+  requestAnimationFrame(refreshActiveNavIndicator);
+  setTimeout(refreshActiveNavIndicator, 100);
+
+  // Handle window resizing & orientation change
+  window.addEventListener('resize', refreshActiveNavIndicator);
+  window.addEventListener('orientationchange', () => setTimeout(refreshActiveNavIndicator, 150));
 
   /* ==========================================================================
      Live Interactive Calculators (CGPA Calculator & Grade Predictor)
