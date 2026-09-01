@@ -35,6 +35,11 @@ export default function Footer({ onOpenAdmin }) {
                 </a>
               </li>
               <li>
+                <a href="https://discourse.onlinedegree.iitm.ac.in" target="_blank" rel="noopener noreferrer">
+                  IITM Discourse Forum <ExternalLink size={11} style={{ display: 'inline', marginLeft: '3px' }} />
+                </a>
+              </li>
+              <li>
                 <a href="https://lookerstudio.google.com/u/0/reporting/d02dac13-665b-49cc-8d51-0451268a6a3e/page/5sgkE" target="_blank" rel="noopener noreferrer">
                   Looker Studio Dashboard <ExternalLink size={11} style={{ display: 'inline', marginLeft: '3px' }} />
                 </a>

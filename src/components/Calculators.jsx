@@ -109,7 +109,7 @@ export default function Calculators() {
                 <Calculator size={20} />
                 <h3>CGPA Calculator</h3>
               </div>
-              <p>Official Formula: <code>CGPA = Total Grade Points ÷ Total Subjects</code></p>
+              <p>Calculate cumulative GPA by adding your subject grade points.</p>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '200px', overflowY: 'auto', marginBottom: '10px' }}>
@@ -179,7 +179,7 @@ export default function Calculators() {
                 <Target size={20} />
                 <h3>End-Term Target Forecaster</h3>
               </div>
-              <p>Formula: <code>T = max(0.6F + 0.3max(Q1,Q2), 0.45F + 0.25Q1 + 0.3Q2)</code></p>
+              <p>Forecast your expected course grade using your Quiz and End-Term scores.</p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
@@ -272,7 +272,7 @@ export default function Calculators() {
                 <Sparkles size={20} />
                 <h3>End-Term Passing Predictor</h3>
               </div>
-              <p>Calculate minimum marks needed in End-Term (F /100) to pass the course (T &ge; 40).</p>
+              <p>Determine the minimum End-Term score required to hit your target grade.</p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
