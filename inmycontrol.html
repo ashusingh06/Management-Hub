@@ -1330,6 +1330,32 @@
       loadCoursesFromApi();
     }
 
+    function mergeWithMasterCatalog(loadedCourses) {
+      const map = new Map();
+      INITIAL_COURSES_CATALOG.forEach(c => map.set(c.code.toUpperCase(), { ...c }));
+      if (Array.isArray(loadedCourses)) {
+        loadedCourses.forEach(c => {
+          if (!c || !c.code) return;
+          const code = c.code.toUpperCase();
+          if (map.has(code)) {
+            const base = map.get(code);
+            map.set(code, {
+              ...base,
+              ...c,
+              title: c.title || base.title,
+              level: c.level || base.level,
+              pdf_url: c.pdf_url || base.pdf_url || '',
+              notes: c.notes || base.notes || null,
+              pyqs: Array.isArray(c.pyqs) ? c.pyqs : (base.pyqs || [])
+            });
+          } else {
+            map.set(code, c);
+          }
+        });
+      }
+      return Array.from(map.values());
+    }
+
     async function saveCoursesLocallyAndSync(updatedCourses) {
       allCourses = updatedCourses;
       try {
@@ -1355,7 +1381,7 @@
         try {
           const cloudCourses = await fetchCoursesFromFirestore();
           if (Array.isArray(cloudCourses) && cloudCourses.length > 0) {
-            allCourses = cloudCourses;
+            allCourses = mergeWithMasterCatalog(cloudCourses);
             try {
               localStorage.setItem('mghub_courses', JSON.stringify(allCourses));
             } catch(e){}
@@ -1373,7 +1399,7 @@
         if (res.ok) {
           const data = await res.json();
           if (data.courses && data.courses.length > 0) {
-            allCourses = data.courses;
+            allCourses = mergeWithMasterCatalog(data.courses);
             saveCoursesLocallyAndSync(allCourses);
             renderCourseTable(allCourses);
             renderPdfManagerTable(allCourses);
@@ -1387,7 +1413,7 @@
       try {
         const saved = JSON.parse(localStorage.getItem('mghub_courses') || 'null');
         if (Array.isArray(saved) && saved.length > 0) {
-          allCourses = saved;
+          allCourses = mergeWithMasterCatalog(saved);
           renderCourseTable(allCourses);
           renderPdfManagerTable(allCourses);
           updateDashboardCounts();
@@ -1401,7 +1427,7 @@
         if (res.ok) {
           const list = await res.json();
           if (Array.isArray(list) && list.length > 0) {
-            allCourses = list;
+            allCourses = mergeWithMasterCatalog(list);
             renderCourseTable(allCourses);
             renderPdfManagerTable(allCourses);
             updateDashboardCounts();
@@ -1410,6 +1436,7 @@
         }
       } catch (e) {}
 
+      allCourses = Array.from(INITIAL_COURSES_CATALOG);
       renderCourseTable(allCourses);
       renderPdfManagerTable(allCourses);
       updateDashboardCounts();
@@ -1874,6 +1901,7 @@
       renderCourseTable(allCourses);
       renderPdfManagerTable(allCourses);
       updateDashboardCounts();
+      saveCoursesLocallyAndSync(allCourses);
 
       try {
         if (courseId) {
@@ -1923,6 +1951,7 @@
       renderCourseTable(allCourses);
       renderPdfManagerTable(allCourses);
       updateDashboardCounts();
+      saveCoursesLocallyAndSync(allCourses);
       courseEditModal.classList.remove('active');
 
       const payload = { code, level, title, credits, prerequisites: prereqs, description: desc };

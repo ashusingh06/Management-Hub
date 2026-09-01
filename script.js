@@ -720,13 +720,72 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeLevelFilter = 'foundation';
   let liveCourses = [];
 
+  const MASTER_COURSES_CATALOG = [
+    { id: 1, code: "BSMA1001", level: "foundation", title: "Mathematics for Data Science I", credits: 4, prerequisites: [], description: "Linear algebra, matrix operations, calculus fundamentals, vector spaces, and mathematical foundations for analytics.", pdf_url: "" },
+    { id: 2, code: "BSMA1002", level: "foundation", title: "Statistics for Data Science I", credits: 4, prerequisites: [], description: "Probability theory, random variables, discrete and continuous distributions, hypothesis testing, and exploratory data analysis.", pdf_url: "" },
+    { id: 3, code: "BSCS1001", level: "foundation", title: "Computational Thinking", credits: 4, prerequisites: [], description: "Algorithm design, problem decomposition, logic formulation, pseudocode, iteration, and structured problem solving.", pdf_url: "" },
+    { id: 4, code: "BSHS1001", level: "foundation", title: "English I", credits: 4, prerequisites: [], description: "Professional communication, academic writing, presentation techniques, grammar, and executive business discourse.", pdf_url: "" },
+    { id: 5, code: "BSMS1201", level: "foundation", title: "Principles of Economics", credits: 4, prerequisites: [], description: "Microeconomic foundations, market equilibrium, supply-demand dynamics, price elasticity, and consumer theory.", pdf_url: "" },
+    { id: 6, code: "BSMS1202", level: "foundation", title: "Financial Accounting", credits: 4, prerequisites: [], description: "Balance sheets, ledger entries, income statements, cash flow statements, and corporate financial recordkeeping.", pdf_url: "" },
+    { id: 7, code: "BSMS1203", level: "foundation", title: "Business Statistics", credits: 4, prerequisites: ["BSMA1002"], description: "Regression models, time-series forecasting, variance analysis (ANOVA), and statistical decision-making frameworks.", pdf_url: "" },
+    { id: 8, code: "BSMS1204", level: "foundation", title: "Management Thought and Practice", credits: 4, prerequisites: [], description: "Classical & contemporary management theories, leadership frameworks, organizational design, and business strategy.", pdf_url: "" },
+    { id: 9, code: "BSMS2201", level: "diploma", title: "Python for Data Analytics", credits: 4, prerequisites: ["BSCS1001"], description: "Pandas, NumPy, Matplotlib, Seaborn, exploratory data analysis, web scraping, and data transformation pipelines.", pdf_url: "" },
+    { id: 10, code: "BSMS2202", level: "diploma", title: "Data Management", credits: 4, prerequisites: ["BSCS1001"], description: "Relational schema design, SQL querying, indexing, ACID transactions, database normalization, and data modeling.", pdf_url: "" },
+    { id: 11, code: "BSMS2203", level: "diploma", title: "Analysis of Economic Data", credits: 4, prerequisites: ["BSMS1201", "BSMA1002"], description: "Econometric techniques, empirical model evaluation, OLS regression, hypothesis testing on macroeconomic datasets.", pdf_url: "" },
+    { id: 12, code: "BSMS3201", level: "diploma", title: "Marketing Analytics", credits: 4, prerequisites: ["BSMS1203", "BSMS1204"], description: "Customer segmentation, Customer Lifetime Value (CLV), churn prediction, pricing optimization, and marketing mix modeling.", pdf_url: "" },
+    { id: 13, code: "BSMS3202", level: "diploma", title: "HR Analytics", credits: 4, prerequisites: ["BSMA1002", "BSMS1204"], description: "Workforce metrics, employee retention modeling, talent acquisition funnels, and organizational performance data.", pdf_url: "" },
+    { id: 14, code: "BSMS3203", level: "diploma", title: "Financial Analytics", credits: 4, prerequisites: ["BSMS1202", "BSMA1002"], description: "Asset pricing models (CAPM), portfolio risk metrics, Value at Risk (VaR), and quantitative financial time-series.", pdf_url: "" },
+    { id: 15, code: "BSMS2204", level: "diploma", title: "Operations Management", credits: 4, prerequisites: ["BSMA1001", "BSMS1204"], description: "Process optimization, queueing systems, inventory control (EOQ), capacity planning, and Lean Six Sigma principles.", pdf_url: "" },
+    { id: 16, code: "BSMS3204", level: "diploma", title: "Supply Chain Analytics", credits: 4, prerequisites: ["BSMS2204", "BSMS1203"], description: "Network design, logistics tracking, demand forecasting, multi-echelon inventory optimization, and bullwhip effect reduction.", pdf_url: "" },
+    { id: 17, code: "BSMS3901", level: "diploma", title: "Business Management Project", credits: 4, prerequisites: ["BSMS1204", "BSMS1202"], description: "Applied strategic research, business model evaluation, competitive landscape mapping, and executive execution planning.", pdf_url: "" },
+    { id: 18, code: "BSMS3902", level: "diploma", title: "Business Analytics Project", credits: 4, prerequisites: ["BSMS2201", "BSMS2202", "BSMS1203"], description: "End-to-end data pipeline construction, statistical model deployment, interactive dashboards, and actionable insight delivery.", pdf_url: "" },
+    { id: 19, code: "BSMS2205", level: "diploma", title: "Corporate Finance", credits: 4, prerequisites: ["BSMS1202"], description: "Capital budgeting (NPV/IRR), Weighted Average Cost of Capital (WACC), dividend decisions, and optimal capital structure.", pdf_url: "" },
+    { id: 20, code: "BSMS2206", level: "diploma", title: "Organizational Behaviour", credits: 4, prerequisites: ["BSMS1204"], description: "Team dynamics, workplace psychology, organizational culture, leadership influence, and cross-functional conflict resolution.", pdf_url: "" },
+    { id: 21, code: "BSMS3205", level: "diploma", title: "Money Banking and Financial Markets", credits: 4, prerequisites: ["BSMS1201", "BSMS1202"], description: "Monetary policy transmission mechanisms, commercial banking systems, bond markets, interest rates, and central banking.", pdf_url: "" },
+    { id: 22, code: "BSMS2207", level: "diploma", title: "Marketing Management", credits: 4, prerequisites: ["BSMS1204"], description: "Brand positioning, market research methodologies, omnichannel distribution strategy, and consumer touchpoint optimization.", pdf_url: "" },
+    { id: 23, code: "BSMS2208", level: "diploma", title: "Macroeconomics", credits: 4, prerequisites: ["BSMS1201"], description: "National income accounting (GDP), fiscal policy, inflation, unemployment, IS-LM frameworks, and international trade balance.", pdf_url: "" },
+    { id: 24, code: "BSMS3206", level: "diploma", title: "Managerial Economics", credits: 4, prerequisites: ["BSMS1201", "BSMA1001"], description: "Pricing strategy, oligopoly and game-theoretic market structures, cost analysis, and corporate decision theory.", pdf_url: "" },
+    { id: 25, code: "BSGN3001", level: "bs", title: "Strategies for Professional Growth", credits: 4, prerequisites: ["BSHS1001", "BSMS1204"], description: "Executive communication, career roadmap building, industry networking, personal branding, and professional leadership ethics.", pdf_url: "" },
+    { id: 26, code: "BSMS3207", level: "bs", title: "GenAI for Business", credits: 4, prerequisites: ["BSMS2201", "BSCS1001"], description: "LLM adoption frameworks, prompt engineering architectures, generative AI agent workflows, and measuring enterprise business ROI.", pdf_url: "" },
+    { id: 27, code: "BSMS3208", level: "bs", title: "Digital Business", credits: 4, prerequisites: ["BSMS1204", "BSMS2207"], description: "Platform business models, multi-sided market strategies, e-commerce architectures, network effects, and digital product scaling.", pdf_url: "" },
+    { id: 28, code: "BSMS3209", level: "bs", title: "Logistics and Supply Chain Management", credits: 4, prerequisites: ["BSMS3204"], description: "Multi-modal freight logistics, automated warehousing systems, port operations, and global supply resilience strategies.", pdf_url: "" },
+    { id: 29, code: "BSMS4201", level: "bs", title: "Applied Time Series Analysis", credits: 4, prerequisites: ["BSMS1203", "BSMS2201"], description: "ARIMA, SARIMA, GARCH volatility models, exponential smoothing, cointegration, stationarity, and financial forecasting.", pdf_url: "" },
+    { id: 30, code: "BSMS4202", level: "bs", title: "Market Intelligence", credits: 4, prerequisites: ["BSMS3201", "BSMS2201"], description: "Competitive intelligence frameworks, consumer trend scraping, sentiment tracking, NLP on market feeds, and actionable insight generation.", pdf_url: "" }
+  ];
+
+  function mergeWithMasterCatalog(loadedCourses) {
+    const map = new Map();
+    MASTER_COURSES_CATALOG.forEach(c => map.set(c.code.toUpperCase(), { ...c }));
+    if (Array.isArray(loadedCourses)) {
+      loadedCourses.forEach(c => {
+        if (!c || !c.code) return;
+        const code = c.code.toUpperCase();
+        if (map.has(code)) {
+          const base = map.get(code);
+          map.set(code, {
+            ...base,
+            ...c,
+            title: c.title || base.title,
+            level: c.level || base.level,
+            pdf_url: c.pdf_url || base.pdf_url || '',
+            notes: c.notes || base.notes || null,
+            pyqs: Array.isArray(c.pyqs) ? c.pyqs : (base.pyqs || [])
+          });
+        } else {
+          map.set(code, c);
+        }
+      });
+    }
+    return Array.from(map.values());
+  }
+
   async function loadLiveCoursesFromDatabase() {
     // 1. Try Firebase Cloud Firestore (Global Realtime Database)
     if (typeof fetchCoursesFromFirestore === 'function') {
       try {
         const cloudCourses = await fetchCoursesFromFirestore();
         if (Array.isArray(cloudCourses) && cloudCourses.length > 0) {
-          liveCourses = cloudCourses;
+          liveCourses = mergeWithMasterCatalog(cloudCourses);
           try {
             localStorage.setItem('mghub_courses', JSON.stringify(liveCourses));
           } catch(e){}
@@ -743,7 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok) {
         const data = await res.json();
         if (data.courses && data.courses.length > 0) {
-          liveCourses = data.courses;
+          liveCourses = mergeWithMasterCatalog(data.courses);
           renderDynamicCourseCards(liveCourses);
           updateFilterPillCounts(liveCourses);
           return;
@@ -755,7 +814,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const saved = JSON.parse(localStorage.getItem('mghub_courses') || 'null');
       if (Array.isArray(saved) && saved.length > 0) {
-        liveCourses = saved;
+        liveCourses = mergeWithMasterCatalog(saved);
         renderDynamicCourseCards(liveCourses);
         updateFilterPillCounts(liveCourses);
         return;
@@ -768,7 +827,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          liveCourses = data;
+          liveCourses = mergeWithMasterCatalog(data);
           renderDynamicCourseCards(liveCourses);
           updateFilterPillCounts(liveCourses);
           return;
@@ -776,6 +835,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (e) {}
 
+    liveCourses = Array.from(MASTER_COURSES_CATALOG);
+    renderDynamicCourseCards(liveCourses);
+    updateFilterPillCounts(liveCourses);
     bindStaticCardEvents();
   }
 
