@@ -21,7 +21,6 @@ export default function Footer({ onOpenAdmin }) {
             <ul>
               <li><a href="#calculators">Cumulative CGPA Engine</a></li>
               <li><a href="#calculators">Target Grade Forecaster</a></li>
-              <li><a href="#notes">Prerequisite Dependency Search</a></li>
               <li><a href="#notes">Study Notes & PDF Downloads</a></li>
             </ul>
           </div>

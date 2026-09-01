@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let scrollTimeout = null;
 
   /**
-   * Updates the position and width of the active pill indicator
+   * Updates the position, width, and height of the active pill indicator with pixel perfection
    */
   function updateIndicator(targetLink) {
     if (!targetLink || !navIndicator || !navbar) return;
@@ -65,10 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const linkRect = targetLink.getBoundingClientRect();
 
     const left = linkRect.left - navRect.left;
+    const top = linkRect.top - navRect.top;
     const width = linkRect.width;
+    const height = linkRect.height;
 
-    navIndicator.style.transform = `translateX(${left}px)`;
+    navIndicator.style.transform = `translate3d(${left}px, ${top}px, 0)`;
     navIndicator.style.width = `${width}px`;
+    navIndicator.style.height = `${height}px`;
 
     if (!navIndicator.classList.contains('ready')) {
       navIndicator.classList.add('ready');
@@ -992,11 +995,67 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // =========================================================================
+  // Live Official Ecosystem Portals Rendering & Firestore Sync
+  // =========================================================================
+  const DEFAULT_PORTAL_LINKS = [
+    { id: 'iitm-portal', title: 'Official Degree Website', subtitle: 'study.iitm.ac.in/mg', url: 'https://study.iitm.ac.in/mg/index.html' },
+    { id: 'iitm-discourse', title: 'IITM Discourse Forum', subtitle: 'discourse.onlinedegree.iitm.ac.in', url: 'https://discourse.onlinedegree.iitm.ac.in' },
+    { id: 'iitm-handbook', title: 'MG Student Handbook', subtitle: 'Official Program Handbook', url: 'https://docs.google.com/document/u/1/d/e/2PACX-1vTnw4G6smKsm_EJqeksqBE2qX9tFcn2PYkC2b4QH_TTInjUCQg5-jZjW-paQ4L3g6CLdTKj_zyyDs31/pub' },
+    { id: 'iitm-looker', title: 'Looker Studio Dashboard', subtitle: 'Student Grade Insights', url: 'https://lookerstudio.google.com/u/0/reporting/d02dac13-665b-49cc-8d51-0451268a6a3e/page/5sgkE' },
+    { id: 'iitm-scorechecker', title: 'Score Checker App', subtitle: 'Official Criteria Engine', url: 'https://score-checker-379619009600.asia-south1.run.app/' }
+  ];
+
+  async function loadAndRenderLivePortalLinks() {
+    let portalLinks = DEFAULT_PORTAL_LINKS;
+
+    // 1. Try local storage cache first
+    try {
+      const cached = localStorage.getItem('mghub_portal_links');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          portalLinks = parsed;
+          renderPortalsDOM(portalLinks);
+        }
+      }
+    } catch (e) {}
+
+    // 2. Fetch latest live from Cloud Firestore
+    if (typeof fetchPortalLinksFromFirestore === 'function') {
+      try {
+        const cloudLinks = await fetchPortalLinksFromFirestore();
+        if (Array.isArray(cloudLinks) && cloudLinks.length > 0) {
+          portalLinks = cloudLinks;
+          try { localStorage.setItem('mghub_portal_links', JSON.stringify(portalLinks)); } catch(e){}
+          renderPortalsDOM(portalLinks);
+        }
+      } catch (e) {}
+    }
+  }
+
+  function renderPortalsDOM(links) {
+    const grid = document.querySelector('#links .links-grid');
+    if (grid && Array.isArray(links) && links.length > 0) {
+      grid.innerHTML = links.map(l => `
+        <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="portal-link-item">
+          <div>
+            <strong>${l.title}</strong>
+            <span>${l.subtitle || l.url.replace(/^https?:\/\//, '')}</span>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+        </a>
+      `).join('');
+    }
+  }
+
   // Auto re-sync when window gains focus (e.g. returning from Admin Dashboard tab)
   window.addEventListener('focus', () => {
     loadLiveCoursesFromDatabase();
+    loadAndRenderLivePortalLinks();
   });
 
-  // Initialize dynamic data load from backend
+  // Initialize dynamic data load from backend & Cloud Firestore
   loadLiveCoursesFromDatabase();
+  loadAndRenderLivePortalLinks();
 });

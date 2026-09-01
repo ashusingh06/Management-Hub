@@ -385,7 +385,6 @@
             <ul>
               <li><a href="index.html#calculators">CGPA Predictor</a></li>
               <li><a href="index.html#calculators">Target Grade Forecaster</a></li>
-              <li><a href="index.html#notes">Prerequisite Traversal</a></li>
               <li><a href="index.html#notes">PDF Study Notes</a></li>
             </ul>
           </div>
@@ -449,8 +448,10 @@
         const navRect = navbar.getBoundingClientRect();
         const btnRect = targetBtn.getBoundingClientRect();
         const left = btnRect.left - navRect.left;
-        navIndicator.style.transform = `translateX(${left}px)`;
+        const top = btnRect.top - navRect.top;
+        navIndicator.style.transform = `translate3d(${left}px, ${top}px, 0)`;
         navIndicator.style.width = `${btnRect.width}px`;
+        navIndicator.style.height = `${btnRect.height}px`;
         navIndicator.classList.add('ready');
       }
 

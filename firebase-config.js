@@ -59,6 +59,32 @@ async function saveCoursesToFirestore(coursesList) {
   }
 }
 
+async function fetchPortalLinksFromFirestore() {
+  const db = getFirebaseDb();
+  if (!db) return null;
+  try {
+    const doc = await db.collection('settings').doc('portal_links').get();
+    if (doc.exists && Array.isArray(doc.data()?.list) && doc.data().list.length > 0) {
+      return doc.data().list;
+    }
+  } catch (e) {}
+  return null;
+}
+
+async function savePortalLinksToFirestore(linksList) {
+  const db = getFirebaseDb();
+  if (!db) return false;
+  try {
+    await db.collection('settings').doc('portal_links').set({
+      list: linksList,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 async function signInWithGoogle() {
   const fb = getFirebaseAuth();
   if (!fb) throw new Error('Firebase SDK not loaded');

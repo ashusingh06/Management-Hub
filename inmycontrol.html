@@ -709,6 +709,7 @@
       <div class="admin-tabs">
         <button class="tab-btn active" data-tab="courses">Course Catalog (<span id="tabCourseCount">30</span>)</button>
         <button class="tab-btn" data-tab="pdf-manager">📄 PDF Notes Manager</button>
+        <button class="tab-btn" data-tab="links-manager">🔗 Portal Links (<span id="tabLinksCount">5</span>)</button>
         <button class="tab-btn" data-tab="analytics">Search Trends & Analytics</button>
         <button class="tab-btn" data-tab="system">Database Maintenance</button>
       </div>
@@ -836,7 +837,66 @@
           </div>
         </div>
       </section>
+
+      <!-- Tab 5: Official Ecosystem Portal Links Manager -->
+      <section id="tab-links-manager" class="tab-content" style="display: none;">
+        <div class="table-container">
+          <div class="toolbar-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700;">Official Ecosystem Portals & Resources</h3>
+              <p style="font-size: 12.5px; color: #71717a; margin-top: 2px;">Manage official external portal links displayed on the student home page and footer.</p>
+            </div>
+            <button class="btn-create-course" id="openAddLinkModalBtn">+ Add New Portal Link</button>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Portal Title</th>
+                  <th style="width: 25%;">Display Subtitle</th>
+                  <th style="width: 35%;">Destination URL</th>
+                  <th style="width: 15%;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="portalLinksTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
+  </div>
+
+  <!-- Portal Link Add / Edit Modal -->
+  <div class="admin-modal" id="portalLinkModal" style="display: none;">
+    <div class="admin-modal-card" style="max-width: 500px;">
+      <div class="admin-modal-header">
+        <h3 id="portalLinkModalTitle">Add Portal Link</h3>
+        <button class="btn-modal-close" id="closePortalLinkModalBtn">✕</button>
+      </div>
+
+      <form id="portalLinkForm">
+        <input type="hidden" id="portalLinkIdInput" />
+        <div class="form-group">
+          <label>Portal / Service Title *</label>
+          <input type="text" id="portalLinkTitleInput" placeholder="e.g. IITM Discourse Forum" required />
+        </div>
+        <div class="form-group">
+          <label>Display Subtitle / Hostname *</label>
+          <input type="text" id="portalLinkSubtitleInput" placeholder="e.g. discourse.onlinedegree.iitm.ac.in" required />
+        </div>
+        <div class="form-group">
+          <label>Destination Web URL *</label>
+          <input type="url" id="portalLinkUrlInput" placeholder="https://discourse.onlinedegree.iitm.ac.in" required />
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-sm-edit" id="cancelPortalLinkBtn" style="padding: 10px 18px;">Cancel</button>
+          <button type="submit" class="btn-primary-save" id="savePortalLinkSubmitBtn" style="padding: 10px 20px;">Save Portal Link</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Resource Attachment Modal (Notes & PYQs) -->
@@ -1219,6 +1279,7 @@
         });
 
         if (targetTab === 'analytics') loadAnalytics();
+        if (targetTab === 'links-manager') loadPortalLinks();
       });
     });
 
@@ -1922,19 +1983,160 @@
       } catch (e) {}
     });
 
-    // Export DB Backup
-    document.getElementById('exportDbBtn')?.addEventListener('click', () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allCourses, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", "management_hub_courses_backup.json");
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
+    // =========================================================================
+    // 5. Official Ecosystem Portal Links Management
+    // =========================================================================
+    const DEFAULT_PORTAL_LINKS = [
+      { id: 'iitm-portal', title: 'Official Degree Website', subtitle: 'study.iitm.ac.in/mg', url: 'https://study.iitm.ac.in/mg/index.html' },
+      { id: 'iitm-discourse', title: 'IITM Discourse Forum', subtitle: 'discourse.onlinedegree.iitm.ac.in', url: 'https://discourse.onlinedegree.iitm.ac.in' },
+      { id: 'iitm-handbook', title: 'MG Student Handbook', subtitle: 'Official Program Handbook', url: 'https://docs.google.com/document/u/1/d/e/2PACX-1vTnw4G6smKsm_EJqeksqBE2qX9tFcn2PYkC2b4QH_TTInjUCQg5-jZjW-paQ4L3g6CLdTKj_zyyDs31/pub' },
+      { id: 'iitm-looker', title: 'Looker Studio Dashboard', subtitle: 'Student Grade Insights', url: 'https://lookerstudio.google.com/u/0/reporting/d02dac13-665b-49cc-8d51-0451268a6a3e/page/5sgkE' },
+      { id: 'iitm-scorechecker', title: 'Score Checker App', subtitle: 'Official Criteria Engine', url: 'https://score-checker-379619009600.asia-south1.run.app/' }
+    ];
+
+    let allPortalLinks = Array.from(DEFAULT_PORTAL_LINKS);
+
+    async function loadPortalLinks() {
+      if (typeof fetchPortalLinksFromFirestore === 'function') {
+        try {
+          const cloudLinks = await fetchPortalLinksFromFirestore();
+          if (Array.isArray(cloudLinks) && cloudLinks.length > 0) {
+            allPortalLinks = cloudLinks;
+            try { localStorage.setItem('mghub_portal_links', JSON.stringify(allPortalLinks)); } catch(e){}
+            renderPortalLinksTable(allPortalLinks);
+            return;
+          }
+        } catch (e) {}
+      }
+
+      try {
+        const local = localStorage.getItem('mghub_portal_links');
+        if (local) {
+          allPortalLinks = JSON.parse(local);
+        }
+      } catch (e) {}
+
+      renderPortalLinksTable(allPortalLinks);
+    }
+
+    function renderPortalLinksTable(links) {
+      const tbody = document.getElementById('portalLinksTableBody');
+      const countEl = document.getElementById('tabLinksCount');
+      if (countEl) countEl.textContent = links.length;
+      if (!tbody) return;
+
+      if (!links.length) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #a1a1aa; padding: 24px;">No portal links found. Click "+ Add New Portal Link" to create one.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = links.map(link => `
+        <tr>
+          <td><strong>${link.title}</strong></td>
+          <td><span style="color: #71717a; font-size: 13px;">${link.subtitle}</span></td>
+          <td>
+            <a href="${link.url}" target="_blank" rel="noopener noreferrer" style="color: #09090b; font-weight: 600; text-decoration: underline; font-size: 13px; word-break: break-all;">
+              ${link.url} ↗
+            </a>
+          </td>
+          <td>
+            <div class="action-btn-group">
+              <button class="btn-sm-edit" onclick="openEditPortalLinkModal('${link.id}')">✏️ Edit</button>
+              <button class="btn-sm-edit" style="color: #ef4444; border-color: #fecaca;" onclick="deletePortalLink('${link.id}')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    const portalLinkModal = document.getElementById('portalLinkModal');
+    const portalLinkForm = document.getElementById('portalLinkForm');
+
+    document.getElementById('openAddLinkModalBtn')?.addEventListener('click', () => {
+      document.getElementById('portalLinkModalTitle').textContent = 'Add New Portal Link';
+      document.getElementById('portalLinkIdInput').value = '';
+      document.getElementById('portalLinkTitleInput').value = '';
+      document.getElementById('portalLinkSubtitleInput').value = '';
+      document.getElementById('portalLinkUrlInput').value = '';
+      portalLinkModal.style.display = 'flex';
+      document.getElementById('portalLinkTitleInput').focus();
+    });
+
+    document.getElementById('closePortalLinkModalBtn')?.addEventListener('click', () => {
+      portalLinkModal.style.display = 'none';
+    });
+
+    document.getElementById('cancelPortalLinkBtn')?.addEventListener('click', () => {
+      portalLinkModal.style.display = 'none';
+    });
+
+    window.openEditPortalLinkModal = function(id) {
+      const link = allPortalLinks.find(l => l.id === id);
+      if (!link) return;
+
+      document.getElementById('portalLinkModalTitle').textContent = `Edit Portal Link (${link.title})`;
+      document.getElementById('portalLinkIdInput').value = link.id;
+      document.getElementById('portalLinkTitleInput').value = link.title;
+      document.getElementById('portalLinkSubtitleInput').value = link.subtitle;
+      document.getElementById('portalLinkUrlInput').value = link.url;
+      portalLinkModal.style.display = 'flex';
+    };
+
+    window.deletePortalLink = async function(id) {
+      const link = allPortalLinks.find(l => l.id === id);
+      if (!link) return;
+      if (!confirm(`Delete portal link "${link.title}"? This will immediately remove it from the student home page.`)) return;
+
+      allPortalLinks = allPortalLinks.filter(l => l.id !== id);
+      renderPortalLinksTable(allPortalLinks);
+
+      try {
+        localStorage.setItem('mghub_portal_links', JSON.stringify(allPortalLinks));
+        if (typeof savePortalLinksToFirestore === 'function') {
+          await savePortalLinksToFirestore(allPortalLinks);
+        }
+      } catch (e) {}
+    };
+
+    portalLinkForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('portalLinkIdInput').value.trim();
+      const title = document.getElementById('portalLinkTitleInput').value.trim();
+      const subtitle = document.getElementById('portalLinkSubtitleInput').value.trim();
+      const url = document.getElementById('portalLinkUrlInput').value.trim();
+
+      if (!title || !subtitle || !url) return;
+
+      if (id) {
+        const item = allPortalLinks.find(l => l.id === id);
+        if (item) {
+          item.title = title;
+          item.subtitle = subtitle;
+          item.url = url;
+        }
+      } else {
+        allPortalLinks.push({
+          id: 'link-' + Date.now(),
+          title,
+          subtitle,
+          url
+        });
+      }
+
+      renderPortalLinksTable(allPortalLinks);
+      portalLinkModal.style.display = 'none';
+
+      try {
+        localStorage.setItem('mghub_portal_links', JSON.stringify(allPortalLinks));
+        if (typeof savePortalLinksToFirestore === 'function') {
+          await savePortalLinksToFirestore(allPortalLinks);
+        }
+      } catch (e) {}
     });
 
     // Init auth check & immediate render
     checkAuth();
+    loadPortalLinks();
   </script>
 </body>
 </html>

@@ -161,16 +161,21 @@ body {
 /* Active Sliding Black Pill */
 .nav-indicator {
   position: absolute;
-  top: 4px;
+  top: 0;
   left: 0;
   height: 42px;
-  background-color: #000000;
+  background-color: #09090b;
   border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+              width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   z-index: 1;
+  opacity: 0;
+}
+
+.nav-indicator.ready {
   opacity: 1;
 }
 
@@ -223,7 +228,7 @@ body {
 .nav-btn.active {
   color: #ffffff !important;
   font-weight: 600;
-  background-color: #09090b;
+  background-color: transparent !important;
 }
 
 .nav-btn.active .nav-icon {
