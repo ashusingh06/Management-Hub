@@ -1,27 +1,12 @@
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const apiKey = process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || 'AIzaSyBqjrdW8B7UR_QeQ-ADibYBNGzo4yIp0Mw';
-const authDomain = process.env.VITE_FIREBASE_AUTH_DOMAIN || 'management-hub-1c14c.firebaseapp.com';
-const projectId = process.env.VITE_FIREBASE_PROJECT_ID || 'management-hub-1c14c';
-const storageBucket = process.env.VITE_FIREBASE_STORAGE_BUCKET || 'management-hub-1c14c.firebasestorage.app';
-const messagingSenderId = process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '568530023976';
-const appId = process.env.VITE_FIREBASE_APP_ID || '1:568530023976:web:0f28d8e845ad41e9a7a71d';
-const measurementId = process.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-YNZ0DZHR71';
-
-const configContent = `// Auto-generated Firebase Config from Environment Variables
+// Firebase Authentication & Cloud Firestore Configuration for [Management Hub]
 const firebaseConfig = {
-  apiKey: "${apiKey}",
-  authDomain: "${authDomain}",
-  projectId: "${projectId}",
-  storageBucket: "${storageBucket}",
-  messagingSenderId: "${messagingSenderId}",
-  appId: "${appId}",
-  measurementId: "${measurementId}"
+  apiKey: "AIzaSyBqjrdW8B7UR_QeQ-ADibYBNGzo4yIp0Mw",
+  authDomain: "management-hub-1c14c.firebaseapp.com",
+  projectId: "management-hub-1c14c",
+  storageBucket: "management-hub-1c14c.firebasestorage.app",
+  messagingSenderId: "568530023976",
+  appId: "1:568530023976:web:0f28d8e845ad41e9a7a71d",
+  measurementId: "G-YNZ0DZHR71"
 };
 
 let authInstance = null;
@@ -104,8 +89,3 @@ async function signOutUser() {
   sessionStorage.removeItem('mghub_admin_email');
   localStorage.removeItem('mghub_jwt');
 }
-`;
-
-const outputPath = join(__dirname, 'firebase-config.js');
-fs.writeFileSync(outputPath, configContent, 'utf8');
-console.log('Successfully generated firebase-config.js at ' + outputPath);
