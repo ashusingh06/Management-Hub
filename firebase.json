@@ -1,0 +1,26 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "server.js",
+      "app.py",
+      "requirements.txt",
+      "run.bat",
+      "createAdmin.js",
+      "src/**",
+      "dist/**"
+    ],
+    "rewrites": [
+      { "source": "/inmycontrol", "destination": "/inmycontrol.html" },
+      { "source": "/admin", "destination": "/inmycontrol.html" },
+      { "source": "/course", "destination": "/course.html" },
+      { "source": "/login", "destination": "/login.html" },
+      { "source": "/qualifier", "destination": "/qualifier.html" }
+    ],
+    "cleanUrls": true
+  }
+}
