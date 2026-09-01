@@ -567,8 +567,15 @@
 
         // Study Notes
         const notesData = c.notes || {};
-        const notesUrl = localPdfMap[c.code] || notesData.fileUrl || c.pdf_url || '';
-        const hasNotes = Boolean(notesData.available || (notesUrl && notesUrl.trim().length > 0));
+        let notesUrl = '';
+        if (c.notes && c.notes.available !== false && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0) {
+          notesUrl = c.notes.fileUrl;
+        } else if (c.pdf_url && c.pdf_url.trim().length > 0) {
+          notesUrl = c.pdf_url;
+        } else if (localPdfMap[c.code] && localPdfMap[c.code].trim().length > 0 && c.notes?.available !== false) {
+          notesUrl = localPdfMap[c.code];
+        }
+        const hasNotes = Boolean(notesUrl && notesUrl.trim().length > 0);
 
         if (hasNotes && notesUrl) {
           notesAvailableContainer.style.display = 'flex';

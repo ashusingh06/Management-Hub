@@ -598,8 +598,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // A. Populate Study Notes Section
     const notesData = course.notes || {};
-    const notesUrl = localPdf || notesData.fileUrl || course.pdf_url || '';
-    const hasNotes = Boolean(notesData.available || (notesUrl && notesUrl.trim().length > 0));
+    let notesUrl = '';
+    if (course.notes && course.notes.available !== false && course.notes.fileUrl && course.notes.fileUrl.trim().length > 0) {
+      notesUrl = course.notes.fileUrl;
+    } else if (course.pdf_url && course.pdf_url.trim().length > 0) {
+      notesUrl = course.pdf_url;
+    } else if (localPdf && localPdf.trim().length > 0 && course.notes?.available !== false) {
+      notesUrl = localPdf;
+    }
+    const hasNotes = Boolean(notesUrl && notesUrl.trim().length > 0);
 
     if (hasNotes && notesUrl) {
       if (modalNotesAvailableBox) modalNotesAvailableBox.style.display = 'flex';
@@ -767,8 +774,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ...c,
             title: c.title || base.title,
             level: c.level || base.level,
-            pdf_url: c.pdf_url || base.pdf_url || '',
-            notes: c.notes || base.notes || null,
+            pdf_url: c.pdf_url !== undefined ? c.pdf_url : (base.pdf_url || ''),
+            notes: c.notes !== undefined ? c.notes : (base.notes || null),
             pyqs: Array.isArray(c.pyqs) ? c.pyqs : (base.pyqs || [])
           });
         } else {
@@ -872,8 +879,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
 
     notesGrid.innerHTML = courses.map(c => {
-      const notesUrl = localPdfMap[c.code] || c.notes?.fileUrl || c.pdf_url || '';
-      const hasNotes = Boolean(c.notes?.available || (notesUrl && notesUrl.trim().length > 0));
+      let notesUrl = '';
+      if (c.notes && c.notes.available !== false && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0) {
+        notesUrl = c.notes.fileUrl;
+      } else if (c.pdf_url && c.pdf_url.trim().length > 0) {
+        notesUrl = c.pdf_url;
+      } else if (localPdfMap[c.code] && localPdfMap[c.code].trim().length > 0 && c.notes?.available !== false) {
+        notesUrl = localPdfMap[c.code];
+      }
+      const hasNotes = Boolean(notesUrl && notesUrl.trim().length > 0);
       const pyqCount = Array.isArray(c.pyqs) ? c.pyqs.length : 0;
       const hasPyqs = pyqCount > 0;
       const levelLabel = c.level.charAt(0).toUpperCase() + c.level.slice(1);

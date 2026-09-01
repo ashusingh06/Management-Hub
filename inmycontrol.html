@@ -1344,8 +1344,8 @@
               ...c,
               title: c.title || base.title,
               level: c.level || base.level,
-              pdf_url: c.pdf_url || base.pdf_url || '',
-              notes: c.notes || base.notes || null,
+              pdf_url: c.pdf_url !== undefined ? c.pdf_url : (base.pdf_url || ''),
+              notes: c.notes !== undefined ? c.notes : (base.notes || null),
               pyqs: Array.isArray(c.pyqs) ? c.pyqs : (base.pyqs || [])
             });
           } else {
@@ -1362,8 +1362,11 @@
         localStorage.setItem('mghub_courses', JSON.stringify(allCourses));
         const pdfMap = {};
         allCourses.forEach(c => {
-          if (c.pdf_url) pdfMap[c.code] = c.pdf_url;
-          else if (c.notes && c.notes.fileUrl) pdfMap[c.code] = c.notes.fileUrl;
+          if (c.pdf_url && c.pdf_url.trim().length > 0) {
+            pdfMap[c.code] = c.pdf_url;
+          } else if (c.notes && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0 && c.notes.available !== false) {
+            pdfMap[c.code] = c.notes.fileUrl;
+          }
         });
         localStorage.setItem('mghub_local_pdfs', JSON.stringify(pdfMap));
       } catch (e) {}
@@ -1718,8 +1721,14 @@
       if (target) {
         target.pdf_url = '';
         target.notes = { available: false, fileName: '', fileUrl: '' };
-        saveCoursesLocallyAndSync(allCourses);
+        await saveCoursesLocallyAndSync(allCourses);
       }
+
+      try {
+        const localPdfMap = JSON.parse(localStorage.getItem('mghub_local_pdfs') || '{}');
+        delete localPdfMap[code];
+        localStorage.setItem('mghub_local_pdfs', JSON.stringify(localPdfMap));
+      } catch (e) {}
 
       renderCourseTable(allCourses);
       renderPdfManagerTable(allCourses);
