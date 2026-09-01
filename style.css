@@ -1141,28 +1141,33 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 12px;
+  width: 100%;
 }
 
 .filter-pill {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 7px 16px;
+  padding: 8px 18px;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: #52525b;
   background: #ffffff;
   border: 1px solid #e4e4e7;
   border-radius: 9999px;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
 }
 
 .filter-pill:hover {
   color: #09090b;
   border-color: #a1a1aa;
+  background: #fafafc;
   transform: translateY(-1px);
 }
 
@@ -1172,30 +1177,114 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
 .filter-pill.active {
   color: #ffffff;
-  background: #000000;
-  border-color: #000000;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  background: #09090b;
+  border-color: #09090b;
+  font-weight: 700;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
 }
 
 .count-badge {
   font-size: 11px;
-  font-weight: 600;
-  background: rgba(0, 0, 0, 0.06);
-  color: inherit;
-  padding: 1px 6px;
+  font-weight: 700;
+  background: #f4f4f5;
+  color: #52525b;
+  padding: 2px 7px;
   border-radius: 9999px;
   transition: all 0.2s ease;
 }
 
 .filter-pill.active .count-badge {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
 }
 
 .search-status-bar {
   font-size: 12.5px;
   color: #71717a;
   font-weight: 500;
+}
+
+/* Mobile Segmented Capsule Bar for Filter Pills */
+@media (max-width: 640px) {
+  .search-bar-box {
+    margin-bottom: 10px;
+  }
+
+  #notesSearchInput {
+    height: 46px;
+    font-size: 13.5px;
+    padding: 0 38px 0 42px;
+    border-radius: 12px;
+  }
+
+  .search-icon {
+    left: 14px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .filter-pills-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 4px;
+    background: #f4f4f5;
+    border: 1px solid #e4e4e7;
+    border-radius: 12px;
+    box-sizing: border-box;
+    margin-top: 8px;
+  }
+
+  .filter-pill {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    padding: 8px 2px;
+    font-size: 11.5px;
+    font-weight: 600;
+    gap: 3px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .filter-pill:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: transparent;
+    transform: none;
+  }
+
+  .filter-pill.active {
+    background: #09090b;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  }
+
+  .filter-pill .count-badge {
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 6px;
+  }
+
+  .search-status-bar {
+    margin-top: 10px !important;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .filter-pill {
+    font-size: 10px;
+    gap: 2px;
+  }
+
+  .filter-pill .count-badge {
+    font-size: 9px;
+    padding: 0 3px;
+  }
 }
 
 /* Notes Cards Grid */
