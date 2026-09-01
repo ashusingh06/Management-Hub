@@ -1157,13 +1157,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadAndRenderContributors() {
-    let contributors = DEFAULT_CONTRIBUTORS;
+    let contributors = null;
 
     try {
       const cached = localStorage.getItem('mghub_contributors');
-      if (cached) {
+      if (cached !== null) {
         const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           contributors = parsed;
           renderContributorsDOM(contributors);
         }
@@ -1173,14 +1173,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof fetchContributorsFromFirestore === 'function') {
       try {
         const cloudContributors = await fetchContributorsFromFirestore();
-        if (Array.isArray(cloudContributors) && cloudContributors.length > 0) {
+        if (Array.isArray(cloudContributors)) {
           contributors = cloudContributors;
           try { localStorage.setItem('mghub_contributors', JSON.stringify(contributors)); } catch(e){}
           renderContributorsDOM(contributors);
+          return;
         }
       } catch (e) {}
     }
 
+    if (contributors === null) {
+      contributors = DEFAULT_CONTRIBUTORS;
+    }
     renderContributorsDOM(contributors);
   }
 

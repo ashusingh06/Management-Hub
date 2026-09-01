@@ -11,7 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js?v=20260901_18"></script>
+  <script src="firebase-config.js?v=20260901_19"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; text-rendering: optimizeLegibility; }
@@ -2281,7 +2281,7 @@
       if (typeof fetchContributorsFromFirestore === 'function') {
         try {
           const cloudContributors = await fetchContributorsFromFirestore();
-          if (Array.isArray(cloudContributors) && cloudContributors.length > 0) {
+          if (Array.isArray(cloudContributors)) {
             allContributors = cloudContributors;
             try { localStorage.setItem('mghub_contributors', JSON.stringify(allContributors)); } catch(e){}
             renderContributorsTable(allContributors);
@@ -2292,7 +2292,7 @@
 
       try {
         const local = localStorage.getItem('mghub_contributors');
-        if (local) {
+        if (local !== null) {
           allContributors = JSON.parse(local);
         }
       } catch (e) {}

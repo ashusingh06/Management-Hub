@@ -90,7 +90,7 @@ async function fetchContributorsFromFirestore() {
   if (!db) return null;
   try {
     const doc = await db.collection('settings').doc('contributors').get();
-    if (doc.exists && Array.isArray(doc.data()?.list) && doc.data().list.length > 0) {
+    if (doc.exists && Array.isArray(doc.data()?.list)) {
       return doc.data().list;
     }
   } catch (e) {}
