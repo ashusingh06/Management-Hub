@@ -1,20 +1,12 @@
 # 🎓 Management Hub — IIT Madras BS Management & Analytics Portal
 
-[![Live Portal](https://img.shields.io/badge/Live%20Demo-management--hub--1c14c.web.app-blue?style=for-the-badge&logo=firebase)](https://management-hub-1c14c.web.app)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
-[![Firebase](https://img.shields.io/badge/Firebase-Hosting%20%7C%20Firestore%20%7C%20Auth-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com)
-[![Cloudinary](https://img.shields.io/badge/Cloudinary-PDF%20Storage%20CDN-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com)
+[![Database](https://img.shields.io/badge/Database-Cloud%20Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com)
+[![Storage](https://img.shields.io/badge/Storage-Cloudinary%20CDN-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com)
 
 **Management Hub** is a fast, modern, and comprehensive academic resource platform designed specifically for students of the **IIT Madras BS in Management and Data Science / Business Analytics** program.
 
 It provides centralized, 24/7 access to curated course catalogs, multi-contributor study notes, past year examination question papers (PYQs), dynamic grading calculators, search analytics, and administrative management tools.
-
----
-
-## 🚀 Live Demo & Deployment
-
-- **🌐 Live Production Website:** [https://management-hub-1c14c.web.app](https://management-hub-1c14c.web.app)
-- **🔐 Administrator Portal:** [https://management-hub-1c14c.web.app/inmycontrol](https://management-hub-1c14c.web.app/inmycontrol)
 
 ---
 
@@ -30,13 +22,13 @@ It provides centralized, 24/7 access to curated course catalogs, multi-contribut
 ### 🧮 Student Productivity Tools
 - **End-Term Passing Calculator:** Interactive grading calculator to compute exact required end-term scores based on assignments and quiz marks.
 - **🔖 Local Bookmarks:** One-click course bookmarking saved to browser storage for offline quick reference.
-- **🔗 Official IITM Ecosystem Links:** Curated direct shortcuts to Portal, Discourse Forum, Student Dashboard, and Support.
+- **🔗 Official Ecosystem Links:** Curated shortcuts to student portals, discussion forums, and academic resources.
 
-### 👑 Administrator Dashboard (`/inmycontrol`)
-- **Secure Authentication:** 1-Click Google OAuth & encrypted passcode authorization for admin access.
-- **Cloudinary High-Speed PDF Uploads:** Direct client-side signed SHA-1 uploads to Cloudinary CDN (supporting 1,000+ PDFs without server limits).
-- **Resource Management Modal:** Attach, preview (`Open ↗`), and delete (`✕ Delete`) individual notes and PYQ papers per course.
-- **Real-Time Database Maintenance:** Backup and restore full catalog JSON states, track live visitor search trends, and manage community contributors.
+### 👑 Resource Management & Admin Tools
+- **Secure Access Control:** Encrypted authentication for course management.
+- **High-Speed Cloud Storage:** Direct signed uploads to cloud CDN (supporting 1,000+ PDFs seamlessly).
+- **Multi-Resource Modal:** Attach, preview (`Open ↗`), and manage individual notes and PYQ papers per course.
+- **Catalog Management:** Real-time synchronization and master catalog backup.
 
 ---
 
@@ -44,22 +36,19 @@ It provides centralized, 24/7 access to curated course catalogs, multi-contribut
 
 ```mermaid
 graph TD
-    User([Student / Admin Browser]) -->|HTTP / HTTPS| Hosting[Firebase Hosting CDN]
-    User -->|Direct Signed Upload| Cloudinary[(Cloudinary Global CDN - PDFs)]
-    User -->|Realtime Stream / Read| Firestore[(Firebase Cloud Firestore)]
-    User -->|OAuth Sign-In| FirebaseAuth[Firebase Authentication]
-    Admin[Admin Panel /inmycontrol] -->|Manage Resources| Firestore
-    Admin -->|Upload Multi-Notes| Cloudinary
+    User([Student / Admin Browser]) -->|Access Portal| Web[Web Client Application]
+    User -->|Fast Direct Upload| Cloudinary[(Cloud Storage CDN - PDFs)]
+    User -->|Realtime Sync| Firestore[(Cloud Database)]
+    User -->|Authentication| Auth[Auth Service]
 ```
 
 | Layer | Technology |
 |---|---|
 | **Frontend** | Vanilla HTML5, CSS3 (Modern Glassmorphism & Custom Properties), JavaScript (ES6+) |
-| **Hosting & Deployment** | Firebase Hosting (`management-hub-1c14c.web.app`) |
-| **Database** | Firebase Cloud Firestore (Real-time NoSQL cloud sync) |
-| **Authentication** | Firebase Authentication (Google OAuth + Email/Password) |
+| **Database** | Cloud Firestore (Real-time NoSQL cloud sync) |
+| **Authentication** | Firebase Authentication (OAuth & Email/Password) |
 | **PDF & Asset Storage** | Cloudinary REST API & Global CDN |
-| **Local Development** | Node.js, Express.js (Optional REST Server) |
+| **Local Development** | Node.js, Express.js (Optional Local Server) |
 
 ---
 
@@ -69,14 +58,13 @@ graph TD
 Management-Hub/
 ├── index.html            # Main Student Portal & Interactive Course Catalog
 ├── course.html           # Dedicated Course Details Page (Multi-Section Folders & PYQs)
-├── inmycontrol.html      # Secure Administrator Dashboard & PDF Resource Manager
-├── login.html            # Student Login & Account Gateway
+├── inmycontrol.html      # Administrator Dashboard & Resource Manager
+├── login.html            # User Login Gateway
 ├── register.html         # User Registration Page
 ├── profile.html          # Student Profile & Saved Bookmarks
 ├── script.js             # Main Portal Application Logic & Instant Caching
 ├── style.css             # Unified Design System, Cards & Typography
-├── firebase-config.js    # Firebase & Cloudinary Client SDK Integration
-├── firebase.json         # Firebase Hosting Configuration & Route Rewrites
+├── firebase-config.js    # Cloud Integration & Client SDK Configuration
 ├── server.js             # Node.js Express Backend (for Local Development)
 ├── package.json          # Project Dependencies & Build Scripts
 └── data/
@@ -117,20 +105,6 @@ npm start
 npm run dev
 ```
 Open your browser at `http://localhost:3000`.
-
----
-
-## 🚀 Deploying to Firebase Hosting
-
-To deploy updates to the live web application:
-
-```bash
-# 1. Login to Firebase CLI (if not already logged in)
-npx firebase login
-
-# 2. Deploy only static hosting files
-npx firebase-tools deploy --only hosting
-```
 
 ---
 
