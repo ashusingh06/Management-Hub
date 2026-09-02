@@ -55,6 +55,7 @@ async function saveCoursesToFirestore(coursesList) {
     }, { merge: true });
     return true;
   } catch (e) {
+    console.error('saveCoursesToFirestore error:', e);
     return false;
   }
 }
@@ -219,6 +220,23 @@ function downloadPdfSecurely(url, filename = 'document.pdf') {
   document.body.removeChild(a);
 }
 
+function normalizePdfUrl(rawUrl) {
+  if (!rawUrl) return '';
+  let url = rawUrl.trim();
+  
+  // Google Drive format: https://drive.google.com/file/d/FILE_ID/view... -> https://drive.google.com/file/d/FILE_ID/preview
+  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveMatch && driveMatch[1]) {
+    return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+  }
+  const driveIdMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (driveIdMatch && driveIdMatch[1]) {
+    return `https://drive.google.com/file/d/${driveIdMatch[1]}/preview`;
+  }
+  
+  return url;
+}
+
 async function uploadPdfToFirebaseStorage(file, courseCode) {
   if (typeof firebase === 'undefined') return null;
   if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -228,8 +246,15 @@ async function uploadPdfToFirebaseStorage(file, courseCode) {
     const timestamp = Date.now();
     const cleanFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
     const storageRef = storage.ref(`notes/${courseCode}/${timestamp}_${cleanFileName}`);
-    const snapshot = await storageRef.put(file);
-    const downloadUrl = await snapshot.ref.getDownloadURL();
+    
+    // Strict 8-second timeout so uploads never hang
+    const uploadTask = storageRef.put(file);
+    const uploadPromise = uploadTask.then(snapshot => snapshot.ref.getDownloadURL());
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Upload timeout')), 8000)
+    );
+    
+    const downloadUrl = await Promise.race([uploadPromise, timeoutPromise]);
     return downloadUrl;
   } catch (e) {
     console.warn('Firebase storage upload fallback:', e);
