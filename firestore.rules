@@ -1,14 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // Full public access for courses and settings (admin controls via app only)
     match /courses/{courseCode} {
-      allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'aashishsinghh06@gmail.com';
+      allow read, write: if true;
     }
+    
     match /settings/{document} {
-      allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'aashishsinghh06@gmail.com';
+      allow read, write: if true;
     }
+    
+    // Block everything else
     match /{document=**} {
       allow read, write: if false;
     }
