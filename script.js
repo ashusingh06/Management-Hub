@@ -1231,8 +1231,29 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAndRenderContributors();
   });
 
-  // Initialize dynamic data load from backend & Cloud Firestore
+  // Initialize dynamic data load from Cloud Firestore
   loadLiveCoursesFromDatabase();
   loadAndRenderLivePortalLinks();
   loadAndRenderContributors();
+
+  // Realtime Cloud Firestore Subscriptions (Instant push to Mobile & Web within 100ms)
+  if (typeof listenToCoursesFromFirestore === 'function') {
+    listenToCoursesFromFirestore((cloudCourses) => {
+      liveCourses = mergeWithMasterCatalog(cloudCourses);
+      renderDynamicCourseCards(liveCourses);
+      updateFilterPillCounts(liveCourses);
+    });
+  }
+
+  if (typeof listenToPortalLinksFromFirestore === 'function') {
+    listenToPortalLinksFromFirestore((cloudLinks) => {
+      renderPortalsDOM(cloudLinks);
+    });
+  }
+
+  if (typeof listenToContributorsFromFirestore === 'function') {
+    listenToContributorsFromFirestore((cloudContributors) => {
+      renderContributorsDOM(cloudContributors);
+    });
+  }
 });

@@ -112,6 +112,49 @@ async function saveContributorsToFirestore(contributorsList) {
   }
 }
 
+// Real-time Cloud Firestore Subscriptions (Live Data Streaming to Mobile & Web)
+function listenToCoursesFromFirestore(callback) {
+  const db = getFirebaseDb();
+  if (!db) return () => {};
+  try {
+    return db.collection('settings').doc('courses').onSnapshot((doc) => {
+      if (doc.exists && Array.isArray(doc.data()?.list) && doc.data().list.length > 0) {
+        callback(doc.data().list);
+      }
+    }, (err) => console.warn('Firestore realtime courses listener:', err));
+  } catch (e) {
+    return () => {};
+  }
+}
+
+function listenToPortalLinksFromFirestore(callback) {
+  const db = getFirebaseDb();
+  if (!db) return () => {};
+  try {
+    return db.collection('settings').doc('portal_links').onSnapshot((doc) => {
+      if (doc.exists && Array.isArray(doc.data()?.list) && doc.data().list.length > 0) {
+        callback(doc.data().list);
+      }
+    }, (err) => console.warn('Firestore realtime links listener:', err));
+  } catch (e) {
+    return () => {};
+  }
+}
+
+function listenToContributorsFromFirestore(callback) {
+  const db = getFirebaseDb();
+  if (!db) return () => {};
+  try {
+    return db.collection('settings').doc('contributors').onSnapshot((doc) => {
+      if (doc.exists && Array.isArray(doc.data()?.list)) {
+        callback(doc.data().list);
+      }
+    }, (err) => console.warn('Firestore realtime contributors listener:', err));
+  } catch (e) {
+    return () => {};
+  }
+}
+
 async function signInWithGoogle() {
   const fb = getFirebaseAuth();
   if (!fb) throw new Error('Firebase SDK not loaded');
