@@ -11,7 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js?v=20260902_01"></script>
+  <script src="firebase-config.js?v=20260902_02"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; text-rendering: optimizeLegibility; }
@@ -772,7 +772,10 @@
               <h3 style="font-size: 16px; font-weight: 700;">Curriculum Study Notes & PDF Files</h3>
               <p style="font-size: 13px; color: #71717a; margin-top: 2px;">Upload PDF files or attach Google Drive/Web document links to any course.</p>
             </div>
-            <input type="text" id="pdfSearchInput" class="search-table-input" placeholder="Filter courses for Notes or PYQs..." />
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button class="btn-create-course" id="syncToCloudBtn" style="background: #166534; border-color: #166534; font-size: 12.5px; padding: 7px 14px;">☁️ Sync Live to Mobile</button>
+              <input type="text" id="pdfSearchInput" class="search-table-input" placeholder="Filter courses for Notes or PYQs..." />
+            </div>
           </div>
 
           <div class="data-table-wrapper">
@@ -1522,6 +1525,28 @@
       renderPdfManagerTable(allCourses);
       updateDashboardCounts();
     }
+
+    document.getElementById('syncToCloudBtn')?.addEventListener('click', async () => {
+      const btn = document.getElementById('syncToCloudBtn');
+      const orig = btn.textContent;
+      btn.textContent = 'Syncing...';
+      btn.disabled = true;
+      try {
+        if (typeof saveCoursesToFirestore === 'function') {
+          const ok = await saveCoursesToFirestore(allCourses);
+          if (ok) {
+            alert('✓ All courses & attached notes have been synced live to Cloud Firestore! They are now visible on all mobile phones and devices worldwide.');
+          } else {
+            alert('Cloud sync attempted. Please verify your internet connection or Google login.');
+          }
+        }
+      } catch (err) {
+        alert('Sync error: ' + err.message);
+      } finally {
+        btn.textContent = orig;
+        btn.disabled = false;
+      }
+    });
 
     function renderCourseTable(courses) {
       const tbody = document.getElementById('courseTableBody');
