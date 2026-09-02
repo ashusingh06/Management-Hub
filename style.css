@@ -228,7 +228,11 @@ body {
 .nav-btn.active {
   color: #ffffff !important;
   font-weight: 600;
-  background-color: transparent !important;
+  background-color: #09090b;
+}
+
+.nav-indicator.ready ~ .nav-btn.active {
+  background-color: transparent;
 }
 
 .nav-btn.active .nav-icon {
@@ -1275,6 +1279,11 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   .search-status-bar {
     margin-top: 10px !important;
     font-size: 12px;
+  }
+
+  .notes-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 }
 

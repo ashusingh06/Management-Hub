@@ -521,10 +521,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!courseModal) return;
     activeModalCourseCode = courseCode.toUpperCase().trim();
 
-    // 1. Find course in memory or fallback
-    let targetCourse = liveCourses.find(c => c.code.toUpperCase() === activeModalCourseCode);
+    // 1. Instant Render from Memory Cache / LocalStorage (0ms immediate display)
+    let targetCourse = (Array.isArray(liveCourses) ? liveCourses : []).find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
+    if (!targetCourse) {
+      try {
+        const saved = JSON.parse(localStorage.getItem('mghub_courses') || '[]');
+        targetCourse = saved.find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
+      } catch (e) {}
+    }
 
-    // Initial DOM population from memory
     if (targetCourse) {
       populateModalData(targetCourse);
     } else {
@@ -544,18 +549,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     courseModal.classList.add('active');
-
-    // 1. Instant Render from Memory Cache / LocalStorage (0ms immediate display)
-    let targetCourse = (Array.isArray(liveCourses) ? liveCourses : []).find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
-    if (!targetCourse) {
-      try {
-        const saved = JSON.parse(localStorage.getItem('mghub_courses') || '[]');
-        targetCourse = saved.find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
-      } catch (e) {}
-    }
-    if (targetCourse) {
-      populateModalData(targetCourse);
-    }
 
     // 2. Non-blocking background sync from Firestore / API
     (async () => {
@@ -1265,7 +1258,19 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAndRenderContributors();
   });
 
-  // Initialize dynamic data load from Cloud Firestore
+  // Immediate Synchronous Initial Paint (0ms instant courses rendering for mobile & desktop)
+  try {
+    const cached = JSON.parse(localStorage.getItem('mghub_courses') || 'null');
+    liveCourses = Array.isArray(cached) && cached.length > 0 
+      ? mergeWithMasterCatalog(cached) 
+      : Array.from(MASTER_COURSES_CATALOG);
+  } catch (e) {
+    liveCourses = Array.from(MASTER_COURSES_CATALOG);
+  }
+  renderDynamicCourseCards(liveCourses);
+  updateFilterPillCounts(liveCourses);
+
+  // Initialize dynamic background sync from Cloud Firestore & APIs
   loadLiveCoursesFromDatabase();
   loadAndRenderLivePortalLinks();
   loadAndRenderContributors();
