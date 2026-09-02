@@ -11,7 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js?v=20260902_04"></script>
+  <script src="firebase-config.js?v=20260902_newtabfix"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; text-rendering: optimizeLegibility; }
@@ -1011,6 +1011,24 @@
           </div>
         </div>
 
+        <!-- Section / Folder / Contributor Group (For Study Notes) -->
+        <div class="form-group" id="sectionGroup">
+          <label style="display: flex; align-items: center; justify-content: space-between;">
+            <span>📁 Section / Folder / Contributor Name</span>
+            <span style="font-size: 11px; font-weight: 500; color: #71717a;">e.g. Ashu's Notes, Sibu's Notes, Week-wise...</span>
+          </label>
+          <input type="text" id="resourceSectionInput" placeholder="e.g. Ashu's Notes, Sibu's Notes, Comprehensive, Module 1..." list="sectionSuggestionsList" />
+          <datalist id="sectionSuggestionsList">
+            <option value="Ashu's Notes"></option>
+            <option value="Sibu's Notes"></option>
+            <option value="Comprehensive Notes"></option>
+            <option value="Handwritten Notes"></option>
+            <option value="Formula Sheets & Summary"></option>
+            <option value="Lecture Slides"></option>
+            <option value="Assignment & Solutions"></option>
+          </datalist>
+        </div>
+
         <!-- Resource Title Input -->
         <div class="form-group" id="titleGroup">
           <label id="titleLabel">Document Title / Label</label>
@@ -1042,28 +1060,16 @@
           <input type="url" id="pdfUrlInput" placeholder="https://drive.google.com/... or https://domain.com/file.pdf" />
         </div>
 
-        <!-- Existing Attached Notes Info with Rename Option -->
-        <div id="currentPdfInfo" style="display: none; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px; margin-bottom: 14px; font-size: 12.5px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <strong style="color: #166534; display: flex; align-items: center; gap: 4px;"><span>📄</span> Current Notes Attached:</strong>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <a id="currentPdfLink" href="#" target="_blank" style="color: #166534; font-weight: 700; text-decoration: underline;">View PDF ↗</a>
-              <button type="button" id="removePdfBtn" style="background: none; border: none; color: #ef4444; font-size: 12px; font-weight: 700; cursor: pointer;">✕ Remove</button>
-            </div>
-          </div>
-          <div style="margin-top: 6px;">
-            <label style="display: block; font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; margin-bottom: 4px;">Display Name (What students see on live website):</label>
-            <div style="display: flex; gap: 8px;">
-              <input type="text" id="editNotesTitleInput" placeholder="e.g. Unit 1 - Introduction to Data Science" style="flex: 1; padding: 7px 10px; font-size: 12.5px; border-radius: 6px; border: 1px solid #86efac; background: #ffffff; outline: none;" />
-              <button type="button" id="saveRenamedNotesTitleBtn" class="btn-sm-edit" style="background: #166534; color: #ffffff; border: none; padding: 7px 14px; font-size: 12px; white-space: nowrap;">💾 Save Name</button>
-            </div>
-          </div>
+        <!-- Attached Notes List in Modal -->
+        <div id="modalExistingNotesSection" style="margin-bottom: 14px; display: none;">
+          <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #166534; margin-bottom: 6px;">Attached Study Notes for this Course</label>
+          <div id="modalExistingNotesList" style="display: flex; flex-direction: column; gap: 6px; max-height: 160px; overflow-y: auto;"></div>
         </div>
 
-        <!-- Existing Attached PYQs List inside Modal -->
+        <!-- Attached PYQs List in Modal -->
         <div id="modalExistingPyqSection" style="margin-bottom: 14px; display: none;">
           <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #71717a; margin-bottom: 6px;">Attached PYQs for this Course</label>
-          <div id="modalExistingPyqList" style="display: flex; flex-direction: column; gap: 6px; max-height: 140px; overflow-y: auto;"></div>
+          <div id="modalExistingPyqList" style="display: flex; flex-direction: column; gap: 6px; max-height: 160px; overflow-y: auto;"></div>
         </div>
 
         <button type="submit" class="btn-primary-save" id="savePdfSubmitBtn">Upload & Attach Resource</button>
@@ -1366,9 +1372,21 @@
 
     function updateDashboardCounts() {
       const total = allCourses.length;
-      const attachedCount = allCourses.filter(c => c.pdf_url && c.pdf_url.trim().length > 0).length;
+      let totalPdfs = 0;
+      allCourses.forEach(c => {
+        if (Array.isArray(c.notesList)) {
+          totalPdfs += c.notesList.filter(n => n && (n.fileUrl || n.pdf_url)).length;
+        } else if (c.pdf_url && c.pdf_url.trim().length > 0) {
+          totalPdfs += 1;
+        } else if (c.notes && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0 && c.notes.available !== false) {
+          totalPdfs += 1;
+        }
+        if (Array.isArray(c.pyqs)) {
+          totalPdfs += c.pyqs.filter(p => p && (p.fileUrl || p.url)).length;
+        }
+      });
       document.getElementById('metricCourses').textContent = total;
-      document.getElementById('metricPdfs').textContent = attachedCount;
+      document.getElementById('metricPdfs').textContent = totalPdfs;
       document.getElementById('tabCourseCount').textContent = total;
     }
 
@@ -1558,10 +1576,12 @@
       }
 
       tbody.innerHTML = courses.map(c => {
-        const hasPdf = c.pdf_url && c.pdf_url.trim().length > 0;
+        const notesCount = Array.isArray(c.notesList) ? c.notesList.filter(n => n && (n.fileUrl || n.pdf_url)).length : (c.pdf_url ? 1 : 0);
+        const pyqCount = Array.isArray(c.pyqs) ? c.pyqs.filter(p => p && p.fileUrl).length : 0;
+        const totalPdfs = notesCount + pyqCount;
         const safeTitle = (c.title || c.code).replace(/'/g, "\\'");
-        const pdfBadge = hasPdf 
-          ? `<button type="button" onclick="openPdfSecurely('${c.pdf_url}', '${safeTitle}_Notes.pdf')" class="pdf-badge-attached" style="cursor:pointer; background:none; border: 1px solid #bbf7d0;">📄 PDF Linked ↗</button>` 
+        const pdfBadge = totalPdfs > 0 
+          ? `<span class="pdf-badge-attached" style="background:#f0fdf4; color:#166534; border: 1px solid #bbf7d0;">📄 ${totalPdfs} PDF${totalPdfs > 1 ? 's' : ''}</span>` 
           : `<span class="pdf-badge-none">No PDF</span>`;
 
         return `
@@ -1573,8 +1593,8 @@
             <td>${pdfBadge}</td>
             <td>
               <div class="action-btn-group">
-                <button class="btn-sm-pdf" onclick="openPdfModal('${c.code}', '${safeTitle}', '${c.pdf_url || ''}')">
-                  <span>📄</span> ${hasPdf ? 'Edit PDF' : 'Add PDF'}
+                <button class="btn-sm-pdf" onclick="openResourceModal('${c.code}', '${safeTitle}')">
+                  <span>📄</span> Manage PDFs (${totalPdfs})
                 </button>
                 <button class="btn-sm-edit" onclick="editCourseModal('${c.code}')">Edit</button>
                 <button class="btn-sm-delete" onclick="deleteCourse(${c.id || 0}, '${c.code}')">Delete</button>
@@ -1595,17 +1615,15 @@
       }
 
       tbody.innerHTML = courses.map(c => {
-        const notesUrl = c.notes?.fileUrl || c.pdf_url || '';
-        const hasNotes = Boolean(c.notes?.available || (notesUrl && notesUrl.trim().length > 0));
-        const pyqs = Array.isArray(c.pyqs) ? c.pyqs : [];
-        const hasPyqs = pyqs.length > 0;
+        const notesList = Array.isArray(c.notesList) ? c.notesList.filter(n => n && (n.fileUrl || n.pdf_url)) : (c.pdf_url ? [{ fileUrl: c.pdf_url, title: 'Study Notes' }] : []);
+        const pyqs = Array.isArray(c.pyqs) ? c.pyqs.filter(p => p && p.fileUrl) : [];
         const safeTitle = (c.title || c.code).replace(/'/g, "\\'");
 
-        const notesHtml = hasNotes 
-          ? `<button type="button" onclick="openPdfSecurely('${notesUrl}', '${safeTitle}_Notes.pdf')" class="pdf-badge-attached" style="cursor:pointer; background:none; border: 1px solid #bbf7d0;">✓ Notes File ↗</button>` 
+        const notesHtml = notesList.length > 0
+          ? `<span class="pdf-badge-attached" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;">📄 ${notesList.length} Note${notesList.length > 1 ? 's' : ''}</span>` 
           : `<span class="pdf-badge-none">No Notes</span>`;
 
-        const pyqHtml = hasPyqs
+        const pyqHtml = pyqs.length > 0
           ? `<span class="pdf-badge-attached" style="background:#eef2ff; color:#4338ca; border-color:#c7d2fe;">📝 ${pyqs.length} PYQ Paper${pyqs.length > 1 ? 's' : ''}</span>`
           : `<span class="pdf-badge-none">0 Papers</span>`;
 
@@ -1617,7 +1635,7 @@
             <td>${pyqHtml}</td>
             <td>
               <button class="btn-sm-pdf" onclick="openResourceModal('${c.code}', '${c.title.replace(/'/g, "\\'")}')">
-                <span>⚡</span> Manage Notes & PYQs
+                <span>⚡</span> Manage PDFs (${notesList.length + pyqs.length})
               </button>
             </td>
           </tr>
@@ -1664,6 +1682,8 @@
     const removePdfBtn = document.getElementById('removePdfBtn');
     const typeNotesRadio = document.getElementById('typeNotesRadio');
     const typePyqRadio = document.getElementById('typePyqRadio');
+    const sectionGroup = document.getElementById('sectionGroup');
+    const resourceSectionInput = document.getElementById('resourceSectionInput');
     const titleLabel = document.getElementById('titleLabel');
     const resourceTitleInput = document.getElementById('resourceTitleInput');
     const yearGroup = document.getElementById('yearGroup');
@@ -1678,11 +1698,13 @@
         titleLabel.textContent = 'PYQ Paper Title / Examination Name';
         resourceTitleInput.placeholder = `e.g. ${code} — PYQ 2025 (End-Term Exam)`;
         yearGroup.style.display = 'block';
+        if (sectionGroup) sectionGroup.style.display = 'none';
         document.getElementById('savePdfSubmitBtn').textContent = 'Upload & Attach PYQ Paper';
       } else {
-        titleLabel.textContent = 'Study Notes Title / Label';
+        titleLabel.textContent = 'Document Title / Label';
         resourceTitleInput.placeholder = `e.g. ${code} Comprehensive Study Notes`;
         yearGroup.style.display = 'none';
+        if (sectionGroup) sectionGroup.style.display = 'block';
         document.getElementById('savePdfSubmitBtn').textContent = 'Upload & Attach Study Notes';
       }
     }
@@ -1692,7 +1714,30 @@
 
     window.openResourceModal = function(code, title) {
       const course = allCourses.find(c => c.code === code) || {};
-      const existingNotes = course.notes?.fileUrl || course.pdf_url || '';
+      
+      // Normalize notesList array
+      if (!Array.isArray(course.notesList)) {
+        course.notesList = [];
+        if (course.notes && course.notes.fileUrl && course.notes.available !== false) {
+          course.notesList.push({
+            id: Date.now(),
+            section: course.notes.section || 'General Study Notes',
+            title: course.notes.title || course.notes.fileName || 'Study Notes',
+            fileName: course.notes.fileName || 'Notes.pdf',
+            fileUrl: course.notes.fileUrl
+          });
+        } else if (course.pdf_url && course.pdf_url.trim().length > 0) {
+          course.notesList.push({
+            id: Date.now(),
+            section: 'General Study Notes',
+            title: 'Study Notes',
+            fileName: 'Notes.pdf',
+            fileUrl: course.pdf_url
+          });
+        }
+      }
+
+      const notesList = course.notesList;
       const pyqs = Array.isArray(course.pyqs) ? course.pyqs : [];
 
       document.getElementById('pdfModalTitle').textContent = `Manage Resources: ${code}`;
@@ -1703,34 +1748,47 @@
       uploadZoneText.textContent = 'Click to select PDF file from your computer';
 
       typeNotesRadio.checked = true;
+      if (resourceSectionInput) resourceSectionInput.value = '';
       resourceTitleInput.value = '';
       resourceYearInput.value = new Date().getFullYear();
       updateResourceTypeUI();
 
-      // Current Notes Info
-      const currentInfo = document.getElementById('currentPdfInfo');
-      const currentLink = document.getElementById('currentPdfLink');
-      const editNotesTitleInput = document.getElementById('editNotesTitleInput');
+      // Existing Attached Notes List
+      const modalExistingNotesSection = document.getElementById('modalExistingNotesSection');
+      const modalExistingNotesList = document.getElementById('modalExistingNotesList');
 
-      if (existingNotes && existingNotes.trim().length > 0) {
-        currentInfo.style.display = 'block';
-        currentLink.href = existingNotes;
-        if (editNotesTitleInput) {
-          editNotesTitleInput.value = course.notes?.title || course.notes?.fileName || '';
-        }
+      if (notesList.length > 0) {
+        modalExistingNotesSection.style.display = 'block';
+        modalExistingNotesList.innerHTML = notesList.map((n, idx) => `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+            <div style="min-width: 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span style="font-size: 14px;">📄</span>
+              <strong style="color: #166534;">${n.title || n.fileName || `Notes #${idx + 1}`}</strong>
+              <span style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-size: 10.5px; padding: 1px 7px; border-radius: 9999px; font-weight: 700;">📁 ${n.section || 'General'}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <a href="${n.fileUrl || '#'}" target="_blank" style="color: #166534; font-weight: 700; text-decoration: underline;">View ↗</a>
+              <button type="button" onclick="deleteNote('${code}', ${idx})" style="background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer;">✕ Delete</button>
+            </div>
+          </div>
+        `).join('');
       } else {
-        currentInfo.style.display = 'none';
-        if (editNotesTitleInput) editNotesTitleInput.value = '';
+        modalExistingNotesSection.style.display = 'none';
+        modalExistingNotesList.innerHTML = '';
       }
 
-      // Existing PYQs List
+      // Existing Attached PYQs List
+      const modalExistingPyqSection = document.getElementById('modalExistingPyqSection');
+      const modalExistingPyqList = document.getElementById('modalExistingPyqList');
+
       if (pyqs.length > 0) {
         modalExistingPyqSection.style.display = 'block';
         modalExistingPyqList.innerHTML = pyqs.map((p, idx) => `
           <div style="display: flex; align-items: center; justify-content: space-between; background: #fafafc; border: 1px solid #e4e4e7; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
-            <div style="min-width: 0;">
+            <div style="min-width: 0; display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 14px;">📝</span>
               <strong>${p.title || `${code} — PYQ ${p.year}`}</strong>
-              <span style="color: #71717a; margin-left: 6px;">(${p.year || 'Exam'})</span>
+              <span style="color: #71717a; margin-left: 4px;">(${p.year || 'Exam'})</span>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
               <a href="${p.fileUrl || '#'}" target="_blank" style="color: #166534; font-weight: 700; text-decoration: underline;">View ↗</a>
@@ -1746,68 +1804,41 @@
       pdfUploadModal.classList.add('active');
     };
 
-    const saveRenamedNotesTitleBtn = document.getElementById('saveRenamedNotesTitleBtn');
-    if (saveRenamedNotesTitleBtn) {
-      saveRenamedNotesTitleBtn.addEventListener('click', async () => {
-        const code = document.getElementById('pdfCourseCodeInput').value;
-        const newTitle = document.getElementById('editNotesTitleInput').value.trim();
-        if (!newTitle) {
-          alert('Please enter a display name for the study notes.');
-          return;
-        }
-
-        saveRenamedNotesTitleBtn.textContent = 'Saving...';
-        try {
-          const res = await fetch('/api/admin/courses/update-resource-title', {
-            method: 'POST',
-            headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({
-              course_code: code,
-              resource_type: 'notes',
-              title: newTitle
-            })
-          });
-          if (res.ok) {
-            const target = allCourses.find(c => c.code === code);
-            if (target) {
-              if (!target.notes) target.notes = {};
-              target.notes.title = newTitle;
-              target.notes.fileName = newTitle;
-              saveCoursesLocallyAndSync(allCourses);
-            }
-            renderCourseTable(allCourses);
-            renderPdfManagerTable(allCourses);
-            saveRenamedNotesTitleBtn.textContent = '✓ Saved!';
-            setTimeout(() => { saveRenamedNotesTitleBtn.textContent = '💾 Save Name'; }, 1800);
-          }
-        } catch (e) {
-          saveRenamedNotesTitleBtn.textContent = '💾 Save Name';
-        }
-      });
-    }
-
     window.openPdfModal = window.openResourceModal;
+
+    window.deleteNote = async function(code, idx) {
+      if (!confirm(`Delete this study note from ${code}?`)) return;
+      const target = allCourses.find(c => c.code === code);
+      if (target) {
+        if (!Array.isArray(target.notesList)) {
+          target.notesList = [];
+          if (target.notes && target.notes.fileUrl) target.notesList.push({ ...target.notes });
+        }
+        target.notesList.splice(idx, 1);
+        if (target.notesList.length > 0) {
+          target.notes = target.notesList[0];
+          target.pdf_url = target.notesList[0].fileUrl;
+        } else {
+          target.notes = { available: false, fileName: '', fileUrl: '' };
+          target.pdf_url = '';
+        }
+        await saveCoursesLocallyAndSync(allCourses);
+        renderCourseTable(allCourses);
+        renderPdfManagerTable(allCourses);
+        openResourceModal(code, target.title);
+      }
+    };
 
     window.deletePyq = async function(code, idx) {
       if (!confirm(`Delete this PYQ paper from ${code}?`)) return;
       const target = allCourses.find(c => c.code === code);
       if (target && Array.isArray(target.pyqs)) {
         target.pyqs.splice(idx, 1);
-        saveCoursesLocallyAndSync(allCourses);
+        await saveCoursesLocallyAndSync(allCourses);
         renderCourseTable(allCourses);
         renderPdfManagerTable(allCourses);
         openResourceModal(code, target.title);
       }
-
-      try {
-        await fetch('/api/admin/courses/delete-pyq', {
-          method: 'POST',
-          headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ course_code: code, pyq_index: idx })
-        });
-      } catch (e) {}
     };
 
     closePdfModalBtn.addEventListener('click', () => pdfUploadModal.classList.remove('active'));
@@ -1818,41 +1849,11 @@
       }
     });
 
-    removePdfBtn.addEventListener('click', async () => {
-      const code = document.getElementById('pdfCourseCodeInput').value;
-      if (!confirm(`Remove Study Notes attachment from ${code}?`)) return;
-
-      const target = allCourses.find(c => c.code === code);
-      if (target) {
-        target.pdf_url = '';
-        target.notes = { available: false, fileName: '', fileUrl: '' };
-        await saveCoursesLocallyAndSync(allCourses);
-      }
-
-      try {
-        const localPdfMap = JSON.parse(localStorage.getItem('mghub_local_pdfs') || '{}');
-        delete localPdfMap[code];
-        localStorage.setItem('mghub_local_pdfs', JSON.stringify(localPdfMap));
-      } catch (e) {}
-
-      renderCourseTable(allCourses);
-      renderPdfManagerTable(allCourses);
-      updateDashboardCounts();
-      pdfUploadModal.classList.remove('active');
-
-      try {
-        await fetch(`/api/admin/courses/remove-pdf/${code}`, {
-          method: 'POST',
-          headers: getAuthHeaders(),
-          credentials: 'include'
-        });
-      } catch (e) {}
-    });
-
     pdfUploadForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const code = document.getElementById('pdfCourseCodeInput').value;
       const resourceType = typePyqRadio.checked ? 'pyq' : 'notes';
+      const sectionName = (resourceSectionInput ? resourceSectionInput.value.trim() : '') || 'General Study Notes';
       const title = resourceTitleInput.value.trim();
       const year = resourceYearInput.value;
       const file = pdfFileInput.files[0];
@@ -1866,63 +1867,94 @@
 
       const submitBtn = document.getElementById('savePdfSubmitBtn');
       const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Uploading & Attaching...';
+      submitBtn.textContent = 'Uploading PDF...';
       submitBtn.disabled = true;
 
       try {
-        let fileDataUrl = '';
         let cloudFileUrl = '';
 
-        if (file && typeof uploadPdfToFirebaseStorage === 'function') {
-          try {
-            cloudFileUrl = await uploadPdfToFirebaseStorage(file, code);
-          } catch (e) {
-            console.warn('Firebase storage upload failed:', e);
+        if (file) {
+          if (typeof uploadPdfToCloudinary === 'function') {
+            cloudFileUrl = await uploadPdfToCloudinary(file, code, (percent) => {
+              submitBtn.textContent = `Uploading: ${percent}%...`;
+            });
+          } else if (typeof uploadPdfToFirebaseStorage === 'function') {
+            cloudFileUrl = await uploadPdfToFirebaseStorage(file, code, (percent) => {
+              submitBtn.textContent = `Uploading: ${percent}%...`;
+            });
+          }
+
+          if (!cloudFileUrl) {
+            throw new Error('Could not get upload URL from Cloudinary. Please check file and try again.');
           }
         }
 
-        if (file && !cloudFileUrl) {
-          if (file.size <= 5 * 1024 * 1024) {
-            try {
-              fileDataUrl = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (ev) => resolve(ev.target.result);
-                reader.onerror = () => resolve('');
-                reader.readAsDataURL(file);
-              });
-            } catch(e) {
-              fileDataUrl = '';
-            }
-          }
-        }
+        submitBtn.textContent = 'Saving to Database...';
 
         const target = allCourses.find(c => c.code === code);
         if (target) {
-          const resolvedFileUrl = cloudFileUrl || url || fileDataUrl || '#';
+          const resolvedFileUrl = cloudFileUrl || url || '#';
           const resolvedFileName = file ? file.name : (title ? `${title}.pdf` : `${code}_Notes.pdf`);
           const customTitle = title || (resourceType === 'pyq' ? `${code} — PYQ ${year || new Date().getFullYear()}` : `${code} Study Notes`);
 
           if (resourceType === 'pyq') {
             if (!Array.isArray(target.pyqs)) target.pyqs = [];
             target.pyqs.unshift({
+              id: Date.now(),
               year: parseInt(year) || new Date().getFullYear(),
               title: customTitle,
               fileName: resolvedFileName,
-              fileUrl: resolvedFileUrl
+              fileUrl: resolvedFileUrl,
+              uploadedAt: new Date().toISOString()
             });
           } else {
+            // Study Notes - Support multiple notes list with Section Name
+            if (!Array.isArray(target.notesList)) {
+              target.notesList = [];
+              if (target.notes && target.notes.fileUrl && target.notes.available !== false) {
+                target.notesList.push({
+                  id: Date.now() - 1000,
+                  section: target.notes.section || 'General Study Notes',
+                  title: target.notes.title || target.notes.fileName || 'Study Notes',
+                  fileName: target.notes.fileName || 'Notes.pdf',
+                  fileUrl: target.notes.fileUrl
+                });
+              } else if (target.pdf_url && target.pdf_url.trim().length > 0) {
+                target.notesList.push({
+                  id: Date.now() - 1000,
+                  section: 'General Study Notes',
+                  title: 'Study Notes',
+                  fileName: 'Notes.pdf',
+                  fileUrl: target.pdf_url
+                });
+              }
+            }
+
+            target.notesList.unshift({
+              id: Date.now(),
+              section: sectionName,
+              title: customTitle,
+              fileName: resolvedFileName,
+              fileUrl: resolvedFileUrl,
+              uploadedAt: new Date().toISOString()
+            });
+
             target.pdf_url = resolvedFileUrl;
             target.notes = {
               available: true,
+              section: sectionName,
               title: customTitle,
               fileName: resolvedFileName,
               fileUrl: resolvedFileUrl
             };
           }
+
           if (typeof saveCourseToFirestore === 'function') {
             try {
               await saveCourseToFirestore(target);
-            } catch (e) {}
+            } catch (e) {
+              console.warn('saveCourseToFirestore non-blocking error:', e);
+            }
           }
         }
 
@@ -1932,11 +1964,13 @@
         updateDashboardCounts();
 
         pdfUploadForm.reset();
+        pdfFileInput.value = '';
+        uploadZoneText.textContent = 'Click to select PDF file from your computer';
         pdfUploadModal.classList.remove('active');
-        alert(`✓ ${resourceType === 'pyq' ? 'PYQ Paper' : 'Study Notes'} attached to ${code} successfully! It is now live across all mobile phones and web browsers.`);
+        alert(`✓ ${resourceType === 'pyq' ? 'PYQ Paper' : `[${sectionName}] Study Notes`} attached to ${code} successfully! It is now live across all mobile phones and web browsers.`);
       } catch (err) {
         console.error('Error attaching resource:', err);
-        alert('An error occurred while attaching the resource: ' + (err.message || 'Unknown error'));
+        alert('Upload failed: ' + (err.message || 'Please check your connection and try again.'));
       } finally {
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;

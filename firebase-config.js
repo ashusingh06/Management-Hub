@@ -250,40 +250,15 @@ async function signOutUser() {
 function openPdfSecurely(url, filename = 'document.pdf') {
   if (!url || url === '#' || url === '') return;
 
-  if (url.startsWith('data:')) {
-    try {
-      const arr = url.split(',');
-      const mimeMatch = arr[0].match(/:(.*?);/);
-      const mime = mimeMatch ? mimeMatch[1] : 'application/pdf';
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      const blob = new Blob([u8arr], { type: mime });
-      const blobUrl = URL.createObjectURL(blob);
-      const win = window.open(blobUrl, '_blank');
-      if (!win) {
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }
-      return;
-    } catch (e) {
-      console.error('Error opening data URL:', e);
-    }
-  }
-
-  // Normal HTTP/HTTPS / Relative URL
-  const win = window.open(url, '_blank', 'noopener,noreferrer');
-  if (!win) {
-    window.location.href = url;
-  }
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    try { document.body.removeChild(a); } catch (e) {}
+  }, 100);
 }
 
 function downloadPdfSecurely(url, filename = 'document.pdf') {
@@ -341,27 +316,99 @@ function normalizePdfUrl(rawUrl) {
   return url;
 }
 
-async function uploadPdfToFirebaseStorage(file, courseCode) {
-  if (typeof firebase === 'undefined') return null;
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  if (!firebase.storage) return null;
+// ==============================================================================
+// Cloudinary Direct Browser Upload (Free 25GB Storage - 24/7 Available)
+// Works directly on Firebase Hosting without requiring any backend server!
+// ==============================================================================
+const CLOUDINARY_CONFIG = {
+  cloudName: 'sendqukv',
+  apiKey: '122139736221295',
+  apiSecret: 'nJ9yJ5Sw7Tavp3VV09nXnYciZp8',
+  folder: 'management-hub/pdfs'
+};
+
+async function computeSha1Hex(str) {
+  const enc = new TextEncoder();
+  const data = enc.encode(str);
+  const hashBuffer = await window.crypto.subtle.digest('SHA-1', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function uploadPdfToCloudinary(file, courseCode, onProgress = null) {
+  if (!file) return null;
+  return new Promise(async (resolve, reject) => {
+    try {
+      const timestamp = Math.round(Date.now() / 1000);
+      const folder = CLOUDINARY_CONFIG.folder;
+      const strToSign = `folder=${folder}&timestamp=${timestamp}${CLOUDINARY_CONFIG.apiSecret}`;
+      const signature = await computeSha1Hex(strToSign);
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', folder);
+      formData.append('timestamp', timestamp.toString());
+      formData.append('api_key', CLOUDINARY_CONFIG.apiKey);
+      formData.append('signature', signature);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/auto/upload`, true);
+
+      if (xhr.upload && typeof onProgress === 'function') {
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            onProgress(percent);
+          }
+        };
+      }
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            if (data && data.secure_url) {
+              resolve(data.secure_url);
+            } else {
+              reject(new Error('Cloudinary response missing secure_url'));
+            }
+          } catch (err) {
+            reject(new Error('Invalid JSON from Cloudinary: ' + err.message));
+          }
+        } else {
+          try {
+            const errData = JSON.parse(xhr.responseText);
+            reject(new Error(errData?.error?.message || `Cloudinary upload error (${xhr.status})`));
+          } catch (e) {
+            reject(new Error(`Cloudinary upload failed with HTTP status ${xhr.status}`));
+          }
+        }
+      };
+
+      xhr.onerror = () => {
+        reject(new Error('Network error while uploading PDF to Cloudinary. Please check your connection.'));
+      };
+
+      xhr.ontimeout = () => {
+        reject(new Error('Upload timed out after 120 seconds. Please try again.'));
+      };
+
+      xhr.timeout = 120000; // 2 minutes max
+      xhr.send(formData);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+async function uploadPdfToFirebaseStorage(file, courseCode, onProgress = null) {
+  // Primary: Upload directly to Cloudinary (25GB Free, No Backend Required)
   try {
-    const storage = firebase.storage();
-    const timestamp = Date.now();
-    const cleanFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const storageRef = storage.ref(`notes/${courseCode}/${timestamp}_${cleanFileName}`);
-    
-    // Strict 8-second timeout so uploads never hang
-    const uploadTask = storageRef.put(file);
-    const uploadPromise = uploadTask.then(snapshot => snapshot.ref.getDownloadURL());
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Upload timeout')), 8000)
-    );
-    
-    const downloadUrl = await Promise.race([uploadPromise, timeoutPromise]);
-    return downloadUrl;
+    const cloudUrl = await uploadPdfToCloudinary(file, courseCode, onProgress);
+    if (cloudUrl) return cloudUrl;
   } catch (e) {
-    console.warn('Firebase storage upload fallback:', e);
-    return null;
+    console.error('Cloudinary upload error:', e);
+    throw e; // Throw error so UI can display proper message
   }
+  return null;
 }

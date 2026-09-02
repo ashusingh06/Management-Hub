@@ -9,6 +9,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { DEFAULT_COURSES } from './src/data/defaultCourses.js';
+import { v2 as cloudinary } from 'cloudinary';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,12 +18,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'mghub_jwt_super_secure_secret_2026_key';
 
-// Ensure data and uploads directories exist
+// Ensure data directory exists (uploads no longer needed — Cloudinary handles storage)
 const DATA_DIR = path.join(__dirname, 'data');
-const UPLOADS_DIR = path.join(__dirname, 'uploads', 'notes');
-
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const COURSES_FILE = path.join(DATA_DIR, 'courses.json');
@@ -75,6 +73,55 @@ function saveAnalytics(data) {
   fs.writeFileSync(ANALYTICS_FILE, JSON.stringify(data, null, 2));
 }
 
+// ==============================================================================
+// Cloudinary Configuration (PDF Storage — Free 25GB, 24*7 accessible)
+// ==============================================================================
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+/**
+ * Upload a buffer to Cloudinary and return the permanent secure URL
+ * @param {Buffer} buffer - File buffer from multer memory storage
+ * @param {string} publicId - Unique identifier for the file
+ * @returns {Promise<string>} - Permanent HTTPS URL of the uploaded PDF
+ */
+function uploadToCloudinary(buffer, publicId) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        public_id: publicId,
+        resource_type: 'auto',         // 'auto' allows proper PDF viewing
+        folder: 'management-hub/pdfs',
+        overwrite: true,
+        use_filename: true,
+        unique_filename: false
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result.secure_url);
+      }
+    );
+    stream.end(buffer);
+  });
+}
+
+// Multer — Memory Storage (PDF buffer streamed directly to Cloudinary)
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'application/pdf' || file.originalname.toLowerCase().endsWith('.pdf')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF files are allowed'), false);
+    }
+  }
+});
+
 // Ensure default admin account exists with bcrypt hash
 async function ensureAdminExists() {
   const users = getUsers();
@@ -95,23 +142,6 @@ async function ensureAdminExists() {
 }
 ensureAdminExists();
 
-// Multer Storage Configuration for PDF Uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, UPLOADS_DIR);
-  },
-  filename: (req, file, cb) => {
-    const courseCode = req.body.course_code || 'COURSE';
-    const sanitized = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
-    cb(null, `${courseCode}_Notes_${Date.now()}_${sanitized}`);
-  }
-});
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 50 * 1024 * 1024 } // 50MB max
-});
-
 // Middleware Configuration
 app.use(cors({
   origin: true,
@@ -120,9 +150,6 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Serve Uploaded PDFs (Publicly Accessible)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ==============================================================================
 // Authentication & Role-Based Authorization Middleware
@@ -497,7 +524,7 @@ app.get('/api/admin/analytics', authenticateToken, requireAdmin, (req, res) => {
 });
 
 // Upload PDF File or Attach Online URL
-app.post('/api/admin/courses/upload-pdf', authenticateToken, requireAdmin, upload.single('pdf_file'), (req, res) => {
+app.post('/api/admin/courses/upload-pdf', authenticateToken, requireAdmin, upload.single('pdf_file'), async (req, res) => {
   const { course_code, pdf_url } = req.body;
   if (!course_code) return res.status(400).json({ error: 'Course code is required' });
 
@@ -511,7 +538,13 @@ app.post('/api/admin/courses/upload-pdf', authenticateToken, requireAdmin, uploa
   let finalPdfUrl = '';
 
   if (req.file) {
-    finalPdfUrl = `/uploads/notes/${req.file.filename}`;
+    try {
+      const publicId = `${course_code}_Notes_${Date.now()}`;
+      finalPdfUrl = await uploadToCloudinary(req.file.buffer, publicId);
+    } catch (err) {
+      console.error('Cloudinary upload error:', err);
+      return res.status(500).json({ error: 'Failed to upload PDF to Cloudinary' });
+    }
   } else if (pdf_url && pdf_url.trim().length > 0) {
     finalPdfUrl = pdf_url.trim();
   } else {
@@ -535,7 +568,7 @@ app.post('/api/admin/courses/upload-pdf', authenticateToken, requireAdmin, uploa
 });
 
 // Upload Resource (Notes or PYQ)
-app.post('/api/admin/courses/upload-resource', authenticateToken, requireAdmin, upload.single('resource_file'), (req, res) => {
+app.post('/api/admin/courses/upload-resource', authenticateToken, requireAdmin, upload.single('resource_file'), async (req, res) => {
   const { course_code, resource_type, title, year, resource_url } = req.body;
   if (!course_code) return res.status(400).json({ error: 'Course code is required' });
 
@@ -550,8 +583,15 @@ app.post('/api/admin/courses/upload-resource', authenticateToken, requireAdmin, 
   let finalFileName = '';
 
   if (req.file) {
-    finalUrl = `/uploads/notes/${req.file.filename}`;
-    finalFileName = req.file.originalname;
+    try {
+      const typeLabel = resource_type === 'pyq' ? 'PYQ' : 'Notes';
+      const publicId = `${course_code}_${typeLabel}_${Date.now()}`;
+      finalUrl = await uploadToCloudinary(req.file.buffer, publicId);
+      finalFileName = req.file.originalname;
+    } catch (err) {
+      console.error('Cloudinary upload error:', err);
+      return res.status(500).json({ error: 'Failed to upload PDF to Cloudinary' });
+    }
   } else if (resource_url && resource_url.trim().length > 0) {
     finalUrl = resource_url.trim();
     finalFileName = title ? `${title.replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf` : `${course_code}_Document.pdf`;

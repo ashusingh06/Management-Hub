@@ -545,41 +545,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     courseModal.classList.add('active');
 
-    // 2. Fetch fresh course details (with notes & pyqs) from Firestore, API, or LocalStorage
-    if (typeof fetchCoursesFromFirestore === 'function') {
+    // 1. Instant Render from Memory Cache / LocalStorage (0ms immediate display)
+    let targetCourse = (Array.isArray(liveCourses) ? liveCourses : []).find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
+    if (!targetCourse) {
       try {
-        const cloudCourses = await fetchCoursesFromFirestore();
-        if (Array.isArray(cloudCourses) && cloudCourses.length > 0) {
-          const match = cloudCourses.find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
-          if (match) {
-            targetCourse = match;
-            populateModalData(targetCourse);
-            return;
+        const saved = JSON.parse(localStorage.getItem('mghub_courses') || '[]');
+        targetCourse = saved.find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
+      } catch (e) {}
+    }
+    if (targetCourse) {
+      populateModalData(targetCourse);
+    }
+
+    // 2. Non-blocking background sync from Firestore / API
+    (async () => {
+      try {
+        if (typeof fetchCoursesFromFirestore === 'function') {
+          const cloudCourses = await fetchCoursesFromFirestore();
+          if (Array.isArray(cloudCourses) && cloudCourses.length > 0) {
+            const match = cloudCourses.find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
+            if (match && courseModal.classList.contains('active') && activeModalCourseCode === (match.code || '').toUpperCase()) {
+              populateModalData(match);
+            }
           }
         }
       } catch (e) {}
-    }
-
-    try {
-      const res = await fetch(`/api/course/${activeModalCourseCode}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.course) {
-          targetCourse = data.course;
-          populateModalData(targetCourse);
-          return;
-        }
-      }
-    } catch (e) {}
-
-    try {
-      const saved = JSON.parse(localStorage.getItem('mghub_courses') || '[]');
-      const localMatch = saved.find(c => (c.code || '').toUpperCase() === activeModalCourseCode);
-      if (localMatch) {
-        targetCourse = localMatch;
-        populateModalData(targetCourse);
-      }
-    } catch (e) {}
+    })();
   }
 
   function populateModalData(course) {
@@ -597,48 +588,91 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
 
     // A. Populate Study Notes Section
-    const notesData = course.notes || {};
-    let notesUrl = '';
-    if (course.notes && course.notes.available !== false && course.notes.fileUrl && course.notes.fileUrl.trim().length > 0) {
-      notesUrl = course.notes.fileUrl;
-    } else if (course.pdf_url && course.pdf_url.trim().length > 0) {
-      notesUrl = course.pdf_url;
-    } else if (localPdf && localPdf.trim().length > 0 && course.notes?.available !== false) {
-      notesUrl = localPdf;
+    // A. Populate Study Notes (Multi-Notes Support)
+    const modalNotesListStack = document.getElementById('modalNotesListStack');
+    let notesList = [];
+    if (Array.isArray(course.notesList) && course.notesList.length > 0) {
+      notesList = course.notesList.filter(n => n && (n.fileUrl || n.pdf_url));
+    } else {
+      let legacyUrl = '';
+      if (course.notes && course.notes.available !== false && course.notes.fileUrl && course.notes.fileUrl.trim().length > 0) {
+        legacyUrl = course.notes.fileUrl;
+      } else if (course.pdf_url && course.pdf_url.trim().length > 0) {
+        legacyUrl = course.pdf_url;
+      } else if (localPdf && localPdf.trim().length > 0 && course.notes?.available !== false) {
+        legacyUrl = localPdf;
+      }
+      if (legacyUrl) {
+        notesList = [{
+          title: course.notes?.title || course.notes?.fileName || 'Study Notes',
+          fileName: course.notes?.fileName || 'Notes.pdf',
+          fileUrl: legacyUrl
+        }];
+      }
     }
-    const hasNotes = Boolean(notesUrl && notesUrl.trim().length > 0);
 
-    if (hasNotes && notesUrl) {
-      if (modalNotesAvailableBox) modalNotesAvailableBox.style.display = 'flex';
+    if (notesList.length > 0) {
+      if (modalNotesListStack) {
+        modalNotesListStack.style.display = 'flex';
+
+        // Group notes by section
+        const sectionGroups = {};
+        notesList.forEach(n => {
+          const sec = (n.section && n.section.trim().length > 0) ? n.section.trim() : 'General Study Notes';
+          if (!sectionGroups[sec]) sectionGroups[sec] = [];
+          sectionGroups[sec].push(n);
+        });
+
+        const groupKeys = Object.keys(sectionGroups);
+
+        modalNotesListStack.innerHTML = groupKeys.map(secName => {
+          const files = sectionGroups[secName];
+          return `
+            <div class="section-folder-card" style="background:#ffffff; border:1px solid #e4e4e7; border-radius:12px; overflow:hidden; margin-bottom:10px;">
+              <div class="section-folder-header" style="background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:10px 14px; display:flex; align-items:center; justify-content:space-between;">
+                <div style="font-size:13.5px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:7px;">
+                  <span style="font-size:16px;">📁</span>
+                  <span>${secName}</span>
+                </div>
+                <span style="font-size:11px; font-weight:700; padding:2px 8px; border-radius:9999px; background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">${files.length} File${files.length > 1 ? 's' : ''}</span>
+              </div>
+              <div class="section-folder-list" style="display:flex; flex-direction:column;">
+                ${files.map((n, idx) => {
+                  const fileUrl = n.fileUrl || n.pdf_url || '#';
+                  const title = n.title || n.fileName || `Notes #${idx + 1}`;
+                  const safeFileName = (n.fileName || `${title}.pdf`).replace(/'/g, "\\'");
+                  return `
+                    <div class="section-file-item" style="padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; border-bottom:1px solid #f1f5f9;">
+                      <div style="min-width:0; display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:15px; color:#166534;">📄</span>
+                        <strong style="font-size:13px; color:#09090b; word-break:break-word;">${title}</strong>
+                      </div>
+                      <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                        <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor:pointer; background:#09090b; color:#ffffff !important; border:none; font-family:inherit; font-weight:700; font-size:12px; padding:6px 12px; border-radius:7px;">Open ↗</button>
+                        <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="Download ${title}" style="cursor:pointer; background:#f4f4f5; border:1px solid #e4e4e7; color:#09090b; width:28px; height:28px;">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
       if (modalNotesEmptyBox) modalNotesEmptyBox.style.display = 'none';
       if (modalNotesStatusBadge) {
-        modalNotesStatusBadge.textContent = 'Available';
+        modalNotesStatusBadge.textContent = `${notesList.length} Notes Available`;
         modalNotesStatusBadge.style.color = '#166534';
         modalNotesStatusBadge.style.background = '#f0fdf4';
         modalNotesStatusBadge.style.borderColor = '#bbf7d0';
       }
-
-      const fileName = notesData.title || notesData.fileName || notesUrl.split('/').pop().replace(/_/g, ' ') || `${course.code}_Notes.pdf`;
-      if (modalNotesFileName) modalNotesFileName.textContent = fileName;
-
-      if (modalOpenNotesDirectBtn) {
-        modalOpenNotesDirectBtn.href = notesUrl;
-        modalOpenNotesDirectBtn.onclick = (e) => {
-          e.preventDefault();
-          if (typeof openPdfSecurely === 'function') openPdfSecurely(notesUrl, fileName);
-          else window.open(notesUrl, '_blank');
-        };
-      }
-      if (modalDownloadNotesDirectBtn) {
-        modalDownloadNotesDirectBtn.href = notesUrl;
-        modalDownloadNotesDirectBtn.onclick = (e) => {
-          e.preventDefault();
-          if (typeof downloadPdfSecurely === 'function') downloadPdfSecurely(notesUrl, fileName);
-          else window.open(notesUrl, '_blank');
-        };
-      }
     } else {
-      if (modalNotesAvailableBox) modalNotesAvailableBox.style.display = 'none';
+      if (modalNotesListStack) {
+        modalNotesListStack.style.display = 'none';
+        modalNotesListStack.innerHTML = '';
+      }
       if (modalNotesEmptyBox) modalNotesEmptyBox.style.display = 'flex';
       if (modalNotesStatusBadge) {
         modalNotesStatusBadge.textContent = 'Coming Soon';

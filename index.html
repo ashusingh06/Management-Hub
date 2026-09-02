@@ -12,7 +12,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js?v=20260902_04"></script>
+  <script src="firebase-config.js?v=20260902_cloudinary"></script>
 </head>
 <body>
 
@@ -516,19 +516,9 @@
           <span class="modal-section-count" id="modalNotesStatusBadge">Available</span>
         </div>
 
-        <div id="modalNotesAvailableBox" class="resource-box">
-          <div class="resource-info-side">
-            <span class="resource-file-icon">📑</span>
-            <div class="resource-details">
-              <strong class="resource-title" id="modalNotesFileName">Course_Notes.pdf</strong>
-            </div>
-          </div>
-          <div class="resource-actions">
-            <a href="#" id="modalOpenNotesDirectBtn" target="_blank" rel="noopener noreferrer" class="btn-open-pdf">Open PDF ↗</a>
-            <a href="#" id="modalDownloadNotesDirectBtn" target="_blank" rel="noopener noreferrer" download class="btn-dl-pdf" title="Download Notes PDF">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </a>
-          </div>
+        <!-- Dynamic Study Notes Stack -->
+        <div class="pyq-list-stack" id="modalNotesListStack" style="display: none;">
+          <!-- Dynamically populated -->
         </div>
 
         <div id="modalNotesEmptyBox" class="empty-resource-box" style="display: none;">
@@ -577,6 +567,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=20260902_04"></script>
+  <script src="script.js?v=20260902_instantcache"></script>
 </body>
 </html>
