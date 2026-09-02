@@ -86,23 +86,9 @@ cd Management-Hub
 npm install
 ```
 
-### 3. Configure Environment Variables
-Create a `.env` file in the root directory:
-```env
-PORT=3000
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-CLOUDINARY_URL=cloudinary://your_api_key:your_api_secret@your_cloud_name
-```
-
-### 4. Run Locally
+### 3. Run Application
 ```bash
-# Option A: Start Local Node Express Server
 npm start
-
-# Option B: Run via Vite Live Reload
-npm run dev
 ```
 Open your browser at `http://localhost:3000`.
 
