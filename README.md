@@ -13,7 +13,7 @@ It provides centralized, 24/7 access to curated course catalogs, multi-contribut
 ## ✨ Key Features
 
 ### 📚 Academic Catalog & Study Resources
-- **Full Curriculum Catalog:** Covers 52+ courses across Foundation, Diploma (Management & Analytics), and BS Degree tiers.
+- **Full Curriculum Catalog:** Covers 30+ courses across Foundation, Diploma (Management & Analytics), and BS Degree tiers.
 - **📁 Multi-Section / Contributor Notes:** Group study notes by author (e.g. *Ashu's Notes*, *Sibu's Notes*, *Lecture Slides*, *Handwritten Notes*, *Formula Sheets*).
 - **📝 Previous Year Questions (PYQs):** Year-wise past exam question papers with one-click direct PDF preview and downloads.
 - **⚡ Instant 0ms Load Time:** Smart in-memory client caching with asynchronous background Cloud Firestore synchronization.
