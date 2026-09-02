@@ -675,8 +675,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
               </div>
               <div class="resource-actions">
-                <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeTitle}');}else{window.open('${fileUrl}', '_blank');}" class="btn-open-pdf" style="cursor:pointer; background:none; border:1px solid #e4e4e7; font-family:inherit;">Open PDF ↗</button>
-                <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeTitle}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="Download ${title}" style="cursor:pointer; background:none; border:1px solid #e4e4e7;">
+                <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeTitle}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12.5px; padding: 7px 14px; border-radius: 8px;">Open PDF ↗</button>
+                <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeTitle}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="Download ${title}" style="cursor:pointer; background: #f4f4f5; border:1px solid #e4e4e7; color: #09090b;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </button>
               </div>

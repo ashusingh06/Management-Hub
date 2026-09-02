@@ -37,6 +37,20 @@ async function fetchCoursesFromFirestore() {
   const db = getFirebaseDb();
   if (!db) return null;
   try {
+    // 1. Try individual course collection
+    const snapshot = await db.collection('courses').get();
+    if (!snapshot.empty) {
+      const list = [];
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        if (d && d.code) list.push(d);
+      });
+      if (list.length > 0) return list;
+    }
+  } catch (e) {}
+
+  try {
+    // 2. Fallback to settings/courses doc
     const doc = await db.collection('settings').doc('courses').get();
     if (doc.exists && Array.isArray(doc.data()?.list) && doc.data().list.length > 0) {
       return doc.data().list;
@@ -45,17 +59,48 @@ async function fetchCoursesFromFirestore() {
   return null;
 }
 
-async function saveCoursesToFirestore(coursesList) {
+async function saveCourseToFirestore(course) {
   const db = getFirebaseDb();
-  if (!db) return false;
+  if (!db || !course || !course.code) return false;
   try {
-    await db.collection('settings').doc('courses').set({
-      list: coursesList,
+    const code = course.code.toUpperCase();
+    await db.collection('courses').doc(code).set({
+      ...course,
       updatedAt: new Date().toISOString()
     }, { merge: true });
     return true;
   } catch (e) {
-    console.error('saveCoursesToFirestore error:', e);
+    console.error('saveCourseToFirestore error:', e);
+    return false;
+  }
+}
+
+async function saveCoursesToFirestore(coursesList) {
+  const db = getFirebaseDb();
+  if (!db || !Array.isArray(coursesList)) return false;
+  try {
+    // Save to settings/courses summary document
+    await db.collection('settings').doc('courses').set({
+      list: coursesList,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+  } catch (e) {
+    console.warn('saveCoursesToFirestore summary warning:', e);
+  }
+
+  try {
+    // Save each course as its own independent document in `courses` collection
+    const batch = db.batch();
+    coursesList.forEach(course => {
+      if (course && course.code) {
+        const ref = db.collection('courses').doc(course.code.toUpperCase());
+        batch.set(ref, { ...course, updatedAt: new Date().toISOString() }, { merge: true });
+      }
+    });
+    await batch.commit();
+    return true;
+  } catch (e) {
+    console.error('saveCoursesToFirestore batch error:', e);
     return false;
   }
 }
@@ -117,11 +162,27 @@ function listenToCoursesFromFirestore(callback) {
   const db = getFirebaseDb();
   if (!db) return () => {};
   try {
-    return db.collection('settings').doc('courses').onSnapshot((doc) => {
+    const unsubCol = db.collection('courses').onSnapshot((snapshot) => {
+      if (!snapshot.empty) {
+        const list = [];
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          if (d && d.code) list.push(d);
+        });
+        if (list.length > 0) callback(list);
+      }
+    }, (err) => console.warn('Firestore courses collection listener:', err));
+
+    const unsubDoc = db.collection('settings').doc('courses').onSnapshot((doc) => {
       if (doc.exists && Array.isArray(doc.data()?.list) && doc.data().list.length > 0) {
         callback(doc.data().list);
       }
-    }, (err) => console.warn('Firestore realtime courses listener:', err));
+    }, (err) => console.warn('Firestore settings/courses doc listener:', err));
+
+    return () => {
+      try { unsubCol(); } catch (e) {}
+      try { unsubDoc(); } catch (e) {}
+    };
   } catch (e) {
     return () => {};
   }
