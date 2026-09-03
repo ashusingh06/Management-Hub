@@ -1,12 +1,12 @@
 // Firebase Authentication & Cloud Firestore Configuration for [Management Hub]
 const firebaseConfig = {
-  apiKey: "AIzaSyBqjrdW8B7UR_QeQ-ADibYBNGzo4yIp0Mw",
-  authDomain: "management-hub-1c14c.firebaseapp.com",
-  projectId: "management-hub-1c14c",
-  storageBucket: "management-hub-1c14c.firebasestorage.app",
-  messagingSenderId: "568530023976",
-  appId: "1:568530023976:web:0f28d8e845ad41e9a7a71d",
-  measurementId: "G-YNZ0DZHR71"
+  apiKey: "YOUR_FIREBASE_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 let authInstance = null;
@@ -321,9 +321,9 @@ function normalizePdfUrl(rawUrl) {
 // Works directly on Firebase Hosting without requiring any backend server!
 // ==============================================================================
 const CLOUDINARY_CONFIG = {
-  cloudName: 'sendqukv',
-  apiKey: '122139736221295',
-  apiSecret: 'nJ9yJ5Sw7Tavp3VV09nXnYciZp8',
+  cloudName: 'YOUR_CLOUDINARY_CLOUD_NAME',
+  apiKey: 'YOUR_CLOUDINARY_API_KEY',
+  apiSecret: 'YOUR_CLOUDINARY_API_SECRET',
   folder: 'management-hub/pdfs'
 };
 

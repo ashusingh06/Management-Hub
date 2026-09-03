@@ -26,3 +26,5 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 .firebase/
+firebase-config.js
+serviceAccount*.json
