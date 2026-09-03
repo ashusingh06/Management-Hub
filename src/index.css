@@ -623,21 +623,108 @@ body {
   gap: 16px;
 }
 
+.course-card:nth-child(12n + 1) {
+  --course-accent: #059669;
+  --course-bg: #ecfdf5;
+  --course-badge-bg: #d1fae5;
+  --course-badge-text: #065f46;
+  --course-glow: rgba(5, 150, 105, 0.2);
+}
+.course-card:nth-child(12n + 2) {
+  --course-accent: #2563eb;
+  --course-bg: #eff6ff;
+  --course-badge-bg: #dbeafe;
+  --course-badge-text: #1e40af;
+  --course-glow: rgba(37, 99, 235, 0.2);
+}
+.course-card:nth-child(12n + 3) {
+  --course-accent: #7c3aed;
+  --course-bg: #f5f3ff;
+  --course-badge-bg: #ede9fe;
+  --course-badge-text: #5b21b6;
+  --course-glow: rgba(124, 58, 237, 0.2);
+}
+.course-card:nth-child(12n + 4) {
+  --course-accent: #d97706;
+  --course-bg: #fffbeb;
+  --course-badge-bg: #fef3c7;
+  --course-badge-text: #92400e;
+  --course-glow: rgba(217, 119, 6, 0.2);
+}
+.course-card:nth-child(12n + 5) {
+  --course-accent: #e11d48;
+  --course-bg: #fff1f2;
+  --course-badge-bg: #ffe4e6;
+  --course-badge-text: #9f1239;
+  --course-glow: rgba(225, 29, 72, 0.2);
+}
+.course-card:nth-child(12n + 6) {
+  --course-accent: #0891b2;
+  --course-bg: #ecfeff;
+  --course-badge-bg: #cffafe;
+  --course-badge-text: #155e75;
+  --course-glow: rgba(8, 145, 178, 0.2);
+}
+.course-card:nth-child(12n + 7) {
+  --course-accent: #4f46e5;
+  --course-bg: #eef2ff;
+  --course-badge-bg: #e0e7ff;
+  --course-badge-text: #3730a3;
+  --course-glow: rgba(79, 70, 229, 0.2);
+}
+.course-card:nth-child(12n + 8) {
+  --course-accent: #ea580c;
+  --course-bg: #fff7ed;
+  --course-badge-bg: #ffedd5;
+  --course-badge-text: #9a3412;
+  --course-glow: rgba(234, 88, 12, 0.2);
+}
+.course-card:nth-child(12n + 9) {
+  --course-accent: #0d9488;
+  --course-bg: #f0fdfa;
+  --course-badge-bg: #ccfbf1;
+  --course-badge-text: #115e59;
+  --course-glow: rgba(13, 148, 136, 0.2);
+}
+.course-card:nth-child(12n + 10) {
+  --course-accent: #c026d3;
+  --course-bg: #fdf4ff;
+  --course-badge-bg: #fae8ff;
+  --course-badge-text: #86198f;
+  --course-glow: rgba(192, 38, 211, 0.2);
+}
+.course-card:nth-child(12n + 11) {
+  --course-accent: #65a30d;
+  --course-bg: #f7fee7;
+  --course-badge-bg: #ecfccb;
+  --course-badge-text: #3f6212;
+  --course-glow: rgba(101, 163, 13, 0.2);
+}
+.course-card:nth-child(12n + 12) {
+  --course-accent: #9333ea;
+  --course-bg: #faf5ff;
+  --course-badge-bg: #f3e8ff;
+  --course-badge-text: #6b21a8;
+  --course-glow: rgba(147, 51, 234, 0.2);
+}
+
 .course-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
+  background: linear-gradient(180deg, var(--course-bg, #ffffff) 0%, #ffffff 70px);
+  border: 1.5px solid var(--border-light);
+  border-top: 4.5px solid var(--course-accent, #09090b);
   border-radius: var(--radius-lg);
   padding: 20px 22px;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-card);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
 }
 
 .course-card:hover {
-  border-color: var(--text-primary);
+  border-color: var(--course-accent, var(--text-primary));
   transform: translateY(-3px) scale(1.008);
-  box-shadow: var(--shadow-hover);
+  box-shadow: 0 14px 32px -4px var(--course-glow, var(--shadow-hover));
 }
 
 .card-top {

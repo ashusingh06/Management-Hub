@@ -911,7 +911,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localPdfMap = JSON.parse(localStorage.getItem('mghub_local_pdfs') || '{}');
     } catch (e) {}
 
-    notesGrid.innerHTML = courses.map(c => {
+    notesGrid.innerHTML = courses.map((c, index) => {
       let notesUrl = '';
       if (c.notes && c.notes.available !== false && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0) {
         notesUrl = c.notes.fileUrl;
@@ -924,9 +924,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const pyqCount = Array.isArray(c.pyqs) ? c.pyqs.length : 0;
       const hasPyqs = pyqCount > 0;
       const levelLabel = c.level.charAt(0).toUpperCase() + c.level.slice(1);
+      const colorIndex = (index % 12) + 1;
 
       return `
-        <div class="course-card" data-level="${c.level}" data-code="${c.code}">
+        <div class="course-card course-card-color-${colorIndex}" data-color="${colorIndex}" data-level="${c.level}" data-code="${c.code}">
           <div class="course-card-top">
             <span class="level-badge badge-${c.level}">${levelLabel}</span>
             <span class="course-code">${c.code}</span>
