@@ -872,14 +872,54 @@
 
         <!-- Resource Title Input -->
         <div class="form-group" id="titleGroup">
-          <label id="titleLabel">Document Title / Label</label>
-          <input type="text" id="resourceTitleInput" placeholder="e.g. BSMA1002 Comprehensive Study Notes" />
+          <label id="titleLabel">Document Title</label>
+          <input type="text" id="resourceTitleInput" placeholder="Enter document title" />
         </div>
 
-        <!-- Year Input (Visible for PYQ) -->
+        <!-- Year Input (Visible for PYQ) with Single, Range & Custom Modes -->
         <div class="form-group" id="yearGroup" style="display: none;">
-          <label>Examination Year</label>
-          <input type="number" id="resourceYearInput" value="2025" min="2018" max="2030" />
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <label style="margin: 0; font-weight: 700;">Examination Year / Session</label>
+            <span id="yearModeIndicator" style="font-size: 11px; color: #71717a; font-weight: 600;">Single Year</span>
+          </div>
+
+          <!-- Mode Toggle Tabs -->
+          <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+            <button type="button" class="btn-year-mode active" id="btnYearSingle" data-mode="single" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 700; border-radius: 8px; border: 1.5px solid #2563eb; background: #eff6ff; color: #1e40af; cursor: pointer; transition: all 0.15s ease;">
+              Single Year
+            </button>
+            <button type="button" class="btn-year-mode" id="btnYearRange" data-mode="range" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1.5px solid #e4e4e7; background: #ffffff; color: #52525b; cursor: pointer; transition: all 0.15s ease;">
+              Year Range
+            </button>
+            <button type="button" class="btn-year-mode" id="btnYearCustom" data-mode="custom" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1.5px solid #e4e4e7; background: #ffffff; color: #52525b; cursor: pointer; transition: all 0.15s ease;">
+              Custom Text
+            </button>
+          </div>
+
+          <!-- 1. Single Year Input -->
+          <div id="yearBoxSingle">
+            <input type="number" id="resourceYearSingle" value="2025" min="2015" max="2035" placeholder="e.g. 2025" />
+          </div>
+
+          <!-- 2. Range Mode Inputs (Start Year & End Year) -->
+          <div id="yearBoxRange" style="display: none;">
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center;">
+              <input type="number" id="resourceYearRangeStart" placeholder="From (e.g. 2021)" min="2015" max="2035" value="2021" />
+              <span style="font-weight: 700; color: #71717a; font-size: 12px;">to</span>
+              <input type="number" id="resourceYearRangeEnd" placeholder="To (e.g. 2024)" min="2015" max="2035" value="2024" />
+            </div>
+            <div id="yearRangePreviewBadge" style="margin-top: 6px; font-size: 11.5px; font-weight: 700; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 4px 10px; border-radius: 6px; display: inline-block;">
+              Preview: Year 2021 - 2024
+            </div>
+          </div>
+
+          <!-- 3. Custom Text Input -->
+          <div id="yearBoxCustom" style="display: none;">
+            <input type="text" id="resourceYearCustom" placeholder="Enter custom year or session (e.g. 2021-2024, May 2024, Term 1)" />
+          </div>
+
+          <!-- Hidden Input for Form compatibility -->
+          <input type="hidden" id="resourceYearInput" value="2025" />
         </div>
 
         <!-- Option 1: Upload File -->
@@ -1520,20 +1560,117 @@
     const removePdfBtn = document.getElementById('removePdfBtn');
     const typeNotesRadio = document.getElementById('typeNotesRadio');
     const typePyqRadio = document.getElementById('typePyqRadio');
-    const pyqYearGroup = document.getElementById('pyqYearGroup');
+    const pyqYearGroup = document.getElementById('yearGroup') || document.getElementById('pyqYearGroup');
     const resourceTitleInput = document.getElementById('resourceTitleInput');
     const resourceYearInput = document.getElementById('resourceYearInput');
     const modalExistingPyqSection = document.getElementById('modalExistingPyqSection');
     const modalExistingPyqList = document.getElementById('modalExistingPyqList');
     const editNotesTitleInput = document.getElementById('editNotesTitleInput');
 
+    let pyqYearMode = 'single';
+
+    function setPyqYearMode(mode) {
+      pyqYearMode = mode;
+      const btnSingle = document.getElementById('btnYearSingle');
+      const btnRange = document.getElementById('btnYearRange');
+      const btnCustom = document.getElementById('btnYearCustom');
+      const boxSingle = document.getElementById('yearBoxSingle');
+      const boxRange = document.getElementById('yearBoxRange');
+      const boxCustom = document.getElementById('yearBoxCustom');
+      const indicator = document.getElementById('yearModeIndicator');
+
+      [btnSingle, btnRange, btnCustom].forEach(btn => {
+        if (!btn) return;
+        btn.style.borderColor = '#e4e4e7';
+        btn.style.background = '#ffffff';
+        btn.style.color = '#52525b';
+        btn.style.fontWeight = '600';
+      });
+
+      if (boxSingle) boxSingle.style.display = 'none';
+      if (boxRange) boxRange.style.display = 'none';
+      if (boxCustom) boxCustom.style.display = 'none';
+
+      if (mode === 'range') {
+        if (btnRange) {
+          btnRange.style.borderColor = '#2563eb';
+          btnRange.style.background = '#eff6ff';
+          btnRange.style.color = '#1e40af';
+          btnRange.style.fontWeight = '700';
+        }
+        if (boxRange) boxRange.style.display = 'block';
+        if (indicator) indicator.textContent = 'Year Range';
+        updateRangePreview();
+      } else if (mode === 'custom') {
+        if (btnCustom) {
+          btnCustom.style.borderColor = '#2563eb';
+          btnCustom.style.background = '#eff6ff';
+          btnCustom.style.color = '#1e40af';
+          btnCustom.style.fontWeight = '700';
+        }
+        if (boxCustom) boxCustom.style.display = 'block';
+        if (indicator) indicator.textContent = 'Custom Text';
+      } else {
+        pyqYearMode = 'single';
+        if (btnSingle) {
+          btnSingle.style.borderColor = '#2563eb';
+          btnSingle.style.background = '#eff6ff';
+          btnSingle.style.color = '#1e40af';
+          btnSingle.style.fontWeight = '700';
+        }
+        if (boxSingle) boxSingle.style.display = 'block';
+        if (indicator) indicator.textContent = 'Single Year';
+      }
+    }
+
+    function updateRangePreview() {
+      const start = document.getElementById('resourceYearRangeStart')?.value?.trim() || '';
+      const end = document.getElementById('resourceYearRangeEnd')?.value?.trim() || '';
+      const previewBadge = document.getElementById('yearRangePreviewBadge');
+      if (previewBadge) {
+        if (start && end) previewBadge.textContent = `Preview: Year ${start} - ${end}`;
+        else if (start) previewBadge.textContent = `Preview: Year ${start}`;
+        else if (end) previewBadge.textContent = `Preview: Year ${end}`;
+        else previewBadge.textContent = `Preview: Year (enter start & end)`;
+      }
+    }
+
+    function getSelectedPyqYear() {
+      if (pyqYearMode === 'range') {
+        const start = document.getElementById('resourceYearRangeStart')?.value?.trim() || '';
+        const end = document.getElementById('resourceYearRangeEnd')?.value?.trim() || '';
+        if (start && end) return `${start} - ${end}`;
+        if (start) return start;
+        if (end) return end;
+        return String(new Date().getFullYear());
+      }
+      if (pyqYearMode === 'custom') {
+        const custom = document.getElementById('resourceYearCustom')?.value?.trim() || '';
+        return custom || String(new Date().getFullYear());
+      }
+      const single = document.getElementById('resourceYearSingle')?.value?.trim() || '';
+      return single || String(new Date().getFullYear());
+    }
+
+    const btnYearSingle = document.getElementById('btnYearSingle');
+    const btnYearRange = document.getElementById('btnYearRange');
+    const btnYearCustom = document.getElementById('btnYearCustom');
+    if (btnYearSingle) btnYearSingle.addEventListener('click', () => setPyqYearMode('single'));
+    if (btnYearRange) btnYearRange.addEventListener('click', () => setPyqYearMode('range'));
+    if (btnYearCustom) btnYearCustom.addEventListener('click', () => setPyqYearMode('custom'));
+
+    const startInput = document.getElementById('resourceYearRangeStart');
+    const endInput = document.getElementById('resourceYearRangeEnd');
+    if (startInput) startInput.addEventListener('input', updateRangePreview);
+    if (endInput) endInput.addEventListener('input', updateRangePreview);
+
     function toggleResourceTypeFields() {
       if (typePyqRadio.checked) {
-        pyqYearGroup.style.display = 'block';
-        resourceTitleInput.placeholder = 'e.g., Quiz 1 Paper / End-Term PYQ';
+        if (pyqYearGroup) pyqYearGroup.style.display = 'block';
+        resourceTitleInput.placeholder = 'Enter paper title (e.g. End-Term Exam, Quiz 1)';
       } else {
-        pyqYearGroup.style.display = 'none';
-        resourceTitleInput.placeholder = 'e.g., Complete Lecture Summary Notes';
+        if (pyqYearGroup) pyqYearGroup.style.display = 'none';
+        resourceTitleInput.placeholder = 'Enter document title (e.g. Complete Notes)';
       }
     }
 
@@ -1552,7 +1689,13 @@
       typeNotesRadio.checked = true;
       toggleResourceTypeFields();
       resourceTitleInput.value = '';
-      resourceYearInput.value = new Date().getFullYear();
+      setPyqYearMode('single');
+      const curYear = new Date().getFullYear();
+      if (document.getElementById('resourceYearSingle')) document.getElementById('resourceYearSingle').value = curYear;
+      if (document.getElementById('resourceYearRangeStart')) document.getElementById('resourceYearRangeStart').value = curYear - 3;
+      if (document.getElementById('resourceYearRangeEnd')) document.getElementById('resourceYearRangeEnd').value = curYear;
+      if (document.getElementById('resourceYearCustom')) document.getElementById('resourceYearCustom').value = '';
+      updateRangePreview();
 
       // Existing Notes Info
       const currentInfo = document.getElementById('currentPdfInfo');
@@ -1692,7 +1835,7 @@
       const code = document.getElementById('pdfCourseCodeInput').value;
       const resourceType = typePyqRadio.checked ? 'pyq' : 'notes';
       const title = resourceTitleInput.value.trim();
-      const year = resourceYearInput.value;
+      const year = getSelectedPyqYear();
       const file = pdfFileInput.files[0];
       const url = document.getElementById('pdfUrlInput').value.trim();
 
@@ -1775,12 +1918,12 @@
         if (target) {
           const resolvedFileUrl = fileDataUrl || url || '#';
           const resolvedFileName = file ? file.name : (title ? `${title}.pdf` : `${code}_Notes.pdf`);
-          const customTitle = title || (resourceType === 'pyq' ? `${code} — PYQ ${year || new Date().getFullYear()}` : `${code} Study Notes`);
+          const customTitle = title || (resourceType === 'pyq' ? `${code} — PYQ ${year}` : `${code} Study Notes`);
 
           if (resourceType === 'pyq') {
             if (!Array.isArray(target.pyqs)) target.pyqs = [];
             target.pyqs.unshift({
-              year: parseInt(year) || new Date().getFullYear(),
+              year: year,
               title: customTitle,
               fileName: resolvedFileName,
               fileUrl: resolvedFileUrl

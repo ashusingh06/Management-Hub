@@ -724,7 +724,7 @@
           pyqGridContainer.innerHTML = pyqs.map(p => {
             const fileUrl = p.fileUrl || notesUrl || '#';
             const title = p.title || `${c.code} — PYQ ${p.year || ''}`;
-            const yearTag = p.year ? `Year ${p.year}` : 'Question Paper';
+            const yearTag = p.year ? (String(p.year).toLowerCase().includes('year') ? String(p.year) : `Year ${p.year}`) : 'Question Paper';
 
             return `
               <div class="pyq-paper-item">

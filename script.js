@@ -687,7 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalPyqListStack.innerHTML = pyqList.map(pyq => {
           const title = pyq.title || `${course.code} — PYQ ${pyq.year || ''}`;
           const fileUrl = pyq.fileUrl || notesUrl || '#';
-          const yearTag = pyq.year ? `Year ${pyq.year}` : 'Question Paper';
+          const yearTag = pyq.year ? (String(pyq.year).toLowerCase().includes('year') ? String(pyq.year) : `Year ${pyq.year}`) : 'Question Paper';
           const safeTitle = (pyq.fileName || 'PYQ.pdf').replace(/'/g, "\\'");
 
           return `

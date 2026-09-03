@@ -1011,34 +1011,73 @@
           </div>
         </div>
 
-        <!-- Section / Folder / Contributor Group (For Study Notes) -->
+        <!-- Section / Folder Group (For Study Notes) -->
         <div class="form-group" id="sectionGroup">
-          <label style="display: flex; align-items: center; justify-content: space-between;">
-            <span>📁 Section / Folder / Contributor Name</span>
-            <span style="font-size: 11px; font-weight: 500; color: #71717a;">e.g. Ashu's Notes, Sibu's Notes, Week-wise...</span>
-          </label>
-          <input type="text" id="resourceSectionInput" placeholder="e.g. Ashu's Notes, Sibu's Notes, Comprehensive, Module 1..." list="sectionSuggestionsList" />
+          <label>Folder / Section Name (Optional)</label>
+          <input type="text" id="resourceSectionInput" placeholder="Enter folder or section name (optional)" list="sectionSuggestionsList" />
           <datalist id="sectionSuggestionsList">
-            <option value="Ashu's Notes"></option>
-            <option value="Sibu's Notes"></option>
             <option value="Comprehensive Notes"></option>
+            <option value="Lecture Slides"></option>
             <option value="Handwritten Notes"></option>
             <option value="Formula Sheets & Summary"></option>
-            <option value="Lecture Slides"></option>
-            <option value="Assignment & Solutions"></option>
+            <option value="Module 1"></option>
+            <option value="Module 2"></option>
+            <option value="Module 3"></option>
+            <option value="Module 4"></option>
+            <option value="Assignments & Solutions"></option>
           </datalist>
         </div>
 
         <!-- Resource Title Input -->
         <div class="form-group" id="titleGroup">
-          <label id="titleLabel">Document Title / Label</label>
-          <input type="text" id="resourceTitleInput" placeholder="e.g. BSMA1002 Comprehensive Study Notes" />
+          <label id="titleLabel">Document Title</label>
+          <input type="text" id="resourceTitleInput" placeholder="Enter document title" />
         </div>
 
-        <!-- Year Input (Visible for PYQ) -->
+        <!-- Year Input (Visible for PYQ) with Single, Range & Custom Modes -->
         <div class="form-group" id="yearGroup" style="display: none;">
-          <label>Examination Year</label>
-          <input type="number" id="resourceYearInput" value="2025" min="2018" max="2030" />
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <label style="margin: 0; font-weight: 700;">Examination Year / Session</label>
+            <span id="yearModeIndicator" style="font-size: 11px; color: #71717a; font-weight: 600;">Single Year</span>
+          </div>
+
+          <!-- Mode Toggle Tabs -->
+          <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+            <button type="button" class="btn-year-mode active" id="btnYearSingle" data-mode="single" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 700; border-radius: 8px; border: 1.5px solid #2563eb; background: #eff6ff; color: #1e40af; cursor: pointer; transition: all 0.15s ease;">
+              Single Year
+            </button>
+            <button type="button" class="btn-year-mode" id="btnYearRange" data-mode="range" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1.5px solid #e4e4e7; background: #ffffff; color: #52525b; cursor: pointer; transition: all 0.15s ease;">
+              Year Range
+            </button>
+            <button type="button" class="btn-year-mode" id="btnYearCustom" data-mode="custom" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1.5px solid #e4e4e7; background: #ffffff; color: #52525b; cursor: pointer; transition: all 0.15s ease;">
+              Custom Text
+            </button>
+          </div>
+
+          <!-- 1. Single Year Input -->
+          <div id="yearBoxSingle">
+            <input type="number" id="resourceYearSingle" value="2025" min="2015" max="2035" placeholder="e.g. 2025" />
+          </div>
+
+          <!-- 2. Range Mode Inputs (Start Year & End Year) -->
+          <div id="yearBoxRange" style="display: none;">
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center;">
+              <input type="number" id="resourceYearRangeStart" placeholder="From (e.g. 2021)" min="2015" max="2035" value="2021" />
+              <span style="font-weight: 700; color: #71717a; font-size: 12px;">to</span>
+              <input type="number" id="resourceYearRangeEnd" placeholder="To (e.g. 2024)" min="2015" max="2035" value="2024" />
+            </div>
+            <div id="yearRangePreviewBadge" style="margin-top: 6px; font-size: 11.5px; font-weight: 700; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 4px 10px; border-radius: 6px; display: inline-block;">
+              Preview: Year 2021 - 2024
+            </div>
+          </div>
+
+          <!-- 3. Custom Text Input -->
+          <div id="yearBoxCustom" style="display: none;">
+            <input type="text" id="resourceYearCustom" placeholder="Enter custom year or session (e.g. 2021-2024, May 2024, Term 1)" />
+          </div>
+
+          <!-- Hidden Input for Form compatibility -->
+          <input type="hidden" id="resourceYearInput" value="2025" />
         </div>
 
         <!-- Option 1: Upload File -->
@@ -1047,7 +1086,7 @@
           <div class="upload-zone" onclick="document.getElementById('pdfFileInput').click()">
             <div class="upload-zone-icon">📄</div>
             <strong style="font-size: 13.5px; display: block;" id="uploadZoneText">Click to select PDF file from your computer</strong>
-            <span style="font-size: 12px; color: #71717a;">Supports question papers, study notes, and slides</span>
+            <span style="font-size: 12px; color: #71717a;">Supports PDF study notes, question papers, and slides</span>
           </div>
           <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;" />
         </div>
@@ -1057,7 +1096,7 @@
         <!-- Option 2: External Link / Google Drive -->
         <div class="form-group">
           <label>Online URL / Google Drive Link</label>
-          <input type="url" id="pdfUrlInput" placeholder="https://drive.google.com/... or https://domain.com/file.pdf" />
+          <input type="url" id="pdfUrlInput" placeholder="Paste PDF URL or Google Drive link" />
         </div>
 
         <!-- Attached Notes List in Modal -->
@@ -1691,18 +1730,114 @@
     const modalExistingPyqSection = document.getElementById('modalExistingPyqSection');
     const modalExistingPyqList = document.getElementById('modalExistingPyqList');
 
+    let pyqYearMode = 'single'; // 'single' | 'range' | 'custom'
+
+    function setPyqYearMode(mode) {
+      pyqYearMode = mode;
+      const btnSingle = document.getElementById('btnYearSingle');
+      const btnRange = document.getElementById('btnYearRange');
+      const btnCustom = document.getElementById('btnYearCustom');
+      const boxSingle = document.getElementById('yearBoxSingle');
+      const boxRange = document.getElementById('yearBoxRange');
+      const boxCustom = document.getElementById('yearBoxCustom');
+      const indicator = document.getElementById('yearModeIndicator');
+
+      [btnSingle, btnRange, btnCustom].forEach(btn => {
+        if (!btn) return;
+        btn.style.borderColor = '#e4e4e7';
+        btn.style.background = '#ffffff';
+        btn.style.color = '#52525b';
+        btn.style.fontWeight = '600';
+      });
+
+      if (boxSingle) boxSingle.style.display = 'none';
+      if (boxRange) boxRange.style.display = 'none';
+      if (boxCustom) boxCustom.style.display = 'none';
+
+      if (mode === 'range') {
+        if (btnRange) {
+          btnRange.style.borderColor = '#2563eb';
+          btnRange.style.background = '#eff6ff';
+          btnRange.style.color = '#1e40af';
+          btnRange.style.fontWeight = '700';
+        }
+        if (boxRange) boxRange.style.display = 'block';
+        if (indicator) indicator.textContent = 'Year Range';
+        updateRangePreview();
+      } else if (mode === 'custom') {
+        if (btnCustom) {
+          btnCustom.style.borderColor = '#2563eb';
+          btnCustom.style.background = '#eff6ff';
+          btnCustom.style.color = '#1e40af';
+          btnCustom.style.fontWeight = '700';
+        }
+        if (boxCustom) boxCustom.style.display = 'block';
+        if (indicator) indicator.textContent = 'Custom Text';
+      } else {
+        pyqYearMode = 'single';
+        if (btnSingle) {
+          btnSingle.style.borderColor = '#2563eb';
+          btnSingle.style.background = '#eff6ff';
+          btnSingle.style.color = '#1e40af';
+          btnSingle.style.fontWeight = '700';
+        }
+        if (boxSingle) boxSingle.style.display = 'block';
+        if (indicator) indicator.textContent = 'Single Year';
+      }
+    }
+
+    function updateRangePreview() {
+      const start = document.getElementById('resourceYearRangeStart')?.value?.trim() || '';
+      const end = document.getElementById('resourceYearRangeEnd')?.value?.trim() || '';
+      const previewBadge = document.getElementById('yearRangePreviewBadge');
+      if (previewBadge) {
+        if (start && end) previewBadge.textContent = `Preview: Year ${start} - ${end}`;
+        else if (start) previewBadge.textContent = `Preview: Year ${start}`;
+        else if (end) previewBadge.textContent = `Preview: Year ${end}`;
+        else previewBadge.textContent = `Preview: Year (enter start & end)`;
+      }
+    }
+
+    function getSelectedPyqYear() {
+      if (pyqYearMode === 'range') {
+        const start = document.getElementById('resourceYearRangeStart')?.value?.trim() || '';
+        const end = document.getElementById('resourceYearRangeEnd')?.value?.trim() || '';
+        if (start && end) return `${start} - ${end}`;
+        if (start) return start;
+        if (end) return end;
+        return String(new Date().getFullYear());
+      }
+      if (pyqYearMode === 'custom') {
+        const custom = document.getElementById('resourceYearCustom')?.value?.trim() || '';
+        return custom || String(new Date().getFullYear());
+      }
+      const single = document.getElementById('resourceYearSingle')?.value?.trim() || '';
+      return single || String(new Date().getFullYear());
+    }
+
+    const btnYearSingle = document.getElementById('btnYearSingle');
+    const btnYearRange = document.getElementById('btnYearRange');
+    const btnYearCustom = document.getElementById('btnYearCustom');
+    if (btnYearSingle) btnYearSingle.addEventListener('click', () => setPyqYearMode('single'));
+    if (btnYearRange) btnYearRange.addEventListener('click', () => setPyqYearMode('range'));
+    if (btnYearCustom) btnYearCustom.addEventListener('click', () => setPyqYearMode('custom'));
+
+    const startInput = document.getElementById('resourceYearRangeStart');
+    const endInput = document.getElementById('resourceYearRangeEnd');
+    if (startInput) startInput.addEventListener('input', updateRangePreview);
+    if (endInput) endInput.addEventListener('input', updateRangePreview);
+
     function updateResourceTypeUI() {
       const isPyq = typePyqRadio.checked;
-      const code = document.getElementById('pdfCourseCodeInput').value || 'COURSE';
       if (isPyq) {
-        titleLabel.textContent = 'PYQ Paper Title / Examination Name';
-        resourceTitleInput.placeholder = `e.g. ${code} — PYQ 2025 (End-Term Exam)`;
+        titleLabel.textContent = 'Paper Title (Optional)';
+        resourceTitleInput.placeholder = 'Enter paper title (e.g. End-Term Exam, Quiz 1)';
         yearGroup.style.display = 'block';
         if (sectionGroup) sectionGroup.style.display = 'none';
         document.getElementById('savePdfSubmitBtn').textContent = 'Upload & Attach PYQ Paper';
       } else {
-        titleLabel.textContent = 'Document Title / Label';
-        resourceTitleInput.placeholder = `e.g. ${code} Comprehensive Study Notes`;
+        titleLabel.textContent = 'Document Title';
+        resourceTitleInput.placeholder = 'Enter document title (e.g. Complete Notes)';
         yearGroup.style.display = 'none';
         if (sectionGroup) sectionGroup.style.display = 'block';
         document.getElementById('savePdfSubmitBtn').textContent = 'Upload & Attach Study Notes';
@@ -1750,7 +1885,13 @@
       typeNotesRadio.checked = true;
       if (resourceSectionInput) resourceSectionInput.value = '';
       resourceTitleInput.value = '';
-      resourceYearInput.value = new Date().getFullYear();
+      setPyqYearMode('single');
+      const curYear = new Date().getFullYear();
+      if (document.getElementById('resourceYearSingle')) document.getElementById('resourceYearSingle').value = curYear;
+      if (document.getElementById('resourceYearRangeStart')) document.getElementById('resourceYearRangeStart').value = curYear - 3;
+      if (document.getElementById('resourceYearRangeEnd')) document.getElementById('resourceYearRangeEnd').value = curYear;
+      if (document.getElementById('resourceYearCustom')) document.getElementById('resourceYearCustom').value = '';
+      updateRangePreview();
       updateResourceTypeUI();
 
       // Existing Attached Notes List
@@ -1855,7 +1996,7 @@
       const resourceType = typePyqRadio.checked ? 'pyq' : 'notes';
       const sectionName = (resourceSectionInput ? resourceSectionInput.value.trim() : '') || 'General Study Notes';
       const title = resourceTitleInput.value.trim();
-      const year = resourceYearInput.value;
+      const year = getSelectedPyqYear();
       const file = pdfFileInput.files[0];
       const rawUrl = document.getElementById('pdfUrlInput').value.trim();
       const url = typeof normalizePdfUrl === 'function' ? normalizePdfUrl(rawUrl) : rawUrl;
@@ -1895,13 +2036,13 @@
         if (target) {
           const resolvedFileUrl = cloudFileUrl || url || '#';
           const resolvedFileName = file ? file.name : (title ? `${title}.pdf` : `${code}_Notes.pdf`);
-          const customTitle = title || (resourceType === 'pyq' ? `${code} — PYQ ${year || new Date().getFullYear()}` : `${code} Study Notes`);
+          const customTitle = title || (resourceType === 'pyq' ? `${code} — PYQ ${year}` : `${code} Study Notes`);
 
           if (resourceType === 'pyq') {
             if (!Array.isArray(target.pyqs)) target.pyqs = [];
             target.pyqs.unshift({
               id: Date.now(),
-              year: parseInt(year) || new Date().getFullYear(),
+              year: year,
               title: customTitle,
               fileName: resolvedFileName,
               fileUrl: resolvedFileUrl,

@@ -604,7 +604,7 @@ app.post('/api/admin/courses/upload-resource', authenticateToken, requireAdmin, 
       courses[targetIndex].pyqs = [];
     }
 
-    const pyqYear = parseInt(year) || new Date().getFullYear();
+    const pyqYear = year && String(year).trim().length > 0 ? String(year).trim() : String(new Date().getFullYear());
     const customPyqTitle = title && title.trim().length > 0 ? title.trim() : `${course_code} — PYQ ${pyqYear}`;
     const newPyq = {
       year: pyqYear,
