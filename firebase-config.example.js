@@ -222,7 +222,7 @@ async function signInWithGoogle() {
   const res = await fb.auth.signInWithPopup(fb.provider);
   const user = res.user;
   const email = (user.email || '').toLowerCase().trim();
-  const isAdmin = email === 'aashishsinghh06@gmail.com';
+  const isAdmin = email === 'YOUR EMAIL';
   const userData = {
     uid: user.uid,
     name: user.displayName || email.split('@')[0],
