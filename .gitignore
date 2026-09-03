@@ -28,3 +28,12 @@ Thumbs.db
 .firebase/
 firebase-config.js
 serviceAccount*.json
+
+# Admin Dashboard & Tools
+admin.html
+inmycontrol.html
+createAdmin.js
+src/components/AdminDashboard.jsx
+src/components/AdminModal.jsx
+src/pages/AdminLoginPage.jsx
+src/pages/AdminPage.jsx
