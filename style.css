@@ -3751,3 +3751,45 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   }
 }
 
+/* Compact Community Box inside About Us */
+.community-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 0;
+}
+
+.community-grid-compact .community-card {
+  padding: 18px 20px;
+  border-radius: 14px;
+  gap: 14px;
+}
+
+.community-grid-compact .community-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+}
+
+.community-grid-compact .community-icon-box svg {
+  width: 22px;
+  height: 22px;
+}
+
+.community-grid-compact .community-card-body h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.community-grid-compact .community-card-body p {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.community-grid-compact .btn-community-join {
+  padding: 9px 18px;
+  font-size: 12.5px;
+  border-radius: 9999px;
+  gap: 7px;
+}
+
