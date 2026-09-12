@@ -53,18 +53,19 @@ body {
   position: sticky;
   top: 0;
   width: 100%;
-  background: rgba(250, 250, 252, 0.88);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   z-index: 100;
   padding: 10px 0 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .site-header.scrolled {
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.06);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .header-container {
@@ -150,15 +151,21 @@ body {
   height: 48px;
   padding: 4px;
   margin-top: 2px;
-  background: rgba(255, 255, 255, 0.96);
+  background: #ffffff;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1.5px solid #18181b;
   border-radius: 9999px;
-  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.08),
-              0 4px 12px -2px rgba(0, 0, 0, 0.04),
-              0 0 0 1px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.14),
+              0 4px 12px -2px rgba(0, 0, 0, 0.08),
+              0 0 0 1px rgba(255, 255, 255, 0.9) inset;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar:hover {
+  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.18),
+              0 6px 16px -2px rgba(0, 0, 0, 0.1),
+              0 0 0 1px rgba(255, 255, 255, 0.95) inset;
 }
 
 /* Active Sliding Black Pill */
@@ -169,7 +176,7 @@ body {
   height: 40px;
   background-color: #09090b;
   border-radius: 9999px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               height 0.28s cubic-bezier(0.16, 1, 0.3, 1);
@@ -195,10 +202,10 @@ body {
   background: transparent;
   border: none;
   border-radius: 9999px;
-  color: #71717a;
+  color: #27272a;
   font-family: inherit;
   font-size: 13.5px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   outline: none;
@@ -213,14 +220,15 @@ body {
 .nav-icon {
   width: 15.5px;
   height: 15.5px;
-  stroke: #71717a;
+  stroke: #27272a;
+  stroke-width: 2;
   transition: stroke 0.15s ease;
   flex-shrink: 0;
 }
 
 .nav-btn:hover {
   color: #09090b;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #f4f4f5;
 }
 
 .nav-btn:hover .nav-icon {
@@ -230,7 +238,7 @@ body {
 /* Active State - Always high-contrast white on black capsule */
 .nav-btn.active {
   color: #ffffff !important;
-  font-weight: 600;
+  font-weight: 700;
   background-color: #09090b;
 }
 
@@ -240,6 +248,7 @@ body {
 
 .nav-btn.active .nav-icon {
   stroke: #ffffff !important;
+  stroke-width: 2.2;
 }
 
 /* Right Balanced Spacer & Auth Profile Area */
@@ -256,20 +265,21 @@ body {
   gap: 6px;
   background: #ffffff;
   color: #09090b;
-  border: 1px solid #e4e4e7;
-  padding: 6px 14px;
+  border: 1.5px solid #18181b;
+  padding: 6px 15px;
   border-radius: 9999px;
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
   transition: all 0.15s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .btn-header-auth:hover {
   background: #09090b;
   color: #ffffff;
   border-color: #09090b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
 }
 
 .header-user-profile {
@@ -2716,7 +2726,10 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
 @media (max-width: 768px) {
   .site-header {
-    padding: 6px 0 6px 0;
+    padding: 8px 0 8px 0;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1.5px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.06);
   }
 
   .header-container {
@@ -2724,7 +2737,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    padding: 2px 10px;
+    padding: 2px 12px;
     width: 100%;
     box-sizing: border-box;
   }
@@ -2735,7 +2748,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   }
 
   .brand-text {
-    font-size: 27px;
+    font-size: 28px;
   }
 
   .header-center {
@@ -2748,21 +2761,24 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
   .navbar {
     position: relative;
-    height: 42px;
-    padding: 3px 6px;
+    height: 44px;
+    padding: 4px;
     width: 100%;
     max-width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 4px;
+    gap: 5px;
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
+    background: #ffffff;
+    border: 1.5px solid #18181b;
     border-radius: 9999px;
-    box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 24px -3px rgba(0, 0, 0, 0.15),
+                0 2px 8px -1px rgba(0, 0, 0, 0.08);
   }
 
   .navbar::-webkit-scrollbar {
@@ -2776,12 +2792,14 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   .nav-btn {
     flex: 0 0 auto;
     height: 36px;
-    padding: 0 13px;
-    font-size: 12.5px;
+    padding: 0 14px;
+    font-size: 13px;
     font-weight: 600;
-    gap: 5px;
+    color: #27272a;
+    gap: 6px;
     border-radius: 9999px;
     white-space: nowrap;
+    background: transparent;
   }
 
   .nav-btn span {
@@ -2794,15 +2812,20 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   .nav-indicator.ready ~ .nav-btn.active {
     background-color: #09090b !important;
     color: #ffffff !important;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
   }
 
   .nav-btn.active .nav-icon {
     stroke: #ffffff !important;
+    stroke-width: 2.2;
   }
 
   .nav-icon {
-    width: 14px;
-    height: 14px;
+    width: 14.5px;
+    height: 14.5px;
+    stroke: #27272a;
+    stroke-width: 2;
   }
 
   .header-right {
@@ -2836,7 +2859,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
 @media (max-width: 480px) {
   .site-header {
-    padding: 4px 0 4px 0;
+    padding: 6px 0 6px 0;
   }
 
   .main-container {
@@ -2845,31 +2868,35 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
   .header-container {
     gap: 6px;
-    padding: 0 6px;
+    padding: 0 8px;
   }
 
   .brand-text {
-    font-size: 24px;
+    font-size: 25px;
   }
 
   .navbar {
-    height: 40px;
-    padding: 3px 4px;
-    gap: 3px;
+    height: 42px;
+    padding: 3px;
+    gap: 4px;
+    border: 1.5px solid #18181b;
+    box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.16);
   }
 
   .nav-btn {
     height: 34px;
     padding: 0 11px;
-    font-size: 12px;
+    font-size: 12.5px;
+    font-weight: 600;
     gap: 4px;
   }
 
   .nav-icon {
-    width: 13px;
-    height: 13px;
+    width: 13.5px;
+    height: 13.5px;
+    stroke-width: 2;
   }
-
+}
   .degree-title {
     font-size: 23px;
   }
