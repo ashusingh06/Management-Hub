@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   function updateIndicator(targetLink) {
     if (!targetLink || !navIndicator || !navbar) return;
+    if (window.innerWidth <= 768) return;
 
     const navRect = navbar.getBoundingClientRect();
     const linkRect = targetLink.getBoundingClientRect();
@@ -87,6 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
       link.classList.toggle('active', match);
       if (match) {
         updateIndicator(link);
+        if (navbar && navbar.scrollWidth > navbar.clientWidth) {
+          link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
       }
     });
   }

@@ -68,12 +68,12 @@ body {
 }
 
 .header-container {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   max-width: 1320px;
   margin: 0 auto;
-  padding: 4px 36px;
+  padding: 4px 32px;
   gap: 16px;
 }
 
@@ -82,6 +82,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex: 0 0 auto;
 }
 
 .brand-link {
@@ -138,13 +139,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .navbar {
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: 50px;
+  height: 48px;
   padding: 4px;
   margin-top: 2px;
   background: rgba(255, 255, 255, 0.96);
@@ -163,7 +166,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  height: 42px;
+  height: 40px;
   background-color: #09090b;
   border-radius: 9999px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
@@ -186,15 +189,15 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  height: 42px;
-  padding: 0 20px;
+  gap: 7px;
+  height: 40px;
+  padding: 0 16px;
   background: transparent;
   border: none;
   border-radius: 9999px;
   color: #71717a;
   font-family: inherit;
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
@@ -208,8 +211,8 @@ body {
 }
 
 .nav-icon {
-  width: 16.5px;
-  height: 16.5px;
+  width: 15.5px;
+  height: 15.5px;
   stroke: #71717a;
   transition: stroke 0.15s ease;
   flex-shrink: 0;
@@ -244,6 +247,7 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  flex: 0 0 auto;
 }
 
 .btn-header-auth {
@@ -2679,7 +2683,38 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 /* ==========================================================================
    Responsive Adaptations
    ========================================================================== */
-@media (max-width: 820px) {
+@media (max-width: 1100px) and (min-width: 769px) {
+  .header-container {
+    padding: 4px 18px;
+    gap: 12px;
+  }
+
+  .brand-text {
+    font-size: 29px;
+  }
+
+  .nav-btn {
+    height: 38px;
+    padding: 0 11px;
+    font-size: 13px;
+    gap: 5px;
+  }
+
+  .navbar {
+    height: 46px;
+  }
+
+  .nav-indicator {
+    height: 38px;
+  }
+
+  .nav-icon {
+    width: 14.5px;
+    height: 14.5px;
+  }
+}
+
+@media (max-width: 768px) {
   .site-header {
     padding: 6px 0 6px 0;
   }
@@ -2689,7 +2724,9 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    padding: 2px 14px;
+    padding: 2px 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .header-left {
@@ -2698,7 +2735,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   }
 
   .brand-text {
-    font-size: 28px;
+    font-size: 27px;
   }
 
   .header-center {
@@ -2706,26 +2743,61 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
     max-width: 100%;
     display: flex;
     justify-content: center;
+    overflow: hidden;
   }
 
   .navbar {
     position: relative;
     height: 42px;
-    padding: 3px;
+    padding: 3px 6px;
+    width: 100%;
     max-width: 100%;
-    display: inline-flex;
-    justify-content: center;
-    gap: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
     border-radius: 9999px;
     box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.08);
   }
 
+  .navbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-indicator {
+    display: none !important;
+  }
+
   .nav-btn {
+    flex: 0 0 auto;
     height: 36px;
-    padding: 0 14px;
-    font-size: 13px;
+    padding: 0 13px;
+    font-size: 12.5px;
     font-weight: 600;
-    gap: 6px;
+    gap: 5px;
+    border-radius: 9999px;
+    white-space: nowrap;
+  }
+
+  .nav-btn span {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+  }
+
+  .nav-btn.active,
+  .nav-indicator.ready ~ .nav-btn.active {
+    background-color: #09090b !important;
+    color: #ffffff !important;
+  }
+
+  .nav-btn.active .nav-icon {
+    stroke: #ffffff !important;
   }
 
   .nav-icon {
@@ -2762,60 +2834,35 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
   .site-header {
-    padding: 6px 0 4px 0;
+    padding: 4px 0 4px 0;
   }
 
   .main-container {
-    padding: 14px 12px 60px 12px;
+    padding: 12px 10px 60px 10px;
   }
 
   .header-container {
     gap: 6px;
-    padding: 0 8px;
+    padding: 0 6px;
   }
 
   .brand-text {
-    font-size: 26px;
-  }
-
-  .header-center {
-    width: 100%;
-    padding: 0;
+    font-size: 24px;
   }
 
   .navbar {
-    position: relative;
     height: 40px;
-    padding: 3px;
-    width: 100%;
-    max-width: 420px;
-    display: flex;
-    justify-content: space-between;
-    gap: 2px;
-    box-sizing: border-box;
-    border-radius: 9999px;
-    box-shadow: 0 3px 14px -2px rgba(0, 0, 0, 0.07);
+    padding: 3px 4px;
+    gap: 3px;
   }
 
   .nav-btn {
-    flex: 1;
     height: 34px;
-    padding: 0 4px;
-    font-size: 11.5px;
-    font-weight: 600;
-    gap: 3.5px;
-    min-width: 0;
-    justify-content: center;
-    text-align: center;
-    border-radius: 9999px;
-  }
-
-  .nav-btn span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    padding: 0 11px;
+    font-size: 12px;
+    gap: 4px;
   }
 
   .nav-icon {
@@ -2824,7 +2871,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   }
 
   .degree-title {
-    font-size: 24px;
+    font-size: 23px;
   }
 
   .input-row {
@@ -2837,7 +2884,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   }
 
   .site-footer {
-    padding: 40px 16px 28px 16px;
+    padding: 36px 14px 24px 14px;
   }
 }
 
@@ -3457,17 +3504,19 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 24px;
   margin-bottom: 28px;
+  align-items: stretch;
 }
 
 .community-card {
   background: #ffffff;
   border: 1.5px solid #e4e4e7;
   border-radius: 18px;
-  padding: 28px;
+  padding: 26px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 20px;
+  height: 100%;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
   box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.04);
   position: relative;
@@ -3503,7 +3552,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
 .community-card.card-whatsapp .btn-community-join {
   background: #128C7E;
-  color: #ffffff;
+  color: #ffffff !important;
   border: 1px solid #128C7E;
 }
 
@@ -3538,7 +3587,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
 .community-card.card-telegram .btn-community-join {
   background: #0088cc;
-  color: #ffffff;
+  color: #ffffff !important;
   border: 1px solid #0088cc;
 }
 
@@ -3573,7 +3622,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
 .community-card.card-custom .btn-community-join {
   background: #4f46e5;
-  color: #ffffff;
+  color: #ffffff !important;
   border: 1px solid #4f46e5;
 }
 
@@ -3591,8 +3640,8 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 }
 
 .community-icon-box {
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -3606,8 +3655,8 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 }
 
 .community-icon-box svg {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
 }
 
 .community-badge-pill {
@@ -3635,7 +3684,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 }
 
 .community-card-body h3 {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 800;
   color: #09090b;
   letter-spacing: -0.02em;
@@ -3652,28 +3701,36 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 
 .community-card-footer {
   margin-top: auto;
-  padding-top: 6px;
+  padding-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .btn-community-join {
-  width: 100%;
   display: inline-flex;
+  width: auto;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 13px 22px;
-  border-radius: 12px;
-  font-size: 14px;
+  gap: 9px;
+  padding: 11px 22px;
+  border-radius: 9999px;
+  font-size: 13.5px;
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
+  color: #ffffff !important;
+}
+
+.btn-community-join:visited {
+  color: #ffffff !important;
 }
 
 .btn-community-join .btn-arrow-icon {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   transition: transform 0.2s ease;
 }
 
@@ -3687,7 +3744,10 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
     gap: 16px;
   }
   .community-card {
-    padding: 22px 20px;
+    padding: 22px 18px;
+  }
+  .btn-community-join {
+    width: 100%;
   }
 }
 
