@@ -1260,23 +1260,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // Live Community Section Rendering & Firestore Sync
   // =========================================================================
   const DEFAULT_COMMUNITY_SETTINGS = {
-    title: "Join Our Community",
-    subtitle: "Connect with fellow students, collaborate on coursework, share study materials, and stay updated with official announcements across our community groups.",
+    title: "Join Our Student Community",
+    subtitle: "Connect directly with fellow IITM BS students",
     whatsapp: {
       enabled: true,
       title: "Official WhatsApp Community",
       subtitle: "Active discussion group for IITM BS students. Ask questions, share notes, and get instant updates directly on WhatsApp.",
       url: "https://chat.whatsapp.com/ClB7IBHguCWKgjWtuyjfvf",
       badge: "Active Community",
-      buttonText: "Join WhatsApp Community"
+      buttonText: "WhatsApp Group"
     },
     telegram: {
       enabled: true,
       title: "Telegram Channel & Group",
       subtitle: "Direct broadcast channel & discussion forum for study materials, PYQ papers, important deadlines, and academic announcements.",
-      url: "https://t.me/MrBlessing143",
+      url: "https://t.me/+-yjGj2sSHFlINDVl",
       badge: "Fast Alerts & Resources",
-      buttonText: "Join on Telegram"
+      buttonText: "Telegram Group"
     },
     customChannels: []
   };
@@ -1284,6 +1284,55 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderCommunityDOM(settings) {
     if (!settings) settings = DEFAULT_COMMUNITY_SETTINGS;
 
+    // 1. Update Community Buttons inside About Us Section
+    const aboutTitle = document.getElementById('aboutCommunityTitle');
+    const aboutSub = document.getElementById('aboutCommunitySub');
+    if (aboutTitle && settings.title) aboutTitle.textContent = settings.title;
+    if (aboutSub && settings.subtitle) aboutSub.textContent = settings.subtitle;
+
+    const wa = settings.whatsapp || DEFAULT_COMMUNITY_SETTINGS.whatsapp;
+    const aboutWaBtn = document.getElementById('aboutCommunityWaBtn');
+    const aboutWaText = document.getElementById('aboutCommunityWaText');
+    if (aboutWaBtn) {
+      if (wa && wa.enabled !== false && wa.url) {
+        aboutWaBtn.style.display = 'inline-flex';
+        aboutWaBtn.href = wa.url;
+        if (aboutWaText) aboutWaText.textContent = wa.buttonText || 'WhatsApp Group';
+      } else {
+        aboutWaBtn.style.display = 'none';
+      }
+    }
+
+    const tg = settings.telegram || DEFAULT_COMMUNITY_SETTINGS.telegram;
+    const aboutTgBtn = document.getElementById('aboutCommunityTgBtn');
+    const aboutTgText = document.getElementById('aboutCommunityTgText');
+    if (aboutTgBtn) {
+      if (tg && tg.enabled !== false && tg.url) {
+        aboutTgBtn.style.display = 'inline-flex';
+        aboutTgBtn.href = tg.url;
+        if (aboutTgText) aboutTgText.textContent = tg.buttonText || 'Telegram Group';
+      } else {
+        aboutTgBtn.style.display = 'none';
+      }
+    }
+
+    const customContainer = document.getElementById('aboutCommunityCustomList');
+    if (customContainer) {
+      if (Array.isArray(settings.customChannels) && settings.customChannels.length > 0) {
+        customContainer.innerHTML = settings.customChannels
+          .filter(ch => ch && ch.enabled !== false && ch.url)
+          .map(ch => `
+            <a href="${ch.url}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #6366f1; color: #ffffff; padding: 8px 18px; border-radius: 9999px; font-weight: 600; text-decoration: none; font-size: 13.5px; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25); transition: transform 0.15s ease;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 17px; height: 17px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>${ch.buttonText || ch.title || 'Join Channel'}</span>
+            </a>
+          `).join('');
+      } else {
+        customContainer.innerHTML = '';
+      }
+    }
+
+    // 2. Also update dedicated communityChannelsGrid if present in DOM
     const headingEl = document.getElementById('communitySectionHeading');
     const subtitleEl = document.getElementById('communitySectionSubtitle');
     if (headingEl && settings.title) headingEl.textContent = settings.title;
@@ -1295,7 +1344,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardsHtml = [];
 
     // WhatsApp Card
-    const wa = settings.whatsapp || DEFAULT_COMMUNITY_SETTINGS.whatsapp;
     if (wa && wa.enabled !== false) {
       cardsHtml.push(`
         <div class="community-card card-whatsapp">
@@ -1327,7 +1375,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Telegram Card
-    const tg = settings.telegram || DEFAULT_COMMUNITY_SETTINGS.telegram;
     if (tg && tg.enabled !== false) {
       cardsHtml.push(`
         <div class="community-card card-telegram">
@@ -1349,7 +1396,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
           <div class="community-card-footer">
-            <a href="${tg.url || 'https://t.me/MrBlessing143'}" target="_blank" rel="noopener noreferrer" class="btn-community-join">
+            <a href="${tg.url || 'https://t.me/+-yjGj2sSHFlINDVl'}" target="_blank" rel="noopener noreferrer" class="btn-community-join">
               <span>${tg.buttonText || 'Join on Telegram'}</span>
               <svg class="btn-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
             </a>
