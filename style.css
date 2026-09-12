@@ -426,6 +426,7 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 .underline-purple { color: #8b5cf6; }     /* Course Notes & PYQs (Electric Purple) */
 .underline-rose { color: #f43f5e; }       /* About Us (Sunset Rose/Coral) */
 .underline-cyan { color: #0ea5e9; }       /* Our Contributors (Ocean Cyan) */
+.underline-emerald { color: #10b981; }    /* Join Our Community (Emerald Green) */
 .underline-footer-teal { color: #00cba0; } /* Footer Brand (Emerald Teal) */
 
 .subtitle {
@@ -3446,5 +3447,247 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
 .pyq-paper-item:hover {
   background: #faf5ff !important;
   border-color: #8b5cf6 !important;
+}
+
+/* ==========================================================================
+   Join Our Community Section
+   ========================================================================== */
+.community-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.community-card {
+  background: #ffffff;
+  border: 1.5px solid #e4e4e7;
+  border-radius: 18px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.community-card:hover {
+  transform: translateY(-4px);
+}
+
+/* WhatsApp Card Variant */
+.community-card.card-whatsapp {
+  border-top: 5px solid #25D366;
+  background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 88px);
+}
+
+.community-card.card-whatsapp:hover {
+  border-color: #25D366;
+  box-shadow: 0 16px 36px -4px rgba(37, 211, 102, 0.22);
+}
+
+.community-card.card-whatsapp .community-icon-box {
+  background: #dcfce7;
+  border: 1.5px solid #bbf7d0;
+  color: #15803d;
+}
+
+.community-card.card-whatsapp .community-badge-pill {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.community-card.card-whatsapp .btn-community-join {
+  background: #128C7E;
+  color: #ffffff;
+  border: 1px solid #128C7E;
+}
+
+.community-card.card-whatsapp .btn-community-join:hover {
+  background: #075E54;
+  border-color: #075E54;
+  box-shadow: 0 6px 18px rgba(18, 140, 126, 0.35);
+}
+
+/* Telegram Card Variant */
+.community-card.card-telegram {
+  border-top: 5px solid #0088cc;
+  background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 88px);
+}
+
+.community-card.card-telegram:hover {
+  border-color: #0088cc;
+  box-shadow: 0 16px 36px -4px rgba(0, 136, 204, 0.22);
+}
+
+.community-card.card-telegram .community-icon-box {
+  background: #e0f2fe;
+  border: 1.5px solid #bae6fd;
+  color: #0284c7;
+}
+
+.community-card.card-telegram .community-badge-pill {
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.community-card.card-telegram .btn-community-join {
+  background: #0088cc;
+  color: #ffffff;
+  border: 1px solid #0088cc;
+}
+
+.community-card.card-telegram .btn-community-join:hover {
+  background: #006da3;
+  border-color: #006da3;
+  box-shadow: 0 6px 18px rgba(0, 136, 204, 0.35);
+}
+
+/* Generic / Custom Card Variant */
+.community-card.card-custom {
+  border-top: 5px solid #6366f1;
+  background: linear-gradient(180deg, #eef2ff 0%, #ffffff 88px);
+}
+
+.community-card.card-custom:hover {
+  border-color: #6366f1;
+  box-shadow: 0 16px 36px -4px rgba(99, 102, 241, 0.22);
+}
+
+.community-card.card-custom .community-icon-box {
+  background: #e0e7ff;
+  border: 1.5px solid #c7d2fe;
+  color: #4f46e5;
+}
+
+.community-card.card-custom .community-badge-pill {
+  background: #eef2ff;
+  color: #4338ca;
+  border: 1px solid #c7d2fe;
+}
+
+.community-card.card-custom .btn-community-join {
+  background: #4f46e5;
+  color: #ffffff;
+  border: 1px solid #4f46e5;
+}
+
+.community-card.card-custom .btn-community-join:hover {
+  background: #3730a3;
+  border-color: #3730a3;
+}
+
+/* Card Elements */
+.community-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.community-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.community-card:hover .community-icon-box {
+  transform: scale(1.06);
+}
+
+.community-icon-box svg {
+  width: 28px;
+  height: 28px;
+}
+
+.community-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+.community-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.8); }
+}
+
+.community-card-body h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #09090b;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.community-card-body p {
+  font-size: 14px;
+  color: #52525b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.community-card-footer {
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.btn-community-join {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+
+.btn-community-join .btn-arrow-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.btn-community-join:hover .btn-arrow-icon {
+  transform: translateX(3px) translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .community-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .community-card {
+    padding: 22px 20px;
+  }
 }
 

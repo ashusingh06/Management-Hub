@@ -1,0 +1,21 @@
+{
+  "title": "Join Our Community",
+  "subtitle": "Connect with fellow students, collaborate on coursework, share study materials, and stay updated with official announcements across our community groups.",
+  "whatsapp": {
+    "enabled": true,
+    "title": "Official WhatsApp Community",
+    "subtitle": "Active discussion group for IITM BS students. Ask questions, share notes, and get instant updates.",
+    "url": "https://chat.whatsapp.com/ClB7IBHguCWKgjWtuyjfvf",
+    "badge": "Active Community",
+    "buttonText": "Join WhatsApp Community"
+  },
+  "telegram": {
+    "enabled": true,
+    "title": "Telegram Channel & Group",
+    "subtitle": "Direct broadcast channel & discussion forum for study materials, PYQ papers, and important alerts.",
+    "url": "https://t.me/MrBlessing143",
+    "badge": "Fast Alerts & Resources",
+    "buttonText": "Join on Telegram"
+  },
+  "customChannels": []
+}

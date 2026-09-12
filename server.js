@@ -25,6 +25,29 @@ if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const COURSES_FILE = path.join(DATA_DIR, 'courses.json');
 const ANALYTICS_FILE = path.join(DATA_DIR, 'analytics.json');
+const COMMUNITY_FILE = path.join(DATA_DIR, 'community.json');
+
+const DEFAULT_COMMUNITY_SETTINGS = {
+  title: "Join Our Community",
+  subtitle: "Connect with fellow students, collaborate on coursework, share study materials, and stay updated with official announcements across our community groups.",
+  whatsapp: {
+    enabled: true,
+    title: "Official WhatsApp Community",
+    subtitle: "Active discussion group for IITM BS students. Ask questions, share notes, and get instant updates.",
+    url: "https://chat.whatsapp.com/ClB7IBHguCWKgjWtuyjfvf",
+    badge: "Active Community",
+    buttonText: "Join WhatsApp Community"
+  },
+  telegram: {
+    enabled: true,
+    title: "Telegram Channel & Group",
+    subtitle: "Direct broadcast channel & discussion forum for study materials, PYQ papers, and important alerts.",
+    url: "https://t.me/MrBlessing143",
+    badge: "Fast Alerts & Resources",
+    buttonText: "Join on Telegram"
+  },
+  customChannels: []
+};
 
 // Initialize database files if missing
 if (!fs.existsSync(COURSES_FILE)) {
@@ -33,6 +56,10 @@ if (!fs.existsSync(COURSES_FILE)) {
 
 if (!fs.existsSync(ANALYTICS_FILE)) {
   fs.writeFileSync(ANALYTICS_FILE, JSON.stringify({ searches: [], bookmarks: [] }, null, 2));
+}
+
+if (!fs.existsSync(COMMUNITY_FILE)) {
+  fs.writeFileSync(COMMUNITY_FILE, JSON.stringify(DEFAULT_COMMUNITY_SETTINGS, null, 2));
 }
 
 // Database Helpers
@@ -71,6 +98,19 @@ function getAnalytics() {
 
 function saveAnalytics(data) {
   fs.writeFileSync(ANALYTICS_FILE, JSON.stringify(data, null, 2));
+}
+
+function getCommunitySettings() {
+  try {
+    if (!fs.existsSync(COMMUNITY_FILE)) return DEFAULT_COMMUNITY_SETTINGS;
+    return JSON.parse(fs.readFileSync(COMMUNITY_FILE, 'utf-8'));
+  } catch (e) {
+    return DEFAULT_COMMUNITY_SETTINGS;
+  }
+}
+
+function saveCommunitySettings(settings) {
+  fs.writeFileSync(COMMUNITY_FILE, JSON.stringify(settings, null, 2));
 }
 
 // ==============================================================================
@@ -501,9 +541,24 @@ app.post('/api/analytics/search', (req, res) => {
   res.json({ success: true });
 });
 
+// Community Settings (Public Endpoint)
+app.get('/api/community', (req, res) => {
+  res.json(getCommunitySettings());
+});
+
 // ==============================================================================
 // Strictly Protected Admin API Endpoints (Middleware: authenticateToken + requireAdmin)
 // ==============================================================================
+
+// Update Community Settings (Protected Admin)
+app.post('/api/admin/community', authenticateToken, requireAdmin, (req, res) => {
+  const settings = req.body;
+  if (!settings || typeof settings !== 'object') {
+    return res.status(400).json({ error: 'Invalid settings payload' });
+  }
+  saveCommunitySettings(settings);
+  res.json({ success: true, message: 'Community settings updated successfully', settings });
+});
 
 // Admin Analytics
 app.get('/api/admin/analytics', authenticateToken, requireAdmin, (req, res) => {
