@@ -675,17 +675,20 @@
                   <div class="section-folder-list">
                     ${files.map((n, idx) => {
                       const fileUrl = n.fileUrl || n.pdf_url || '#';
-                      const title = n.title || n.fileName || `Notes #${idx + 1}`;
-                      const safeFileName = (n.fileName || `${title}.pdf`).replace(/'/g, "\\'");
+                      const rawTitle = (n.title || n.fileName || `Notes #${idx + 1}`).replace(/\.pdf$/i, '').trim();
+                      const prefix = c.code && !rawTitle.toUpperCase().includes(c.code.toUpperCase()) ? `${c.code} - ` : '';
+                      const cleanFileName = `${prefix}${rawTitle}.pdf`;
+                      const safeFileName = cleanFileName.replace(/'/g, "\\'");
+                      const displayTitle = n.title || n.fileName || `Notes #${idx + 1}`;
                       return `
                         <div class="section-file-item">
                           <div style="min-width: 0; display: flex; align-items: center; gap: 8px;">
                             <span style="font-size: 15px; color: #166534;">📄</span>
-                            <strong style="font-size: 13.5px; color: #09090b; word-break: break-word;">${title}</strong>
+                            <strong style="font-size: 13.5px; color: #09090b; word-break: break-word;">${displayTitle}</strong>
                           </div>
                           <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
                             <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 7px;">Open ↗</button>
-                            <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="Download ${title}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #f4f4f5; color: #09090b; width: 28px; height: 28px;">
+                            <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="Download ${displayTitle}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #f4f4f5; color: #09090b; width: 28px; height: 28px;">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 13px; height: 13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             </button>
                           </div>
@@ -722,6 +725,9 @@
           pyqGridContainer.style.display = 'flex';
           pyqEmptyContainer.style.display = 'none';
           pyqGridContainer.innerHTML = pyqs.map(p => {
+            const rawPyqTitle = (p.title || (p.year ? `${c.code} - PYQ ${p.year}` : `${c.code} - PYQ Paper`)).replace(/\.pdf$/i, '').trim();
+            const cleanPyqFileName = `${rawPyqTitle}.pdf`;
+            const safePyqFileName = cleanPyqFileName.replace(/'/g, "\\'");
             const fileUrl = p.fileUrl || notesUrl || '#';
             const title = p.title || `${c.code} — PYQ ${p.year || ''}`;
             const yearTag = p.year ? (String(p.year).toLowerCase().includes('year') ? String(p.year) : `Year ${p.year}`) : 'Question Paper';
@@ -735,8 +741,8 @@
                   </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-                  <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${(p.fileName || 'PYQ.pdf').replace(/'/g, "\\'")}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12.5px; padding: 7px 14px; border-radius: 8px;">Open PDF ↗</button>
-                  <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${(p.fileName || 'PYQ.pdf').replace(/'/g, "\\'")}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="Download ${title}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #f4f4f5; color: #09090b;">
+                  <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safePyqFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12.5px; padding: 7px 14px; border-radius: 8px;">Open PDF ↗</button>
+                  <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safePyqFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="Download ${title}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #f4f4f5; color: #09090b;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   </button>
                 </div>

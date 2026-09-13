@@ -636,17 +636,20 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="section-folder-list" style="display:flex; flex-direction:column;">
                 ${files.map((n, idx) => {
                   const fileUrl = n.fileUrl || n.pdf_url || '#';
-                  const title = n.title || n.fileName || `Notes #${idx + 1}`;
-                  const safeFileName = (n.fileName || `${title}.pdf`).replace(/'/g, "\\'");
+                  const rawTitle = (n.title || n.fileName || `Notes #${idx + 1}`).replace(/\.pdf$/i, '').trim();
+                  const prefix = course.code && !rawTitle.toUpperCase().includes(course.code.toUpperCase()) ? `${course.code} - ` : '';
+                  const cleanFileName = `${prefix}${rawTitle}.pdf`;
+                  const safeFileName = cleanFileName.replace(/'/g, "\\'");
+                  const displayTitle = n.title || n.fileName || `Notes #${idx + 1}`;
                   return `
                     <div class="section-file-item" style="padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; border-bottom:1px solid #f1f5f9;">
                       <div style="min-width:0; display:flex; align-items:center; gap:8px;">
                         <span style="font-size:15px; color:#166534;">📄</span>
-                        <strong style="font-size:13px; color:#09090b; word-break:break-word;">${title}</strong>
+                        <strong style="font-size:13px; color:#09090b; word-break:break-word;">${displayTitle}</strong>
                       </div>
                       <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
                         <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor:pointer; background:#09090b; color:#ffffff !important; border:none; font-family:inherit; font-weight:700; font-size:12px; padding:6px 12px; border-radius:7px;">Open ↗</button>
-                        <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="Download ${title}" style="cursor:pointer; background:#f4f4f5; border:1px solid #e4e4e7; color:#09090b; width:28px; height:28px;">
+                        <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="Download ${displayTitle}" style="cursor:pointer; background:#f4f4f5; border:1px solid #e4e4e7; color:#09090b; width:28px; height:28px;">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         </button>
                       </div>
@@ -689,10 +692,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (modalPyqListStack) {
         modalPyqListStack.style.display = 'flex';
         modalPyqListStack.innerHTML = pyqList.map(pyq => {
+          const rawPyqTitle = (pyq.title || (pyq.year ? `${course.code} - PYQ ${pyq.year}` : `${course.code} - PYQ Paper`)).replace(/\.pdf$/i, '').trim();
+          const cleanPyqFileName = `${rawPyqTitle}.pdf`;
+          const safeTitle = cleanPyqFileName.replace(/'/g, "\\'");
           const title = pyq.title || `${course.code} — PYQ ${pyq.year || ''}`;
           const fileUrl = pyq.fileUrl || notesUrl || '#';
           const yearTag = pyq.year ? (String(pyq.year).toLowerCase().includes('year') ? String(pyq.year) : `Year ${pyq.year}`) : 'Question Paper';
-          const safeTitle = (pyq.fileName || 'PYQ.pdf').replace(/'/g, "\\'");
 
           return `
             <div class="pyq-item-card">

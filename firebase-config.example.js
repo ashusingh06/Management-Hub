@@ -301,9 +301,26 @@ function openPdfSecurely(url, filename = 'document.pdf') {
   }, 100);
 }
 
-function downloadPdfSecurely(url, filename = 'document.pdf') {
+async function downloadPdfSecurely(url, filename = 'document.pdf') {
   if (!url || url === '#' || url === '') return;
 
+  // 1. Clean and sanitize the target filename
+  let cleanName = String(filename || 'Document.pdf').trim();
+  cleanName = cleanName.replace(/\.pdf$/i, '');
+  cleanName = cleanName.replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, ' ').trim();
+  if (!cleanName) cleanName = 'Study_Notes';
+  const finalFilename = `${cleanName}.pdf`;
+
+  // 2. Handle Google Drive links: convert to direct export download URL
+  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/) || 
+                     url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/) ||
+                     url.match(/drive\.google\.com\/uc\?(?:.*&)?id=([a-zA-Z0-9_-]+)/);
+  if (driveMatch && driveMatch[1]) {
+    window.open(`https://drive.google.com/uc?export=download&id=${driveMatch[1]}`, '_blank');
+    return;
+  }
+
+  // 3. Handle base64 Data URLs
   if (url.startsWith('data:')) {
     try {
       const arr = url.split(',');
@@ -319,24 +336,55 @@ function downloadPdfSecurely(url, filename = 'document.pdf') {
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = blobUrl;
-      a.download = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
+      a.download = finalFilename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 20000);
       return;
     } catch (e) {
       console.error('Error downloading data URL:', e);
     }
   }
 
+  // 4. Cloudinary URLs: inject fl_attachment:<cleanName> transformation
+  let downloadUrl = url;
+  if (downloadUrl.includes('cloudinary.com') && downloadUrl.includes('/upload/')) {
+    const attachmentTag = encodeURIComponent(cleanName.replace(/\s+/g, '_'));
+    if (!downloadUrl.includes('fl_attachment')) {
+      downloadUrl = downloadUrl.replace('/upload/', `/upload/fl_attachment:${attachmentTag}/`);
+    }
+  }
+
+  // 5. Method A: Fetch as Blob (Same-Origin blob: URL)
+  try {
+    const res = await fetch(downloadUrl, { mode: 'cors' });
+    if (res.ok) {
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = finalFilename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 25000);
+      return;
+    }
+  } catch (err) {
+    console.warn('Direct blob fetch failed, falling back to transformed link download:', err);
+  }
+
+  // 6. Method B: Fallback direct anchor download with Content-Disposition
   const a = document.createElement('a');
-  a.href = url;
-  a.download = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
+  a.href = downloadUrl;
+  a.download = finalFilename;
   a.target = '_blank';
   document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
+  setTimeout(() => {
+    try { document.body.removeChild(a); } catch (e) {}
+  }, 100);
 }
 
 function normalizePdfUrl(rawUrl) {
