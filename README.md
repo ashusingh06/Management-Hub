@@ -14,7 +14,7 @@ It provides centralized, 24/7 access to curated course catalogs, multi-contribut
 
 ### 📚 Academic Catalog & Study Resources
 - **Full Curriculum Catalog:** Covers 30+ courses across Foundation, Diploma (Management & Analytics), and BS Degree tiers.
-- **📁 Multi-Section / Contributor Notes:** Group study notes by author (e.g. *Ashu's Notes*, *Sibu's Notes*, *Lecture Slides*, *Handwritten Notes*, *Formula Sheets*).
+- **📁 Multi-Section / Contributor Notes:** Group study notes by author (e.g. *Ashu's Notes*,*Lecture Slides*, *Handwritten Notes*, *Formula Sheets*).
 - **📝 Previous Year Questions (PYQs):** Year-wise past exam question papers with one-click direct PDF preview and downloads.
 - **⚡ Instant 0ms Load Time:** Smart in-memory client caching with asynchronous background Cloud Firestore synchronization.
 - **🔍 Real-Time Intelligent Search:** Fast fuzzy search across course codes (`BSMS1201`), titles, levels, and prerequisites.
@@ -97,7 +97,7 @@ Open your browser at `http://localhost:3000`.
 ## 👥 Contributors & Community
 
 - **Aashish Singh (Ashu)** — Creator & Lead Maintainer ([@ashusingh06](https://github.com/ashusingh06))
-- **Sibu** — Core Academic Contributor
+
 
 ---
 
