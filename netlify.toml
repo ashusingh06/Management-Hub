@@ -21,3 +21,8 @@
   from = "/login"
   to = "/login.html"
   status = 200
+
+[[redirects]]
+  from = "/qualifier"
+  to = "/qualifier.html"
+  status = 200

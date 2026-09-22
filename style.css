@@ -3862,3 +3862,482 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   gap: 7px;
 }
 
+/* ==========================================================================
+   Qualifier Syllabus Section Styles (Matching Reference Course Cards)
+   ========================================================================== */
+
+/* Theme Variables per Subject */
+:root {
+  /* Mathematics: Royal Blue */
+  --syl-math-accent: #2563eb;
+  --syl-math-bg: #eff6ff;
+  --syl-math-border: #bfdbfe;
+  --syl-math-badge-bg: #dbeafe;
+  --syl-math-badge-text: #1e40af;
+  --syl-math-badge-border: #93c5fd;
+  --syl-math-subbadge-bg: #eff6ff;
+  --syl-math-subbadge-text: #2563eb;
+  --syl-math-divider: #dbeafe;
+  --syl-math-glow: rgba(37, 99, 235, 0.16);
+
+  /* Statistics: Warm Golden Amber */
+  --syl-stat-accent: #d97706;
+  --syl-stat-bg: #fffbeb;
+  --syl-stat-border: #fde68a;
+  --syl-stat-badge-bg: #fef3c7;
+  --syl-stat-badge-text: #92400e;
+  --syl-stat-badge-border: #fcd34d;
+  --syl-stat-subbadge-bg: #fffbeb;
+  --syl-stat-subbadge-text: #d97706;
+  --syl-stat-divider: #fef3c7;
+  --syl-stat-glow: rgba(217, 119, 6, 0.16);
+
+  /* Computational Thinking: Emerald Green */
+  --syl-ct-accent: #059669;
+  --syl-ct-bg: #ecfdf5;
+  --syl-ct-border: #a7f3d0;
+  --syl-ct-badge-bg: #d1fae5;
+  --syl-ct-badge-text: #065f46;
+  --syl-ct-badge-border: #6ee7b7;
+  --syl-ct-subbadge-bg: #ecfdf5;
+  --syl-ct-subbadge-text: #059669;
+  --syl-ct-divider: #d1fae5;
+  --syl-ct-glow: rgba(5, 150, 105, 0.16);
+
+  /* English I: Rose / Crimson (Identical to reference image) */
+  --syl-english-accent: #e11d48;
+  --syl-english-bg: #fff1f2;
+  --syl-english-border: #fecdd3;
+  --syl-english-badge-bg: #ffe4e6;
+  --syl-english-badge-text: #9f1239;
+  --syl-english-badge-border: #fda4af;
+  --syl-english-subbadge-bg: #fff1f2;
+  --syl-english-subbadge-text: #e11d48;
+  --syl-english-divider: #ffe4e6;
+  --syl-english-glow: rgba(225, 29, 72, 0.16);
+}
+
+.qualifier-syllabus-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.syllabus-tabs-wrap {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.syllabus-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: #ffffff;
+  border: 1.5px solid #e4e4e7;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #52525b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.syllabus-tab-btn:hover {
+  border-color: #a1a1aa;
+  color: #09090b;
+  background: #fafafa;
+}
+
+.syllabus-tab-btn[data-subject="math"].active {
+  background: var(--syl-math-accent);
+  color: #ffffff;
+  border-color: var(--syl-math-accent);
+  box-shadow: 0 4px 16px var(--syl-math-glow);
+}
+
+.syllabus-tab-btn[data-subject="stat"].active {
+  background: var(--syl-stat-accent);
+  color: #ffffff;
+  border-color: var(--syl-stat-accent);
+  box-shadow: 0 4px 16px var(--syl-stat-glow);
+}
+
+.syllabus-tab-btn[data-subject="ct"].active {
+  background: var(--syl-ct-accent);
+  color: #ffffff;
+  border-color: var(--syl-ct-accent);
+  box-shadow: 0 4px 16px var(--syl-ct-glow);
+}
+
+.syllabus-tab-btn[data-subject="english"].active {
+  background: var(--syl-english-accent);
+  color: #ffffff;
+  border-color: var(--syl-english-accent);
+  box-shadow: 0 4px 16px var(--syl-english-glow);
+}
+
+.syllabus-tab-btn .tab-code-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: #f4f4f5;
+  color: #71717a;
+  transition: all 0.2s ease;
+}
+
+.syllabus-tab-btn.active .tab-code-badge {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.syllabus-content-panel {
+  display: none;
+  animation: fadeInSyllabus 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.syllabus-content-panel.active {
+  display: block;
+}
+
+@keyframes fadeInSyllabus {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subject Header Banner Card */
+.syllabus-subject-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  transition: all 0.25s ease;
+}
+
+#syllabus-panel-math .syllabus-subject-header {
+  background: linear-gradient(180deg, var(--syl-math-bg) 0%, #ffffff 85px);
+  border: 1.5px solid var(--syl-math-border);
+  border-top: 4.5px solid var(--syl-math-accent);
+  box-shadow: 0 4px 16px -2px var(--syl-math-glow);
+}
+
+#syllabus-panel-stat .syllabus-subject-header {
+  background: linear-gradient(180deg, var(--syl-stat-bg) 0%, #ffffff 85px);
+  border: 1.5px solid var(--syl-stat-border);
+  border-top: 4.5px solid var(--syl-stat-accent);
+  box-shadow: 0 4px 16px -2px var(--syl-stat-glow);
+}
+
+#syllabus-panel-ct .syllabus-subject-header {
+  background: linear-gradient(180deg, var(--syl-ct-bg) 0%, #ffffff 85px);
+  border: 1.5px solid var(--syl-ct-border);
+  border-top: 4.5px solid var(--syl-ct-accent);
+  box-shadow: 0 4px 16px -2px var(--syl-ct-glow);
+}
+
+#syllabus-panel-english .syllabus-subject-header {
+  background: linear-gradient(180deg, var(--syl-english-bg) 0%, #ffffff 85px);
+  border: 1.5px solid var(--syl-english-border);
+  border-top: 4.5px solid var(--syl-english-accent);
+  box-shadow: 0 4px 16px -2px var(--syl-english-glow);
+}
+
+.syllabus-subject-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.syllabus-subject-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.syllabus-subject-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  color: #09090b;
+  letter-spacing: -0.015em;
+}
+
+.syllabus-subject-meta {
+  margin: 3px 0 0 0;
+  font-size: 13px;
+  color: #71717a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Weeks Grid */
+.syllabus-weeks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+/* Week Card (Styled precisely like reference image) */
+.syllabus-week-card {
+  border-radius: 16px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.syllabus-week-card:hover {
+  transform: translateY(-3px);
+}
+
+/* 1. Math Card */
+.syllabus-week-card.math {
+  background: linear-gradient(180deg, var(--syl-math-bg) 0%, #ffffff 80px);
+  border: 1.5px solid var(--syl-math-border);
+  border-top: 4.5px solid var(--syl-math-accent);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+}
+.syllabus-week-card.math:hover {
+  border-color: var(--syl-math-accent);
+  box-shadow: 0 14px 30px -4px var(--syl-math-glow);
+}
+.syllabus-week-card.math .syllabus-week-badge {
+  background: var(--syl-math-badge-bg);
+  color: var(--syl-math-badge-text);
+  border: 1px solid var(--syl-math-badge-border);
+}
+.syllabus-week-card.math .syllabus-week-subbadge {
+  background: var(--syl-math-subbadge-bg);
+  color: var(--syl-math-subbadge-text);
+  border: 1px solid var(--syl-math-border);
+}
+.syllabus-week-card.math .syllabus-week-title {
+  border-bottom: 1px solid var(--syl-math-divider);
+}
+
+/* 2. Stat Card */
+.syllabus-week-card.stat {
+  background: linear-gradient(180deg, var(--syl-stat-bg) 0%, #ffffff 80px);
+  border: 1.5px solid var(--syl-stat-border);
+  border-top: 4.5px solid var(--syl-stat-accent);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+}
+.syllabus-week-card.stat:hover {
+  border-color: var(--syl-stat-accent);
+  box-shadow: 0 14px 30px -4px var(--syl-stat-glow);
+}
+.syllabus-week-card.stat .syllabus-week-badge {
+  background: var(--syl-stat-badge-bg);
+  color: var(--syl-stat-badge-text);
+  border: 1px solid var(--syl-stat-badge-border);
+}
+.syllabus-week-card.stat .syllabus-week-subbadge {
+  background: var(--syl-stat-subbadge-bg);
+  color: var(--syl-stat-subbadge-text);
+  border: 1px solid var(--syl-stat-border);
+}
+.syllabus-week-card.stat .syllabus-week-title {
+  border-bottom: 1px solid var(--syl-stat-divider);
+}
+
+/* 3. CT Card */
+.syllabus-week-card.ct {
+  background: linear-gradient(180deg, var(--syl-ct-bg) 0%, #ffffff 80px);
+  border: 1.5px solid var(--syl-ct-border);
+  border-top: 4.5px solid var(--syl-ct-accent);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+}
+.syllabus-week-card.ct:hover {
+  border-color: var(--syl-ct-accent);
+  box-shadow: 0 14px 30px -4px var(--syl-ct-glow);
+}
+.syllabus-week-card.ct .syllabus-week-badge {
+  background: var(--syl-ct-badge-bg);
+  color: var(--syl-ct-badge-text);
+  border: 1px solid var(--syl-ct-badge-border);
+}
+.syllabus-week-card.ct .syllabus-week-subbadge {
+  background: var(--syl-ct-subbadge-bg);
+  color: var(--syl-ct-subbadge-text);
+  border: 1px solid var(--syl-ct-border);
+}
+.syllabus-week-card.ct .syllabus-week-title {
+  border-bottom: 1px solid var(--syl-ct-divider);
+}
+
+/* 4. English Card (Identical to Rose reference image) */
+.syllabus-week-card.english {
+  background: linear-gradient(180deg, var(--syl-english-bg) 0%, #ffffff 80px);
+  border: 1.5px solid var(--syl-english-border);
+  border-top: 4.5px solid var(--syl-english-accent);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+}
+.syllabus-week-card.english:hover {
+  border-color: var(--syl-english-accent);
+  box-shadow: 0 14px 30px -4px var(--syl-english-glow);
+}
+.syllabus-week-card.english .syllabus-week-badge {
+  background: var(--syl-english-badge-bg);
+  color: var(--syl-english-badge-text);
+  border: 1px solid var(--syl-english-badge-border);
+}
+.syllabus-week-card.english .syllabus-week-subbadge {
+  background: var(--syl-english-subbadge-bg);
+  color: var(--syl-english-subbadge-text);
+  border: 1px solid var(--syl-english-border);
+}
+.syllabus-week-card.english .syllabus-week-title {
+  border-bottom: 1px solid var(--syl-english-divider);
+}
+
+/* Card Elements */
+.syllabus-week-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.syllabus-week-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 3px 9px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.syllabus-week-subbadge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}
+
+.syllabus-week-title {
+  margin: 0 0 10px 0;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #09090b;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  padding-bottom: 10px;
+}
+
+.syllabus-week-desc {
+  margin: 0;
+  font-size: 13.5px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* Action button inside subject banner */
+.btn-syllabus-action {
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#syllabus-panel-math .btn-syllabus-action {
+  background: var(--syl-math-bg);
+  color: var(--syl-math-badge-text);
+  border: 1.5px solid var(--syl-math-border);
+}
+#syllabus-panel-math .btn-syllabus-action:hover {
+  background: var(--syl-math-accent);
+  color: #ffffff;
+  border-color: var(--syl-math-accent);
+  box-shadow: 0 4px 14px var(--syl-math-glow);
+}
+
+#syllabus-panel-stat .btn-syllabus-action {
+  background: var(--syl-stat-bg);
+  color: var(--syl-stat-badge-text);
+  border: 1.5px solid var(--syl-stat-border);
+}
+#syllabus-panel-stat .btn-syllabus-action:hover {
+  background: var(--syl-stat-accent);
+  color: #ffffff;
+  border-color: var(--syl-stat-accent);
+  box-shadow: 0 4px 14px var(--syl-stat-glow);
+}
+
+#syllabus-panel-ct .btn-syllabus-action {
+  background: var(--syl-ct-bg);
+  color: var(--syl-ct-badge-text);
+  border: 1.5px solid var(--syl-ct-border);
+}
+#syllabus-panel-ct .btn-syllabus-action:hover {
+  background: var(--syl-ct-accent);
+  color: #ffffff;
+  border-color: var(--syl-ct-accent);
+  box-shadow: 0 4px 14px var(--syl-ct-glow);
+}
+
+#syllabus-panel-english .btn-syllabus-action {
+  background: var(--syl-english-bg);
+  color: var(--syl-english-badge-text);
+  border: 1.5px solid var(--syl-english-border);
+}
+#syllabus-panel-english .btn-syllabus-action:hover {
+  background: var(--syl-english-accent);
+  color: #ffffff;
+  border-color: var(--syl-english-accent);
+  box-shadow: 0 4px 14px var(--syl-english-glow);
+}
+
+@media (max-width: 768px) {
+  .syllabus-weeks-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .syllabus-subject-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+  .syllabus-week-card {
+    padding: 18px 16px;
+  }
+}
+
+
+
