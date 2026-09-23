@@ -648,6 +648,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ` : '';
 
         modalNotesListStack.innerHTML = authBannerHtml + groupKeys.map(secName => {
+          let dlCounts = {};
+          try { dlCounts = JSON.parse(localStorage.getItem('mghub_downloads') || '{}'); } catch(e) {}
           const files = sectionGroups[secName];
           return `
             <div class="section-folder-card" style="background:#ffffff; border:1px solid #e4e4e7; border-radius:12px; overflow:hidden; margin-bottom:10px;">
@@ -667,15 +669,21 @@ document.addEventListener('DOMContentLoaded', () => {
                   const safeFileName = cleanFileName.replace(/'/g, "\\'");
                   const displayTitle = n.title || n.fileName || `Notes #${idx + 1}`;
                   const openBtnText = loggedIn ? 'Open ↗' : '🔒 Open ↗';
+                  const itemKey = (typeof getDownloadCountKey === 'function') ? getDownloadCountKey(course.code, displayTitle, 'notes') : '';
+                  const dlCount = (itemKey && dlCounts[itemKey]) ? dlCounts[itemKey] : 0;
                   return `
                     <div class="section-file-item" style="padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; border-bottom:1px solid #f1f5f9;">
-                      <div style="min-width:0; display:flex; align-items:center; gap:8px;">
+                      <div style="min-width:0; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                         <span style="font-size:15px; color:#166534;">📄</span>
                         <strong style="font-size:13px; color:#09090b; word-break:break-word;">${displayTitle}</strong>
+                        <span class="dl-count-badge" data-key="${itemKey}" title="${dlCount} downloads">
+                          <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                          <span class="dl-num">${dlCount}</span> <span class="dl-text">${dlCount === 1 ? 'download' : 'downloads'}</span>
+                        </span>
                       </div>
                       <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                        <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor:pointer; background:#09090b; color:#ffffff !important; border:none; font-family:inherit; font-weight:700; font-size:12px; padding:6px 12px; border-radius:7px;">${openBtnText}</button>
-                        <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="${loggedIn ? `Download ${displayTitle}` : 'Sign in required to download'}" style="cursor:pointer; background:#f4f4f5; border:1px solid #e4e4e7; color:#09090b; width:28px; height:28px;">
+                        <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeFileName}', '${itemKey}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor:pointer; background:#09090b; color:#ffffff !important; border:none; font-family:inherit; font-weight:700; font-size:12px; padding:6px 12px; border-radius:7px;">${openBtnText}</button>
+                        <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}', '${itemKey}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="${loggedIn ? `Download ${displayTitle}` : 'Sign in required to download'}" style="cursor:pointer; background:#f4f4f5; border:1px solid #e4e4e7; color:#09090b; width:28px; height:28px;">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         </button>
                       </div>
@@ -717,6 +725,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pyqList.length > 0) {
       if (modalPyqListStack) {
         modalPyqListStack.style.display = 'flex';
+        let dlCounts = {};
+        try { dlCounts = JSON.parse(localStorage.getItem('mghub_downloads') || '{}'); } catch(e) {}
+
         modalPyqListStack.innerHTML = pyqList.map(pyq => {
           const rawPyqTitle = (pyq.title || (pyq.year ? `${course.code} - PYQ ${pyq.year}` : `${course.code} - PYQ Paper`)).replace(/\.pdf$/i, '').trim();
           const cleanPyqFileName = `${rawPyqTitle}.pdf`;
@@ -725,6 +736,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const fileUrl = pyq.fileUrl || notesUrl || '#';
           const yearTag = pyq.year ? (String(pyq.year).toLowerCase().includes('year') ? String(pyq.year) : `Year ${pyq.year}`) : 'Question Paper';
           const openPyqText = (typeof isUserLoggedIn === 'function' && isUserLoggedIn()) ? 'Open PDF ↗' : '🔒 Open PDF ↗';
+          const pyqKey = (typeof getDownloadCountKey === 'function') ? getDownloadCountKey(course.code, rawPyqTitle, 'pyqs') : '';
+          const pyqCount = (pyqKey && dlCounts[pyqKey]) ? dlCounts[pyqKey] : 0;
 
           return `
             <div class="pyq-item-card">
@@ -734,12 +747,16 @@ document.addEventListener('DOMContentLoaded', () => {
                   <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                     <strong class="pyq-title">${title}</strong>
                     <span class="pyq-year-pill">${yearTag}</span>
+                    <span class="dl-count-badge" data-key="${pyqKey}" title="${pyqCount} downloads">
+                      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      <span class="dl-num">${pyqCount}</span> <span class="dl-text">${pyqCount === 1 ? 'download' : 'downloads'}</span>
+                    </span>
                   </div>
                 </div>
               </div>
               <div class="resource-actions">
-                <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeTitle}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12.5px; padding: 7px 14px; border-radius: 8px;">${openPyqText}</button>
-                <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeTitle}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="${(typeof isUserLoggedIn === 'function' && isUserLoggedIn()) ? `Download ${title}` : 'Sign in required to download'}" style="cursor:pointer; background: #f4f4f5; border:1px solid #e4e4e7; color: #09090b;">
+                <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeTitle}', '${pyqKey}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12.5px; padding: 7px 14px; border-radius: 8px;">${openPyqText}</button>
+                <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeTitle}', '${pyqKey}');}else{window.open('${fileUrl}', '_blank');}" class="btn-dl-pdf" title="${(typeof isUserLoggedIn === 'function' && isUserLoggedIn()) ? `Download ${title}` : 'Sign in required to download'}" style="cursor:pointer; background: #f4f4f5; border:1px solid #e4e4e7; color: #09090b;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </button>
               </div>
@@ -1010,7 +1027,8 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           const href = dlBtn.getAttribute('data-href') || dlBtn.getAttribute('href');
           if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
-            if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`);
+            const noteKey = (typeof getDownloadCountKey === 'function') ? getDownloadCountKey(code, 'Study Notes', 'notes') : '';
+            if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`, noteKey);
             else window.open(href, '_blank');
           } else {
             window.location.href = `course.html?code=${code}`;
@@ -1058,7 +1076,8 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           const href = dlBtn.getAttribute('data-href') || dlBtn.getAttribute('href');
           if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
-            if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`);
+            const noteKey = (typeof getDownloadCountKey === 'function') ? getDownloadCountKey(code, 'Study Notes', 'notes') : '';
+            if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`, noteKey);
             else window.open(href, '_blank');
           } else {
             window.location.href = `course.html?code=${code}`;
@@ -1558,6 +1577,22 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAndRenderLivePortalLinks();
   loadAndRenderContributors();
   loadAndRenderCommunity();
+
+  // Realtime Download Counts Sync
+  if (typeof fetchDownloadCountsFromFirestore === 'function') {
+    fetchDownloadCountsFromFirestore().then(counts => {
+      if (counts && typeof updateDownloadCountUI === 'function') {
+        Object.keys(counts).forEach(k => updateDownloadCountUI(k, counts[k]));
+      }
+    });
+  }
+  if (typeof listenToDownloadCounts === 'function') {
+    listenToDownloadCounts(counts => {
+      if (counts && typeof updateDownloadCountUI === 'function') {
+        Object.keys(counts).forEach(k => updateDownloadCountUI(k, counts[k]));
+      }
+    });
+  }
 
   // Realtime Cloud Firestore Subscriptions (Instant push to Mobile & Web within 100ms)
   if (typeof listenToCoursesFromFirestore === 'function') {

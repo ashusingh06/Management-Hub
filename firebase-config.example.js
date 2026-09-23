@@ -340,13 +340,105 @@ function showLoginRequiredModal(customMsg = null, redirectUrl = null) {
   });
 }
 
-function openPdfSecurely(url, filename = 'document.pdf') {
+
+// ==============================================================================
+// Realtime Download Counting System (Cloud Firestore + Local Cache)
+// ==============================================================================
+function getDownloadCountKey(courseCode, title, type = 'notes') {
+  const cleanCode = String(courseCode || '').toUpperCase().trim();
+  const cleanTitle = String(title || '')
+    .toLowerCase()
+    .replace(/\.pdf$/i, '')
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  return `${cleanCode}_${type}_${cleanTitle}`;
+}
+
+async function fetchDownloadCountsFromFirestore() {
+  const db = getFirebaseDb();
+  if (!db) return {};
+  try {
+    const doc = await db.collection('settings').doc('downloads').get();
+    if (doc.exists && doc.data()) {
+      const data = doc.data();
+      try { localStorage.setItem('mghub_downloads', JSON.stringify(data)); } catch(e) {}
+      return data;
+    }
+  } catch (e) {
+    console.warn('fetchDownloadCounts error:', e);
+  }
+  return {};
+}
+
+function listenToDownloadCounts(callback) {
+  const db = getFirebaseDb();
+  if (!db) return () => {};
+  try {
+    return db.collection('settings').doc('downloads').onSnapshot((doc) => {
+      if (doc.exists && doc.data()) {
+        const data = doc.data();
+        try { localStorage.setItem('mghub_downloads', JSON.stringify(data)); } catch(e) {}
+        if (typeof callback === 'function') callback(data);
+      }
+    }, (err) => console.warn('Download counts listener warning:', err));
+  } catch (e) {
+    return () => {};
+  }
+}
+
+function updateDownloadCountUI(key, count) {
+  if (!key) return;
+  document.querySelectorAll(`.dl-count-badge[data-key="${key}"]`).forEach(badge => {
+    const numEl = badge.querySelector('.dl-num');
+    if (numEl) numEl.textContent = count;
+    const textEl = badge.querySelector('.dl-text');
+    if (textEl) textEl.textContent = count === 1 ? 'download' : 'downloads';
+    badge.classList.remove('bump');
+    void badge.offsetWidth;
+    badge.classList.add('bump');
+    setTimeout(() => badge.classList.remove('bump'), 400);
+  });
+}
+
+async function incrementDownloadCountInFirestore(key) {
+  if (!key) return;
+
+  // 1. Instantly update localStorage
+  let cached = {};
+  try {
+    cached = JSON.parse(localStorage.getItem('mghub_downloads') || '{}');
+  } catch(e) {}
+  cached[key] = (cached[key] || 0) + 1;
+  try {
+    localStorage.setItem('mghub_downloads', JSON.stringify(cached));
+  } catch(e) {}
+
+  // 2. Animate and update UI instantly on current page
+  updateDownloadCountUI(key, cached[key]);
+
+  // 3. Atomically increment in Cloud Firestore
+  const db = getFirebaseDb();
+  if (!db || typeof firebase === 'undefined' || !firebase.firestore || !firebase.firestore.FieldValue) return;
+  try {
+    await db.collection('settings').doc('downloads').set({
+      [key]: firebase.firestore.FieldValue.increment(1)
+    }, { merge: true });
+  } catch (e) {
+    console.warn('incrementDownloadCount Firestore warning:', e);
+  }
+}
+
+function openPdfSecurely(url, filename = 'document.pdf', itemKey = '') {
+
   if (!isUserLoggedIn()) {
     const currentRedirect = window.location.pathname + window.location.search;
     window.location.href = `login.html?redirect=${encodeURIComponent(currentRedirect)}&reason=notes`;
     return;
   }
-  if (!url || url === '#' || url === '') return;
+    if (itemKey && typeof incrementDownloadCountInFirestore === 'function') {
+    incrementDownloadCountInFirestore(itemKey);
+  }
+if (!url || url === '#' || url === '') return;
 
   const a = document.createElement('a');
   a.href = url;
@@ -359,13 +451,17 @@ function openPdfSecurely(url, filename = 'document.pdf') {
   }, 100);
 }
 
-async function downloadPdfSecurely(url, filename = 'document.pdf') {
+async function downloadPdfSecurely(url, filename = 'document.pdf', itemKey = '') {
+
   if (!isUserLoggedIn()) {
     const currentRedirect = window.location.pathname + window.location.search;
     window.location.href = `login.html?redirect=${encodeURIComponent(currentRedirect)}&reason=notes`;
     return;
   }
-  if (!url || url === '#' || url === '') return;
+    if (itemKey && typeof incrementDownloadCountInFirestore === 'function') {
+    incrementDownloadCountInFirestore(itemKey);
+  }
+if (!url || url === '#' || url === '') return;
 
   // 1. Clean and sanitize the target filename
   let cleanName = String(filename || 'Document.pdf').trim();
