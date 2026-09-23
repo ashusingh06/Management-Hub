@@ -287,7 +287,64 @@ async function signOutUser() {
   localStorage.removeItem('mghub_jwt');
 }
 
+function isUserLoggedIn() {
+  try {
+    const user = JSON.parse(localStorage.getItem('mghub_user') || 'null');
+    if (user && (user.email || user.uid)) return true;
+  } catch (e) {}
+  if (sessionStorage.getItem('mghub_admin_auth') === 'true') return true;
+  const fb = getFirebaseAuth();
+  if (fb && fb.auth && fb.auth.currentUser) return true;
+  return false;
+}
+
+function showLoginRequiredModal(customMsg = null, redirectUrl = null) {
+  let modal = document.getElementById('loginRequiredModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'loginRequiredModal';
+    modal.className = 'auth-gate-modal-overlay';
+    document.body.appendChild(modal);
+  }
+
+  const currentRedirect = redirectUrl || (window.location.pathname + window.location.search);
+  const loginUrl = `login.html?redirect=${encodeURIComponent(currentRedirect)}&reason=notes`;
+
+  modal.innerHTML = `
+    <div class="auth-gate-modal-backdrop" onclick="document.getElementById('loginRequiredModal').classList.remove('active')"></div>
+    <div class="auth-gate-modal-dialog">
+      <div class="auth-gate-modal-header">
+        <div class="auth-gate-icon-wrap">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <button type="button" class="auth-gate-close-btn" onclick="document.getElementById('loginRequiredModal').classList.remove('active')">✕</button>
+      </div>
+      <div class="auth-gate-modal-body">
+        <h3 class="auth-gate-title">Sign In Required</h3>
+        <p class="auth-gate-text">
+          ${customMsg || 'Study notes and academic materials are reserved for verified IITM BS students. Please sign in or register to access and download notes.'}
+        </p>
+      </div>
+      <div class="auth-gate-modal-footer">
+        <a href="${loginUrl}" class="auth-gate-btn-login">Sign In / Register ↗</a>
+        <button type="button" class="auth-gate-btn-cancel" onclick="document.getElementById('loginRequiredModal').classList.remove('active')">Not Now</button>
+      </div>
+    </div>
+  `;
+
+  requestAnimationFrame(() => {
+    modal.classList.add('active');
+  });
+}
+
 function openPdfSecurely(url, filename = 'document.pdf') {
+  if (!isUserLoggedIn()) {
+    showLoginRequiredModal('Study notes and academic materials require an active student account. Please sign in or register to view this document.');
+    return;
+  }
   if (!url || url === '#' || url === '') return;
 
   const a = document.createElement('a');
@@ -302,6 +359,10 @@ function openPdfSecurely(url, filename = 'document.pdf') {
 }
 
 async function downloadPdfSecurely(url, filename = 'document.pdf') {
+  if (!isUserLoggedIn()) {
+    showLoginRequiredModal('Study notes and academic materials require an active student account. Please sign in or register to download this document.');
+    return;
+  }
   if (!url || url === '#' || url === '') return;
 
   // 1. Clean and sanitize the target filename

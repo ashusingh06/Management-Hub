@@ -326,11 +326,8 @@
           const user = await signInWithGoogle();
           showSuccess(`Welcome, ${user.name}! Redirecting...`);
           setTimeout(() => {
-            if (user.role === 'admin') {
-              window.location.href = '/inmycontrol';
-            } else {
-              window.location.href = '/index.html';
-            }
+            const dest = redirectParam || (user.role === 'admin' ? '/inmycontrol' : '/index.html');
+            window.location.href = dest;
           }, 600);
         } catch (err) {
           console.error(err);
@@ -349,10 +346,15 @@
       });
     }
 
-    // Check if error passed via query params (e.g. ?error=unauthorized)
+    // Check if error or redirect passed via query params
     const urlParams = new URLSearchParams(window.location.search);
     const errParam = urlParams.get('error');
-    if (errParam === 'unauthorized') {
+    const redirectParam = urlParams.get('redirect');
+    const reasonParam = urlParams.get('reason');
+
+    if (reasonParam === 'notes') {
+      showError('🔒 Sign In Required: Please sign in or register with your student account to access and download study notes.');
+    } else if (errParam === 'unauthorized') {
       showError('Please sign in with administrator credentials to access the Admin Dashboard.');
     } else if (errParam === 'forbidden') {
       showError('Access Denied: Your account does not have Administrator privileges.');
@@ -427,11 +429,8 @@
           showSuccess('Authentication successful! Redirecting...');
           
           setTimeout(() => {
-            if (data.user && data.user.role === 'admin') {
-              window.location.href = '/inmycontrol';
-            } else {
-              window.location.href = '/index.html';
-            }
+            const dest = redirectParam || (data.user && data.user.role === 'admin' ? '/inmycontrol' : '/index.html');
+            window.location.href = dest;
           }, 600);
         } else {
           showError(data.error || data.message || 'Authentication failed. Please check your credentials.');
@@ -446,7 +445,8 @@
           localStorage.setItem('mghub_user', JSON.stringify({ email: 'aashishsinghh06@gmail.com', role: 'admin', name: 'Administrator' }));
           showSuccess('Admin authentication verified! Opening Admin Panel...');
           setTimeout(() => {
-            window.location.href = '/inmycontrol';
+            const dest = redirectParam || '/inmycontrol';
+            window.location.href = dest;
           }, 500);
           return;
         }

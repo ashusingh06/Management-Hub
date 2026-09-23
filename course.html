@@ -7,12 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260912_aboutcomm">
+  <link rel="stylesheet" href="style.css?v=20260923_notesauth">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
-  <script src="firebase-config.js?v=20260912_largepdf"></script>
+  <script src="firebase-config.js?v=20260923_notesauth"></script>
   <style>
     .course-page-container {
       max-width: 1140px;
@@ -325,8 +325,8 @@
         </nav>
       </div>
 
-      <!-- Right Balanced Spacer -->
-      <div class="header-right"></div>
+      <!-- Right Balanced Spacer / User Auth Box -->
+      <div class="header-right" id="headerAuthBox"></div>
     </div>
   </header>
 
@@ -543,6 +543,56 @@
 
       updateBookmarkState();
 
+      function renderHeaderAuth() {
+        const authBox = document.getElementById('headerAuthBox');
+        if (!authBox) return;
+
+        let user = null;
+        try {
+          user = JSON.parse(localStorage.getItem('mghub_user') || 'null');
+        } catch (e) {}
+
+        if (user && user.email) {
+          const displayName = user.name || user.email.split('@')[0];
+          const initial = displayName.charAt(0).toUpperCase();
+          const isAdmin = user.role === 'admin' || user.email.toLowerCase() === 'aashishsinghh06@gmail.com';
+          const avatarHtml = user.photoURL 
+            ? `<img src="${user.photoURL}" alt="${displayName}" class="header-user-avatar" />`
+            : `<div class="header-user-avatar">${initial}</div>`;
+
+          authBox.innerHTML = `
+            <div class="header-user-profile">
+              ${avatarHtml}
+              <span>${displayName}</span>
+              ${isAdmin ? `<a href="/inmycontrol" style="font-size: 11px; color: #166534; background: #f0fdf4; padding: 2px 6px; border-radius: 4px; text-decoration: none; font-weight: 800;">ADMIN</a>` : ''}
+              <button type="button" class="btn-header-logout" id="headerLogoutBtn" title="Sign Out">✕</button>
+            </div>
+          `;
+
+          document.getElementById('headerLogoutBtn')?.addEventListener('click', async () => {
+            if (typeof signOutUser === 'function') {
+              await signOutUser();
+            } else {
+              localStorage.removeItem('mghub_user');
+              sessionStorage.removeItem('mghub_admin_auth');
+              sessionStorage.removeItem('mghub_admin_email');
+            }
+            renderHeaderAuth();
+            if (window._currentCourseData) renderCourseDetails(window._currentCourseData);
+          });
+        } else {
+          const currentUrl = window.location.pathname + window.location.search;
+          authBox.innerHTML = `
+            <a href="login.html?redirect=${encodeURIComponent(currentUrl)}&reason=notes" class="btn-header-auth" id="headerLoginBtn">
+              <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Sign In</span>
+            </a>
+          `;
+        }
+      }
+
+      renderHeaderAuth();
+
       // Check Local Storage PDF override map
       let localPdfMap = {};
       try {
@@ -618,6 +668,10 @@
       }
 
       function renderCourseDetails(c) {
+        window._currentCourseData = c;
+        const loggedIn = typeof isUserLoggedIn === 'function' ? isUserLoggedIn() : false;
+        const currentUrl = window.location.pathname + window.location.search;
+
         document.title = `${c.code} - ${c.title} | [Management Hub]`;
         pageCourseCode.textContent = c.code;
         pageCourseTitle.textContent = c.title;
@@ -661,7 +715,20 @@
 
             const groupKeys = Object.keys(sectionGroups);
 
-            notesListContainer.innerHTML = groupKeys.map(secName => {
+            const authBannerHtml = !loggedIn ? `
+              <div class="notes-auth-banner">
+                <div class="notes-auth-banner-left">
+                  <span class="notes-auth-lock">🔒</span>
+                  <div>
+                    <div class="notes-auth-heading">Sign In Required to Access Notes</div>
+                    <div class="notes-auth-sub">Study notes and PDFs are reserved for registered IITM BS students. Sign in to view and download all files.</div>
+                  </div>
+                </div>
+                <a href="login.html?redirect=${encodeURIComponent(currentUrl)}&reason=notes" class="notes-auth-banner-btn">Sign In / Register ↗</a>
+              </div>
+            ` : '';
+
+            notesListContainer.innerHTML = authBannerHtml + groupKeys.map(secName => {
               const files = sectionGroups[secName];
               return `
                 <div class="section-folder-card">
@@ -680,6 +747,7 @@
                       const cleanFileName = `${prefix}${rawTitle}.pdf`;
                       const safeFileName = cleanFileName.replace(/'/g, "\\'");
                       const displayTitle = n.title || n.fileName || `Notes #${idx + 1}`;
+                      const openBtnText = loggedIn ? 'Open ↗' : '🔒 Open ↗';
                       return `
                         <div class="section-file-item">
                           <div style="min-width: 0; display: flex; align-items: center; gap: 8px;">
@@ -687,8 +755,8 @@
                             <strong style="font-size: 13.5px; color: #09090b; word-break: break-word;">${displayTitle}</strong>
                           </div>
                           <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-                            <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 7px;">Open ↗</button>
-                            <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="Download ${displayTitle}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #f4f4f5; color: #09090b; width: 28px; height: 28px;">
+                            <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 7px;">${openBtnText}</button>
+                            <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safeFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="${loggedIn ? `Download ${displayTitle}` : 'Sign in required to download'}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #f4f4f5; color: #09090b; width: 28px; height: 28px;">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 13px; height: 13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             </button>
                           </div>
@@ -731,6 +799,7 @@
             const fileUrl = p.fileUrl || notesUrl || '#';
             const title = p.title || `${c.code} — PYQ ${p.year || ''}`;
             const yearTag = p.year ? (String(p.year).toLowerCase().includes('year') ? String(p.year) : `Year ${p.year}`) : 'Question Paper';
+            const openPyqBtnText = loggedIn ? 'Open PDF ↗' : '🔒 Open PDF ↗';
 
             return `
               <div class="pyq-paper-item">
@@ -741,8 +810,8 @@
                   </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-                  <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safePyqFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12.5px; padding: 7px 14px; border-radius: 8px;">Open PDF ↗</button>
-                  <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safePyqFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="Download ${title}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #f4f4f5; color: #09090b;">
+                  <button type="button" onclick="if(typeof openPdfSecurely==='function'){openPdfSecurely('${fileUrl}', '${safePyqFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-open" style="cursor: pointer; background: #09090b; color: #ffffff !important; border: none; font-family: inherit; font-weight: 700; font-size: 12.5px; padding: 7px 14px; border-radius: 8px;">${openPyqBtnText}</button>
+                  <button type="button" onclick="if(typeof downloadPdfSecurely==='function'){downloadPdfSecurely('${fileUrl}', '${safePyqFileName}');}else{window.open('${fileUrl}', '_blank');}" class="btn-action-dl" title="${loggedIn ? `Download ${title}` : 'Sign in required to download'}" style="cursor: pointer; border: 1px solid #e4e4e7; background: #f4f4f5; color: #09090b;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   </button>
                 </div>

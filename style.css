@@ -4339,5 +4339,222 @@ h1, h2, h3, h4, .degree-title, .section-header h1 {
   }
 }
 
+/* ==========================================================================
+   Notes Access Authentication Gate Modal & Banner Styles
+   ========================================================================== */
+.auth-gate-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+  padding: 18px;
+}
 
+.auth-gate-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
 
+.auth-gate-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 9, 11, 0.65);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.auth-gate-modal-dialog {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-radius: 20px;
+  max-width: 440px;
+  width: 100%;
+  padding: 26px 24px;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.25);
+  transform: translateY(14px) scale(0.97);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-gate-modal-overlay.active .auth-gate-modal-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.auth-gate-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.auth-gate-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-gate-close-btn {
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  color: #71717a;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.auth-gate-close-btn:hover {
+  background: #e4e4e7;
+  color: #09090b;
+}
+
+.auth-gate-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #09090b;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
+}
+
+.auth-gate-text {
+  font-size: 14px;
+  color: #52525b;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.auth-gate-modal-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.auth-gate-btn-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: #09090b;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.auth-gate-btn-login:hover {
+  background: #27272a;
+  transform: translateY(-1px);
+}
+
+.auth-gate-btn-cancel {
+  display: block;
+  width: 100%;
+  background: #f4f4f5;
+  color: #52525b;
+  border: 1px solid #e4e4e7;
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.auth-gate-btn-cancel:hover {
+  background: #e4e4e7;
+  color: #09090b;
+}
+
+/* Notes Section In-Page Auth Lock Banner */
+.notes-auth-banner {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border: 1.5px solid #fed7aa;
+  border-radius: 12px;
+  padding: 13px 16px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.notes-auth-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.notes-auth-lock {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.notes-auth-heading {
+  font-size: 13px;
+  font-weight: 800;
+  color: #9a3412;
+  margin-bottom: 2px;
+}
+
+.notes-auth-sub {
+  font-size: 12px;
+  color: #c2410c;
+  line-height: 1.35;
+}
+
+.notes-auth-banner-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ea580c;
+  color: #ffffff !important;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 13px;
+  border-radius: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 5px rgba(234, 88, 12, 0.25);
+}
+
+.notes-auth-banner-btn:hover {
+  background: #c2410c;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .notes-auth-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .notes-auth-banner-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
