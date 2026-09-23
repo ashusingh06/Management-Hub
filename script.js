@@ -733,7 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const cleanPyqFileName = `${rawPyqTitle}.pdf`;
           const safeTitle = cleanPyqFileName.replace(/'/g, "\\'");
           const title = pyq.title || `${course.code} — PYQ ${pyq.year || ''}`;
-          const fileUrl = pyq.fileUrl || notesUrl || '#';
+          const fileUrl = pyq.fileUrl || pyq.url || '#';
           const yearTag = pyq.year ? (String(pyq.year).toLowerCase().includes('year') ? String(pyq.year) : `Year ${pyq.year}`) : 'Question Paper';
           const openPyqText = (typeof isUserLoggedIn === 'function' && isUserLoggedIn()) ? 'Open PDF ↗' : '🔒 Open PDF ↗';
           const pyqKey = (typeof getDownloadCountKey === 'function') ? getDownloadCountKey(course.code, rawPyqTitle, 'pyqs') : '';
@@ -862,6 +862,7 @@ document.addEventListener('DOMContentLoaded', () => {
             level: c.level || base.level,
             pdf_url: c.pdf_url !== undefined ? c.pdf_url : '',
             notes: c.notes !== undefined ? c.notes : { available: false, fileName: '', fileUrl: '' },
+            notesList: Array.isArray(c.notesList) ? c.notesList : (base.notesList || []),
             pyqs: Array.isArray(c.pyqs) ? c.pyqs : []
           });
         } else {
@@ -966,29 +967,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     notesGrid.innerHTML = courses.map((c, index) => {
       let notesUrl = '';
-      if (c.notes && c.notes.available !== false && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0) {
+      if (Array.isArray(c.notesList) && c.notesList.length > 0 && c.notesList[0].fileUrl) {
+        notesUrl = c.notesList[0].fileUrl;
+      } else if (c.notes && c.notes.available !== false && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0) {
         notesUrl = c.notes.fileUrl;
       } else if (c.pdf_url && c.pdf_url.trim().length > 0) {
         notesUrl = c.pdf_url;
       } else if (localPdfMap[c.code] && localPdfMap[c.code].trim().length > 0 && c.notes?.available !== false) {
         notesUrl = localPdfMap[c.code];
       }
+
       const hasNotes = Boolean(notesUrl && notesUrl.trim().length > 0);
-      const pyqCount = Array.isArray(c.pyqs) ? c.pyqs.length : 0;
+      const pyqs = Array.isArray(c.pyqs) ? c.pyqs.filter(p => p && (p.fileUrl || p.url)) : [];
+      const pyqCount = pyqs.length;
       const hasPyqs = pyqCount > 0;
+      const hasAnyPdf = hasNotes || hasPyqs;
+
+      let primaryUrl = notesUrl;
+      let primaryType = 'notes';
+      let primaryTitle = (c.notes && c.notes.title) ? c.notes.title : 'Study Notes';
+      if (!primaryUrl && hasPyqs) {
+        primaryUrl = pyqs[0].fileUrl || pyqs[0].url || '';
+        primaryType = 'pyq';
+        primaryTitle = pyqs[0].title || 'PYQ Paper';
+      }
+
       const levelLabel = c.level.charAt(0).toUpperCase() + c.level.slice(1);
       const colorIndex = (index % 12) + 1;
+      const dlTitle = hasAnyPdf 
+        ? (hasNotes ? `Open Notes: ${c.title}` : `Open PYQ: ${primaryTitle}`) 
+        : 'Open Course Notes & PYQs';
 
       return `
         <div class="course-card course-card-color-${colorIndex}" data-color="${colorIndex}" data-level="${c.level}" data-code="${c.code}">
           <div class="course-card-top">
-            <span class="level-badge badge-${c.level}">${levelLabel}</span>
-            <span class="course-code">${c.code}</span>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span class="level-badge badge-${c.level}">${levelLabel}</span>
+              <span class="course-code">${c.code}</span>
+            </div>
+            <div class="card-resource-tags">
+              ${hasNotes ? `<span class="card-tag card-tag-notes" title="Curated Study Notes Available">📄 Notes</span>` : ''}
+              ${hasPyqs ? `<span class="card-tag card-tag-pyq" title="${pyqCount} Past Year Question Paper${pyqCount > 1 ? 's' : ''} Available">📝 ${pyqCount} PYQ${pyqCount > 1 ? 's' : ''}</span>` : ''}
+            </div>
           </div>
           <h3 class="course-title">${c.title}</h3>
           <div class="course-card-footer">
             <a href="course.html?code=${c.code}" class="btn-note-view" data-code="${c.code}">Open Notes & PYQs</a>
-            <a href="javascript:void(0)" class="btn-note-dl ${hasNotes ? 'has-pdf' : ''}" data-code="${c.code}" data-href="${notesUrl || ''}" title="${hasNotes ? 'Open Notes PDF' : 'View Course Resources'}">
+            <a href="javascript:void(0)" class="btn-note-dl ${hasAnyPdf ? 'has-pdf' : ''}" data-code="${c.code}" data-href="${primaryUrl || ''}" data-resource-type="${primaryType}" data-title="${primaryTitle.replace(/"/g, '&quot;')}" title="${dlTitle}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dl-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </a>
           </div>
@@ -1026,9 +1051,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
           }
           const href = dlBtn.getAttribute('data-href') || dlBtn.getAttribute('href');
+          const isPyq = dlBtn.getAttribute('data-resource-type') === 'pyq';
+          const title = dlBtn.getAttribute('data-title') || (isPyq ? `${code} PYQ Paper` : `${code} Notes`);
           if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
-            const noteKey = (typeof getDownloadCountKey === 'function') ? getDownloadCountKey(code, 'Study Notes', 'notes') : '';
-            if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`, noteKey);
+            const itemKey = (typeof getDownloadCountKey === 'function') 
+              ? getDownloadCountKey(code, title, isPyq ? 'pyqs' : 'notes') 
+              : '';
+            const fileName = isPyq ? `${code}_PYQ.pdf` : `${code}_Notes.pdf`;
+            if (typeof openPdfSecurely === 'function') openPdfSecurely(href, fileName, itemKey);
             else window.open(href, '_blank');
           } else {
             window.location.href = `course.html?code=${code}`;

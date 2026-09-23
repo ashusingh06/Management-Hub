@@ -1,574 +1,824 @@
 [
   {
-    "id": 1,
-    "code": "BSMA1001",
-    "level": "foundation",
     "title": "Mathematics for Data Science I",
-    "credits": 4,
-    "description": "Linear algebra, matrix operations, calculus fundamentals, vector spaces, and mathematical foundations for analytics.",
+    "level": "foundation",
+    "pdf_url": "https://res.cloudinary.com/sendqukv/image/upload/v1788766574/management-hub/pdfs/t30fkdkufi56fqmparon.pdf",
     "prerequisites": [],
-    "syllabus": "Module 1: Vector Spaces & Matrices | Module 2: Systems of Linear Equations | Module 3: Eigenvalues & PCA Foundations | Module 4: Differential Calculus",
-    "pdf_url": "",
+    "credits": 4,
+    "pyqs": [
+      {
+        "fileUrl": "https://drive.google.com/drive/folders/1Fq3vpXmmN3moEFa9TdBqkBfkMfjaPyh-",
+        "uploadedAt": "2026-09-03T05:29:08.045Z",
+        "year": "2023 - 2025",
+        "fileName": "Endterm Pyqs.pdf",
+        "id": 1788413348045,
+        "title": "Endterm Pyqs"
+      }
+    ],
+    "updatedAt": "2026-09-22T15:07:38.935Z",
+    "code": "BSMA1001",
+    "notesList": [
+      {
+        "fileName": "Maths1_W1_Notes.pdf",
+        "uploadedAt": "2026-09-07T07:36:15.061Z",
+        "title": "WEEK 1",
+        "section": "Complete Notes Week 1 to Week 11",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766574/management-hub/pdfs/t30fkdkufi56fqmparon.pdf",
+        "id": 1788766575061
+      },
+      {
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766549/management-hub/pdfs/qjlm661gacklkf9ut6zp.pdf",
+        "section": "Complete Notes Week 1 to Week 11",
+        "uploadedAt": "2026-09-07T07:35:50.121Z",
+        "id": 1788766550121,
+        "title": "WEEK 2",
+        "fileName": "Maths1_W2_Notes.pdf"
+      },
+      {
+        "section": "Complete Notes Week 1 to Week 11",
+        "title": "WEEK 3",
+        "uploadedAt": "2026-09-07T07:35:00.406Z",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766499/management-hub/pdfs/qzxvxn1zyjofelphbni2.pdf",
+        "id": 1788766500406,
+        "fileName": "Maths1_W3_Notes.pdf"
+      },
+      {
+        "id": 1788766468267,
+        "section": "Complete Notes Week 1 to Week 11",
+        "uploadedAt": "2026-09-07T07:34:28.267Z",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766467/management-hub/pdfs/cf1lzj621xzzo8hagjpn.pdf",
+        "title": "WEEK 4",
+        "fileName": "Maths1_W4_Notes.pdf"
+      },
+      {
+        "title": "WEEK 5",
+        "fileName": "Maths1_W5_Notes.pdf",
+        "uploadedAt": "2026-09-07T07:34:00.790Z",
+        "id": 1788766440790,
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766439/management-hub/pdfs/xv5fmhe0mhtbsk24tzp9.pdf",
+        "section": "Complete Notes Week 1 to Week 11"
+      },
+      {
+        "id": 1788766403948,
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766402/management-hub/pdfs/zykogsgdd9pzzeu12wf5.pdf",
+        "title": "WEEK 6",
+        "uploadedAt": "2026-09-07T07:33:23.948Z",
+        "section": "Complete Notes Week 1 to Week 11",
+        "fileName": "Maths1_W6_Notes.pdf"
+      },
+      {
+        "fileName": "Maths1_W7_Notes.pdf",
+        "section": "Complete Notes Week 1 to Week 11",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766376/management-hub/pdfs/j7uklfz6jpwpgdvyltut.pdf",
+        "id": 1788766377907,
+        "uploadedAt": "2026-09-07T07:32:57.907Z",
+        "title": "WEEK 7"
+      },
+      {
+        "title": "WEEK 8",
+        "fileName": "Maths1_W8_Notes.pdf",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766346/management-hub/pdfs/sjjl7tcdcfhpndnlhvud.pdf",
+        "section": "Complete Notes Week 1 to Week 11",
+        "id": 1788766347842,
+        "uploadedAt": "2026-09-07T07:32:27.842Z"
+      },
+      {
+        "section": "Complete Notes Week 1 to Week 11",
+        "id": 1788766319967,
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766318/management-hub/pdfs/vqpuszw40owhxqgb00oz.pdf",
+        "title": "WEEK 9",
+        "fileName": "Maths1_W9_Notes.pdf",
+        "uploadedAt": "2026-09-07T07:31:59.967Z"
+      },
+      {
+        "id": 1788766283649,
+        "title": "WEEK 10",
+        "uploadedAt": "2026-09-07T07:31:23.649Z",
+        "fileName": "Maths1_W10_Notes.pdf",
+        "section": "Complete Notes Week 1 to Week 11",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766282/management-hub/pdfs/pba079ci5zkd4asxogye.pdf"
+      },
+      {
+        "fileName": "Maths1_W11_Notes.pdf",
+        "id": 1788766244566,
+        "title": "WEEK 11",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766242/management-hub/pdfs/ec5kwjudc7gsobpzqi7n.pdf",
+        "uploadedAt": "2026-09-07T07:30:44.566Z",
+        "section": "Complete Notes Week 1 to Week 11"
+      },
+      {
+        "fileUrl": "https://res.cloudinary.com/sendqukv/raw/upload/v1788343623/management-hub/pdfs/pr3h0hyzg5c7mzk1sbfx.pdf",
+        "title": "WEEK 1",
+        "id": 1788344524353,
+        "fileName": "Maths_1_Week_1_Notes.pdf"
+      }
+    ],
     "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
+      "id": 1788344524353,
+      "title": "WEEK 1",
+      "uploadedAt": "2026-09-07T07:28:39.374Z",
+      "available": true,
+      "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1788766574/management-hub/pdfs/t30fkdkufi56fqmparon.pdf",
+      "fileName": "Maths1_W1_Notes.pdf",
+      "section": "Complete Notes Week 1 to Week 11"
     },
-    "pyqs": []
+    "id": 1,
+    "description": "Linear algebra and calculus fundamentals."
   },
   {
-    "id": 2,
+    "notesList": [
+      {
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790088998/management-hub/pdfs/vjhjjp0tsvml8hlx57r6.pdf",
+        "uploadedAt": "2026-09-22T14:56:39.891Z",
+        "title": "WEEK 3",
+        "id": 1790088999891,
+        "fileName": "WEEK 3.pdf",
+        "section": "Statistics Notes by ASHISH SINGH"
+      },
+      {
+        "fileName": "WEEK 2.pdf",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790088903/management-hub/pdfs/lcwkxuma7pzp2uzxzhv1.pdf",
+        "uploadedAt": "2026-09-22T14:55:04.971Z",
+        "section": "Statistics Notes by ASHISH SINGH",
+        "title": "WEEK 2",
+        "id": 1790088904971
+      },
+      {
+        "title": "WEEK 1",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790088842/management-hub/pdfs/t0m9yivzbv3t8smalmn8.pdf",
+        "id": 1790088843628,
+        "section": "Statistics Notes by ASHISH SINGH",
+        "fileName": "WEEK 1.pdf",
+        "uploadedAt": "2026-09-22T14:54:03.628Z"
+      }
+    ],
+    "pyqs": [
+      {
+        "year": "2023 - 2025",
+        "title": "Endterm Pyqs",
+        "fileName": "Endterm Pyqs.pdf",
+        "id": 1788413396782,
+        "uploadedAt": "2026-09-03T05:29:56.782Z",
+        "fileUrl": "https://drive.google.com/drive/folders/1Fq3vpXmmN3moEFa9TdBqkBfkMfjaPyh-"
+      }
+    ],
+    "description": "Probability theory and distributions.",
     "code": "BSMA1002",
     "level": "foundation",
     "title": "Statistics for Data Science I",
-    "credits": 4,
-    "description": "Probability theory, random variables, discrete and continuous distributions, hypothesis testing, and exploratory data analysis.",
+    "updatedAt": "2026-09-22T15:07:38.936Z",
     "prerequisites": [],
-    "syllabus": "Module 1: Probability Basics & Bayes Theorem | Module 2: Probability Distributions | Module 3: Sampling Theory | Module 4: Hypothesis Testing & Confidence Intervals",
-    "pdf_url": "",
     "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
+      "fileName": "WEEK 3.pdf",
+      "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790088998/management-hub/pdfs/vjhjjp0tsvml8hlx57r6.pdf",
+      "title": "WEEK 3",
+      "section": "Statistics Notes by ASHISH SINGH",
+      "available": true
     },
-    "pyqs": []
+    "id": 2,
+    "pdf_url": "https://res.cloudinary.com/sendqukv/image/upload/v1790088998/management-hub/pdfs/vjhjjp0tsvml8hlx57r6.pdf",
+    "credits": 4
   },
   {
     "id": 3,
+    "description": "Algorithm design and logic formulation.",
+    "notes": {
+      "fileName": "WEEK 1-10.pdf",
+      "section": "CT NOTES",
+      "title": "WEEK 1-10",
+      "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790089357/management-hub/pdfs/y7axsmldchr7rffsp3pi.pdf",
+      "available": true
+    },
+    "prerequisites": [],
     "code": "BSCS1001",
+    "credits": 4,
+    "pyqs": [
+      {
+        "fileUrl": "https://drive.google.com/drive/folders/1Fq3vpXmmN3moEFa9TdBqkBfkMfjaPyh-",
+        "id": 1788413460232,
+        "uploadedAt": "2026-09-03T05:31:00.232Z",
+        "title": "Endterm Pyqs",
+        "fileName": "Endterm Pyqs.pdf",
+        "year": "2023 - 2025"
+      }
+    ],
+    "pdf_url": "https://res.cloudinary.com/sendqukv/image/upload/v1790089357/management-hub/pdfs/y7axsmldchr7rffsp3pi.pdf",
+    "updatedAt": "2026-09-22T15:07:38.936Z",
     "level": "foundation",
     "title": "Computational Thinking",
-    "credits": 4,
-    "description": "Algorithm design, problem decomposition, logic formulation, pseudocode, iteration, and structured problem solving.",
-    "prerequisites": [],
-    "syllabus": "Module 1: Logic & Flowcharts | Module 2: Algorithmic Complexity Basics | Module 3: Pattern Recognition | Module 4: Sorting & Searching Logic",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "notesList": [
+      {
+        "title": "WEEK 1-10",
+        "fileName": "WEEK 1-10.pdf",
+        "id": 1790089358210,
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790089357/management-hub/pdfs/y7axsmldchr7rffsp3pi.pdf",
+        "section": "CT NOTES",
+        "uploadedAt": "2026-09-22T15:02:38.210Z"
+      }
+    ]
   },
   {
     "id": 4,
-    "code": "BSHS1001",
-    "level": "foundation",
-    "title": "English I",
-    "credits": 4,
-    "description": "Professional communication, academic writing, presentation techniques, grammar, and executive business discourse.",
+    "notesList": [
+      {
+        "fileName": "WEEK 1-10.pdf",
+        "title": "WEEK 1-10",
+        "section": "English Notes",
+        "uploadedAt": "2026-09-22T15:07:36.068Z",
+        "id": 1790089656068,
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790089655/management-hub/pdfs/jxbwwcbxavh75wsvrc0l.pdf"
+      }
+    ],
     "prerequisites": [],
-    "syllabus": "Module 1: Academic Reading & Summary | Module 2: Business Writing & Memos | Module 3: Executive Presentations | Module 4: Technical Documentation",
-    "pdf_url": "",
+    "title": "English I",
+    "level": "foundation",
+    "updatedAt": "2026-09-22T15:07:38.936Z",
+    "code": "BSHS1001",
+    "pyqs": [
+      {
+        "title": "Endterm Pyqs",
+        "id": 1788413495587,
+        "year": "2023 - 2025",
+        "uploadedAt": "2026-09-03T05:31:35.587Z",
+        "fileName": "Endterm Pyqs.pdf",
+        "fileUrl": "https://drive.google.com/drive/folders/1Fq3vpXmmN3moEFa9TdBqkBfkMfjaPyh-"
+      }
+    ],
+    "description": "Professional communication and writing.",
+    "pdf_url": "https://res.cloudinary.com/sendqukv/image/upload/v1790089655/management-hub/pdfs/jxbwwcbxavh75wsvrc0l.pdf",
     "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
+      "fileName": "WEEK 1-10.pdf",
+      "section": "English Notes",
+      "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790089655/management-hub/pdfs/jxbwwcbxavh75wsvrc0l.pdf",
+      "title": "WEEK 1-10",
+      "available": true
     },
-    "pyqs": []
+    "credits": 4
   },
   {
-    "id": 5,
-    "code": "BSMS1201",
+    "prerequisites": [],
+    "pyqs": [
+      {
+        "uploadedAt": "2026-09-23T15:45:47.335Z",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790178347/management-hub/pdfs/gboxo0lu3qo2jrzzyhc6.pdf",
+        "id": 1790178347335,
+        "year": "2026",
+        "fileName": "MAY 26 QUIZ 1.pdf",
+        "title": "MAY 26 QUIZ 1"
+      }
+    ],
+    "updatedAt": "2026-09-22T15:07:38.936Z",
+    "notesList": [],
     "level": "foundation",
     "title": "Principles of Economics",
-    "credits": 4,
-    "description": "Microeconomic foundations, market equilibrium, supply-demand dynamics, price elasticity, and consumer theory.",
-    "prerequisites": [],
-    "syllabus": "Module 1: Supply & Demand Equilibrium | Module 2: Elasticity of Demand | Module 3: Production & Cost Functions | Module 4: Market Structures & Pricing",
+    "code": "BSMS1201",
     "pdf_url": "",
+    "credits": 4,
     "notes": {
-      "available": false,
       "fileName": "",
+      "available": false,
       "fileUrl": ""
     },
-    "pyqs": []
+    "id": 5,
+    "description": "Microeconomic foundations and market equilibrium."
   },
   {
-    "id": 6,
     "code": "BSMS1202",
+    "pyqs": [
+      {
+        "fileName": "MAY 26 QUIZ 1.pdf",
+        "id": 1790178550373,
+        "year": "2026",
+        "title": "MAY 26 QUIZ 1",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790178549/management-hub/pdfs/rphhkt90up2qgnykgjqx.pdf",
+        "uploadedAt": "2026-09-23T15:49:10.373Z"
+      }
+    ],
+    "notes": {
+      "available": true,
+      "fileName": "Financial Accounting Notes Week 1-12 by Divyansh Garg.pdf",
+      "section": "Financial Accounting Notes By Divyansh Garg",
+      "title": "Week 1-12",
+      "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1789222842/management-hub/pdfs/wbrci0cup0j6owtl5sjc.pdf"
+    },
+    "description": "Balance sheets, income statements.",
+    "id": 6,
+    "updatedAt": "2026-09-22T15:07:38.936Z",
+    "prerequisites": [],
+    "notesList": [
+      {
+        "uploadedAt": "2026-09-12T14:20:45.332Z",
+        "id": 1789222845332,
+        "title": "Week 1-12",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1789222842/management-hub/pdfs/wbrci0cup0j6owtl5sjc.pdf",
+        "fileName": "Financial Accounting Notes Week 1-12 by Divyansh Garg.pdf",
+        "section": "Financial Accounting Notes By Divyansh Garg"
+      }
+    ],
     "level": "foundation",
     "title": "Financial Accounting",
     "credits": 4,
-    "description": "Balance sheets, ledger entries, income statements, cash flow statements, and corporate financial recordkeeping.",
-    "prerequisites": [],
-    "syllabus": "Module 1: Accounting Principles & Dual Aspect | Module 2: Journal & Ledger Balancing | Module 3: Trial Balance & P&L Statement | Module 4: Cash Flow & Balance Sheet Analysis",
-    "pdf_url": "",
+    "pdf_url": "https://res.cloudinary.com/sendqukv/image/upload/v1789222842/management-hub/pdfs/wbrci0cup0j6owtl5sjc.pdf"
+  },
+  {
     "notes": {
       "available": false,
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": []
-  },
-  {
-    "id": 7,
     "code": "BSMS1203",
-    "level": "foundation",
+    "id": 7,
+    "pyqs": [
+      {
+        "year": "2026",
+        "fileName": "MAY 26 QUIZ 1.pdf",
+        "uploadedAt": "2026-09-23T15:51:18.101Z",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790178677/management-hub/pdfs/hdui3wwjrgveyaxgdww4.pdf",
+        "title": "MAY 26 QUIZ 1",
+        "id": 1790178678101
+      }
+    ],
+    "updatedAt": "2026-09-22T15:07:38.936Z",
     "title": "Business Statistics",
+    "level": "foundation",
+    "notesList": [],
     "credits": 4,
-    "description": "Regression models, time-series forecasting, variance analysis (ANOVA), and statistical decision-making frameworks.",
+    "pdf_url": "",
+    "description": "Regression models, time-series forecasting.",
     "prerequisites": [
       "BSMA1002"
-    ],
-    "syllabus": "Module 1: Multiple Linear Regression | Module 2: ANOVA & Experimental Design | Module 3: Non-parametric Tests | Module 4: Time-series Decomposition",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    ]
   },
   {
-    "id": 8,
-    "code": "BSMS1204",
+    "notesList": [
+      {
+        "id": 1789212597968,
+        "fileName": "MTP Notes Weeks 01-12 By Divyansh Garg.pdf",
+        "uploadedAt": "2026-09-12T11:29:57.968Z",
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1789212595/management-hub/pdfs/dukd4umqotcioy8qs7k9.pdf",
+        "title": "Week 1-12",
+        "section": "MTP Notes By Divyansh Garg"
+      }
+    ],
+    "pdf_url": "https://res.cloudinary.com/sendqukv/image/upload/v1789212595/management-hub/pdfs/dukd4umqotcioy8qs7k9.pdf",
+    "updatedAt": "2026-09-22T15:07:38.936Z",
+    "prerequisites": [],
+    "credits": 4,
+    "description": "Classical management theories.",
     "level": "foundation",
     "title": "Management Thought and Practice",
-    "credits": 4,
-    "description": "Classical & contemporary management theories, leadership frameworks, organizational design, and business strategy.",
-    "prerequisites": [],
-    "syllabus": "Module 1: Evolution of Management | Module 2: Planning & Strategic Frameworks | Module 3: Organizational Structures | Module 4: Motivation & Leadership",
-    "pdf_url": "",
+    "pyqs": [
+      {
+        "title": "MAY 26 QUIZ 1",
+        "fileName": "MAY 26 QUIZ 1.pdf",
+        "id": 1790178749345,
+        "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1790178749/management-hub/pdfs/nl1kglf2edjdmoqvn9wq.pdf",
+        "uploadedAt": "2026-09-23T15:52:29.345Z",
+        "year": "2026"
+      }
+    ],
     "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
+      "fileUrl": "https://res.cloudinary.com/sendqukv/image/upload/v1789212595/management-hub/pdfs/dukd4umqotcioy8qs7k9.pdf",
+      "title": "Week 1-12",
+      "available": true,
+      "fileName": "MTP Notes Weeks 01-12 By Divyansh Garg.pdf",
+      "section": "MTP Notes By Divyansh Garg"
     },
-    "pyqs": []
+    "code": "BSMS1204",
+    "id": 8
   },
   {
-    "id": 9,
-    "code": "BSMS2201",
-    "level": "diploma",
     "title": "Python for Data Analytics",
-    "credits": 4,
-    "description": "Pandas, NumPy, Matplotlib, Seaborn, exploratory data analysis, web scraping, and data transformation pipelines.",
-    "prerequisites": [
-      "BSCS1001"
-    ],
-    "syllabus": "Module 1: NumPy Array Manipulation | Module 2: Pandas DataFrames & Cleaning | Module 3: Data Visualization | Module 4: Exploratory Data Projects",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
-  },
-  {
-    "id": 10,
-    "code": "BSMS2202",
     "level": "diploma",
-    "title": "Data Management",
+    "id": 9,
+    "pdf_url": "",
+    "code": "BSMS2201",
     "credits": 4,
-    "description": "Relational schema design, SQL querying, indexing, ACID transactions, database normalization, and data modeling.",
+    "pyqs": [],
+    "notes": {
+      "fileUrl": "",
+      "fileName": "",
+      "available": false
+    },
+    "updatedAt": "2026-09-22T15:07:38.936Z",
+    "description": "Pandas, NumPy, Matplotlib.",
+    "prerequisites": [
+      "BSCS1001"
+    ]
+  },
+  {
+    "title": "Data Management",
+    "level": "diploma",
     "prerequisites": [
       "BSCS1001"
     ],
-    "syllabus": "Module 1: Relational Algebra & Schema Design | Module 2: Advanced SQL Joins & Subqueries | Module 3: Normalization (1NF to BCNF) | Module 4: Transactions & Indexing",
+    "pyqs": [],
+    "code": "BSMS2202",
+    "updatedAt": "2026-09-22T15:07:38.937Z",
     "pdf_url": "",
+    "id": 10,
     "notes": {
-      "available": false,
       "fileName": "",
+      "available": false,
       "fileUrl": ""
     },
-    "pyqs": []
+    "credits": 4,
+    "description": "Relational schema design, SQL querying."
   },
   {
-    "id": 11,
-    "code": "BSMS2203",
     "level": "diploma",
     "title": "Analysis of Economic Data",
-    "credits": 4,
-    "description": "Econometric techniques, empirical model evaluation, OLS regression, hypothesis testing on macroeconomic datasets.",
+    "id": 11,
+    "code": "BSMS2203",
+    "description": "Econometric techniques.",
+    "updatedAt": "2026-09-22T15:07:38.937Z",
     "prerequisites": [
       "BSMS1201",
       "BSMA1002"
     ],
-    "syllabus": "Module 1: Empirical Data Collection | Module 2: Classical Linear Regression | Module 3: Heteroscedasticity & Autocorrelation | Module 4: Econometric Modeling",
-    "pdf_url": "",
+    "pyqs": [],
     "notes": {
-      "available": false,
       "fileName": "",
-      "fileUrl": ""
+      "fileUrl": "",
+      "available": false
     },
-    "pyqs": []
+    "pdf_url": "",
+    "credits": 4
   },
   {
-    "id": 12,
-    "code": "BSMS3201",
-    "level": "diploma",
     "title": "Marketing Analytics",
-    "credits": 4,
-    "description": "Customer segmentation, Customer Lifetime Value (CLV), churn prediction, pricing optimization, and marketing mix modeling.",
+    "level": "diploma",
+    "pyqs": [],
+    "code": "BSMS3201",
+    "description": "Customer segmentation and CLV.",
+    "notes": {
+      "fileName": "",
+      "fileUrl": "",
+      "available": false
+    },
+    "updatedAt": "2026-09-22T15:07:38.937Z",
     "prerequisites": [
       "BSMS1203",
       "BSMS1204"
     ],
-    "syllabus": "Module 1: RFM Analysis & Segmentation | Module 2: Customer Churn Logistic Models | Module 3: Pricing Sensitivity & Conjoint | Module 4: Attribution Modeling",
     "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "credits": 4,
+    "id": 12
   },
   {
-    "id": 13,
-    "code": "BSMS3202",
     "level": "diploma",
     "title": "HR Analytics",
-    "credits": 4,
-    "description": "Workforce metrics, employee retention modeling, talent acquisition funnels, and organizational performance data.",
     "prerequisites": [
       "BSMA1002",
       "BSMS1204"
     ],
-    "syllabus": "Module 1: Workforce Planning Metrics | Module 2: Talent Funnel Conversion | Module 3: Attrition Risk Modeling | Module 4: Performance Appraisal Analytics",
+    "pyqs": [],
     "pdf_url": "",
+    "updatedAt": "2026-09-22T15:07:38.937Z",
+    "credits": 4,
+    "code": "BSMS3202",
     "notes": {
-      "available": false,
       "fileName": "",
-      "fileUrl": ""
+      "fileUrl": "",
+      "available": false
     },
-    "pyqs": []
+    "description": "Workforce metrics and retention modeling.",
+    "id": 13
   },
   {
-    "id": 14,
-    "code": "BSMS3203",
-    "level": "diploma",
+    "pyqs": [],
     "title": "Financial Analytics",
-    "credits": 4,
-    "description": "Asset pricing models (CAPM), portfolio risk metrics, Value at Risk (VaR), and quantitative financial time-series.",
+    "level": "diploma",
+    "code": "BSMS3203",
+    "description": "Asset pricing models, CAPM, VaR.",
     "prerequisites": [
       "BSMS1202",
       "BSMA1002"
     ],
-    "syllabus": "Module 1: Risk & Return Profiles | Module 2: Portfolio Optimization (Markowitz) | Module 3: Capital Asset Pricing Model | Module 4: VaR Estimation",
-    "pdf_url": "",
+    "updatedAt": "2026-09-22T15:07:38.937Z",
+    "id": 14,
     "notes": {
-      "available": false,
       "fileName": "",
-      "fileUrl": ""
+      "fileUrl": "",
+      "available": false
     },
-    "pyqs": []
+    "pdf_url": "",
+    "credits": 4
   },
   {
-    "id": 15,
-    "code": "BSMS2204",
-    "level": "diploma",
     "title": "Operations Management",
+    "level": "diploma",
+    "pdf_url": "",
     "credits": 4,
-    "description": "Process optimization, queueing systems, inventory control (EOQ), capacity planning, and Lean Six Sigma principles.",
+    "id": 15,
+    "description": "Process optimization, queueing systems.",
+    "updatedAt": "2026-09-22T15:07:38.937Z",
+    "notes": {
+      "fileName": "",
+      "available": false,
+      "fileUrl": ""
+    },
+    "pyqs": [],
     "prerequisites": [
       "BSMA1001",
       "BSMS1204"
     ],
-    "syllabus": "Module 1: Process Analysis & Bottlenecks | Module 2: Queueing Models (M/M/1) | Module 3: EOQ & Safety Stock | Module 4: Quality Control & Six Sigma",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "code": "BSMS2204"
   },
   {
-    "id": 16,
+    "credits": 4,
+    "notes": {
+      "fileName": "",
+      "fileUrl": "",
+      "available": false
+    },
+    "pdf_url": "",
+    "updatedAt": "2026-09-22T15:07:38.937Z",
     "code": "BSMS3204",
+    "pyqs": [],
+    "id": 16,
     "level": "diploma",
     "title": "Supply Chain Analytics",
-    "credits": 4,
-    "description": "Network design, logistics tracking, demand forecasting, multi-echelon inventory optimization, and bullwhip effect reduction.",
     "prerequisites": [
       "BSMS2204",
       "BSMS1203"
     ],
-    "syllabus": "Module 1: Supply Chain Network Flows | Module 2: Bullwhip Effect Mitigation | Module 3: Vehicle Routing Algorithms | Module 4: Vendor Managed Inventory",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "description": "Network design, logistics tracking."
   },
   {
-    "id": 17,
-    "code": "BSMS3901",
+    "updatedAt": "2026-09-22T15:07:38.937Z",
     "level": "diploma",
     "title": "Business Management Project",
-    "credits": 2,
-    "description": "Applied strategic research, business model evaluation, competitive landscape mapping, and executive execution planning.",
+    "description": "Applied strategic research.",
     "prerequisites": [
       "BSMS1204",
       "BSMS1202"
     ],
-    "syllabus": "Project Capstone Phase 1: Problem Definition | Phase 2: Secondary Industry Research | Phase 3: Strategic Formulation | Phase 4: Final Executive Defense",
+    "id": 17,
     "pdf_url": "",
     "notes": {
-      "available": false,
+      "fileUrl": "",
       "fileName": "",
-      "fileUrl": ""
+      "available": false
     },
-    "pyqs": []
+    "pyqs": [],
+    "credits": 4,
+    "code": "BSMS3901"
   },
   {
-    "id": 18,
-    "code": "BSMS3902",
+    "pyqs": [],
     "level": "diploma",
     "title": "Business Analytics Project",
-    "credits": 2,
-    "description": "End-to-end data pipeline construction, statistical model deployment, interactive dashboards, and actionable insight delivery.",
+    "code": "BSMS3902",
     "prerequisites": [
       "BSMS2201",
       "BSMS2202",
       "BSMS1203"
     ],
-    "syllabus": "Capstone Phase 1: Data Acquisition & EDA | Phase 2: Model Training & Validation | Phase 3: Dashboard Deployment | Phase 4: Business Impact Presentation",
+    "description": "End-to-end data pipeline construction.",
     "pdf_url": "",
+    "updatedAt": "2026-09-22T15:07:38.937Z",
+    "credits": 4,
+    "notes": {
+      "available": false,
+      "fileUrl": "",
+      "fileName": ""
+    },
+    "id": 18
+  },
+  {
+    "code": "BSMS2205",
     "notes": {
       "available": false,
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": []
-  },
-  {
-    "id": 19,
-    "code": "BSMS2205",
-    "level": "diploma",
-    "title": "Corporate Finance",
+    "pyqs": [],
     "credits": 4,
-    "description": "Capital budgeting (NPV/IRR), Weighted Average Cost of Capital (WACC), dividend decisions, and optimal capital structure.",
+    "id": 19,
     "prerequisites": [
       "BSMS1202"
     ],
-    "syllabus": "Module 1: Time Value of Money & Cash Flows | Module 2: NPV, IRR & Payback Criteria | Module 3: Cost of Capital & WACC | Module 4: Capital Structure Theory",
     "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "level": "diploma",
+    "title": "Corporate Finance",
+    "description": "Capital budgeting, NPV, WACC.",
+    "updatedAt": "2026-09-22T15:07:38.937Z"
   },
   {
+    "updatedAt": "2026-09-22T15:07:38.937Z",
+    "credits": 4,
+    "pdf_url": "",
+    "notes": {
+      "fileUrl": "",
+      "available": false,
+      "fileName": ""
+    },
     "id": 20,
-    "code": "BSMS2206",
     "level": "diploma",
     "title": "Organizational Behaviour",
-    "credits": 4,
-    "description": "Team dynamics, workplace psychology, organizational culture, leadership influence, and cross-functional conflict resolution.",
+    "description": "Team dynamics, workplace psychology.",
+    "pyqs": [],
+    "code": "BSMS2206",
     "prerequisites": [
       "BSMS1204"
-    ],
-    "syllabus": "Module 1: Personality & Perception | Module 2: Group Dynamics & Collaboration | Module 3: Conflict Management | Module 4: Organizational Culture & Change",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    ]
   },
   {
-    "id": 21,
-    "code": "BSMS3205",
-    "level": "diploma",
-    "title": "Money Banking and Financial Markets",
-    "credits": 4,
-    "description": "Monetary policy transmission mechanisms, commercial banking systems, bond markets, interest rates, and central banking.",
     "prerequisites": [
       "BSMS1201",
       "BSMS1202"
     ],
-    "syllabus": "Module 1: Central Banking & Money Supply | Module 2: Bond Markets & Yield Curves | Module 3: Commercial Bank Operations | Module 4: Financial Stability & Regulations",
     "pdf_url": "",
+    "updatedAt": "2026-09-22T15:07:38.939Z",
+    "title": "Money Banking and Financial Markets",
+    "level": "diploma",
+    "id": 21,
+    "credits": 4,
+    "code": "BSMS3205",
+    "pyqs": [],
+    "description": "Monetary policy, central banking.",
     "notes": {
-      "available": false,
       "fileName": "",
+      "available": false,
       "fileUrl": ""
-    },
-    "pyqs": []
+    }
   },
   {
-    "id": 22,
-    "code": "BSMS2207",
     "level": "diploma",
     "title": "Marketing Management",
-    "credits": 4,
-    "description": "Brand positioning, market research methodologies, omnichannel distribution strategy, and consumer touchpoint optimization.",
+    "pyqs": [],
+    "updatedAt": "2026-09-22T15:07:38.939Z",
+    "code": "BSMS2207",
+    "notes": {
+      "fileUrl": "",
+      "fileName": "",
+      "available": false
+    },
+    "description": "Brand positioning, STP framework.",
+    "id": 22,
+    "pdf_url": "",
     "prerequisites": [
       "BSMS1204"
     ],
-    "syllabus": "Module 1: STP Framework | Module 2: 4Ps Marketing Mix | Module 3: Omnichannel Distribution | Module 4: Integrated Brand Campaigns",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "credits": 4
   },
   {
-    "id": 23,
-    "code": "BSMS2208",
-    "level": "diploma",
-    "title": "Macroeconomics",
-    "credits": 4,
-    "description": "National income accounting (GDP), fiscal policy, inflation, unemployment, IS-LM frameworks, and international trade balance.",
+    "description": "GDP, fiscal policy, IS-LM.",
+    "notes": {
+      "fileUrl": "",
+      "available": false,
+      "fileName": ""
+    },
+    "pyqs": [],
     "prerequisites": [
       "BSMS1201"
     ],
-    "syllabus": "Module 1: GDP Measurement & Multipliers | Module 2: IS-LM Equilibrium | Module 3: Monetary & Fiscal Stabilization | Module 4: Inflation & Trade Dynamics",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "id": 23,
+    "updatedAt": "2026-09-22T15:07:38.939Z",
+    "code": "BSMS2208",
+    "credits": 4,
+    "title": "Macroeconomics",
+    "level": "diploma",
+    "pdf_url": ""
   },
   {
-    "id": 24,
-    "code": "BSMS3206",
-    "level": "diploma",
+    "pyqs": [],
     "title": "Managerial Economics",
-    "credits": 4,
-    "description": "Pricing strategy, oligopoly and game-theoretic market structures, cost analysis, and corporate decision theory.",
+    "level": "diploma",
+    "code": "BSMS3206",
+    "description": "Pricing strategy, oligopoly.",
+    "id": 24,
+    "updatedAt": "2026-09-22T15:07:38.939Z",
+    "notes": {
+      "fileName": "",
+      "available": false,
+      "fileUrl": ""
+    },
+    "pdf_url": "",
     "prerequisites": [
       "BSMS1201",
       "BSMA1001"
     ],
-    "syllabus": "Module 1: Demand Estimation & Forecasting | Module 2: Cost Output Relations | Module 3: Oligopoly Game Theory | Module 4: Strategic Pricing Policies",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "credits": 4
   },
   {
-    "id": 25,
-    "code": "BSGN3001",
-    "level": "bs",
-    "title": "Strategies for Professional Growth",
-    "credits": 4,
-    "description": "Executive communication, career roadmap building, industry networking, personal branding, and professional leadership ethics.",
+    "updatedAt": "2026-09-22T15:07:38.939Z",
     "prerequisites": [
       "BSHS1001",
       "BSMS1204"
     ],
-    "syllabus": "Module 1: Professional Identity & Networking | Module 2: Executive Negotiations | Module 3: Leadership Ethics | Module 4: Career Acceleration Frameworks",
+    "description": "Executive communication, career roadmap.",
+    "id": 25,
+    "level": "bs",
+    "title": "Strategies for Professional Growth",
+    "code": "BSGN3001",
+    "pyqs": [],
     "pdf_url": "",
     "notes": {
       "available": false,
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": []
+    "credits": 4
   },
   {
-    "id": 26,
-    "code": "BSMS3207",
-    "level": "bs",
-    "title": "GenAI for Business",
-    "credits": 4,
-    "description": "LLM adoption frameworks, prompt engineering architectures, generative AI agent workflows, and measuring enterprise business ROI.",
+    "notes": {
+      "available": false,
+      "fileName": "",
+      "fileUrl": ""
+    },
     "prerequisites": [
       "BSMS2201",
       "BSCS1001"
     ],
-    "syllabus": "Module 1: LLM Architectures & Foundations | Module 2: Prompt Engineering & RAG Systems | Module 3: Autonomous AI Agents | Module 4: Enterprise ROI & Governance",
+    "credits": 4,
+    "pyqs": [],
     "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "code": "BSMS3207",
+    "title": "GenAI for Business",
+    "level": "bs",
+    "id": 26,
+    "updatedAt": "2026-09-22T15:07:38.939Z",
+    "description": "LLM adoption, prompt engineering."
   },
   {
-    "id": 27,
-    "code": "BSMS3208",
-    "level": "bs",
-    "title": "Digital Business",
-    "credits": 4,
-    "description": "Platform business models, multi-sided market strategies, e-commerce architectures, network effects, and digital product scaling.",
+    "pdf_url": "",
+    "updatedAt": "2026-09-22T15:07:38.940Z",
     "prerequisites": [
       "BSMS1204",
       "BSMS2207"
     ],
-    "syllabus": "Module 1: Digital Disruption & Platforms | Module 2: Network Effects & Two-Sided Markets | Module 3: Digital Product Scaling | Module 4: Monetization Models",
-    "pdf_url": "",
+    "code": "BSMS3208",
+    "credits": 4,
+    "level": "bs",
+    "title": "Digital Business",
+    "id": 27,
+    "pyqs": [],
     "notes": {
-      "available": false,
       "fileName": "",
-      "fileUrl": ""
+      "fileUrl": "",
+      "available": false
     },
-    "pyqs": []
+    "description": "Platform business models, e-commerce."
   },
   {
-    "id": 28,
-    "code": "BSMS3209",
-    "level": "bs",
-    "title": "Logistics and Supply Chain Management",
     "credits": 4,
-    "description": "Multi-modal freight logistics, automated warehousing systems, port operations, and global supply resilience strategies.",
+    "pyqs": [],
+    "pdf_url": "",
+    "notes": {
+      "fileName": "",
+      "fileUrl": "",
+      "available": false
+    },
+    "code": "BSMS3209",
     "prerequisites": [
       "BSMS3204"
     ],
-    "syllabus": "Module 1: Multi-Modal Freight Optimization | Module 2: Warehouse Automation | Module 3: Global Port Logistics | Module 4: Risk & Resilience Architectures",
+    "id": 28,
+    "updatedAt": "2026-09-22T15:07:38.940Z",
+    "title": "Logistics and Supply Chain Management",
+    "level": "bs",
+    "description": "Multi-modal freight logistics."
+  },
+  {
+    "updatedAt": "2026-09-22T15:07:38.940Z",
+    "credits": 4,
+    "description": "ARIMA, SARIMA, GARCH models.",
     "pdf_url": "",
     "notes": {
       "available": false,
       "fileName": "",
       "fileUrl": ""
     },
-    "pyqs": []
-  },
-  {
     "id": 29,
-    "code": "BSMS4201",
     "level": "bs",
     "title": "Applied Time Series Analysis",
-    "credits": 4,
-    "description": "ARIMA, SARIMA, GARCH volatility models, exponential smoothing, cointegration, stationarity, and financial forecasting.",
+    "pyqs": [],
     "prerequisites": [
       "BSMS1203",
       "BSMS2201"
     ],
-    "syllabus": "Module 1: Stationarity & Autocorrelation | Module 2: ARIMA & Seasonal SARIMA | Module 3: GARCH Volatility Modeling | Module 4: Deep Learning Time Series",
-    "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
-    "pyqs": []
+    "code": "BSMS4201"
   },
   {
     "id": 30,
-    "code": "BSMS4202",
-    "level": "bs",
-    "title": "Market Intelligence",
-    "credits": 4,
-    "description": "Competitive intelligence frameworks, consumer trend scraping, sentiment tracking, NLP on market feeds, and actionable insight generation.",
+    "notes": {
+      "fileName": "",
+      "available": false,
+      "fileUrl": ""
+    },
+    "updatedAt": "2026-09-22T15:07:38.940Z",
     "prerequisites": [
       "BSMS3201",
       "BSMS2201"
     ],
-    "syllabus": "Module 1: Web Scraping & Market Signals | Module 2: Social Media Sentiment NLP | Module 3: Competitor Landscape Mapping | Module 4: Executive Decision Feeds",
+    "description": "Competitive intelligence, NLP on market feeds.",
+    "credits": 4,
     "pdf_url": "",
-    "notes": {
-      "available": false,
-      "fileName": "",
-      "fileUrl": ""
-    },
+    "level": "bs",
+    "title": "Market Intelligence",
+    "code": "BSMS4202",
     "pyqs": []
   }
 ]
