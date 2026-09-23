@@ -4,6 +4,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const navLinks = document.querySelectorAll('.nav-btn');
   const sections = document.querySelectorAll('.page-section');
 
+  function isUserLoggedIn() {
+    try {
+      const user = JSON.parse(localStorage.getItem('mghub_user') || 'null');
+      if (user && (user.email || user.uid)) return true;
+    } catch (e) {}
+    if (sessionStorage.getItem('mghub_admin_auth') === 'true') return true;
+    if (localStorage.getItem('mghub_jwt')) return true;
+    return false;
+  }
+
   function renderHeaderAuth() {
     const authBox = document.getElementById('headerAuthBox');
     if (!authBox) return;
@@ -961,7 +971,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <h3 class="course-title">${c.title}</h3>
           <div class="course-card-footer">
             <a href="course.html?code=${c.code}" class="btn-note-view" data-code="${c.code}">Open Notes & PYQs</a>
-            <a href="${notesUrl || '#'}" class="btn-note-dl ${hasNotes ? 'has-pdf' : ''}" data-code="${c.code}" title="${hasNotes ? 'Open Notes PDF in New Tab' : 'View Course Resources'}" ${hasNotes ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+            <a href="javascript:void(0)" class="btn-note-dl ${hasNotes ? 'has-pdf' : ''}" data-code="${c.code}" data-href="${notesUrl || ''}" title="${hasNotes ? 'Open Notes PDF' : 'View Course Resources'}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dl-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </a>
           </div>
@@ -982,15 +992,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (viewBtn) {
         viewBtn.addEventListener('click', (e) => {
-          // Let standard navigation open full separate page
+          if (!isUserLoggedIn()) {
+            e.preventDefault();
+            const targetUrl = `course.html?code=${code}`;
+            window.location.href = `login.html?redirect=${encodeURIComponent(targetUrl)}&reason=notes`;
+          }
         });
       }
 
       if (dlBtn) {
         dlBtn.addEventListener('click', (e) => {
-          const href = dlBtn.getAttribute('href');
-          if (href && href !== '#' && href !== '') {
-            e.preventDefault();
+          e.preventDefault();
+          if (!isUserLoggedIn()) {
+            const targetUrl = `course.html?code=${code}`;
+            window.location.href = `login.html?redirect=${encodeURIComponent(targetUrl)}&reason=notes`;
+            return;
+          }
+          const href = dlBtn.getAttribute('data-href') || dlBtn.getAttribute('href');
+          if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
             if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`);
             else window.open(href, '_blank');
           } else {
@@ -1014,24 +1033,31 @@ document.addEventListener('DOMContentLoaded', () => {
       const dlBtn = card.querySelector('.btn-note-dl');
 
       if (localPdfMap[code] && dlBtn) {
-        dlBtn.href = localPdfMap[code];
-        dlBtn.target = '_blank';
-        dlBtn.rel = 'noopener noreferrer';
+        dlBtn.setAttribute('data-href', localPdfMap[code]);
+        dlBtn.href = 'javascript:void(0)';
         dlBtn.classList.add('has-pdf');
       }
 
       if (viewBtn) {
-        viewBtn.href = `course.html?code=${code}`;
-        viewBtn.addEventListener('click', () => {
-          window.location.href = `course.html?code=${code}`;
+        viewBtn.addEventListener('click', (e) => {
+          if (!isUserLoggedIn()) {
+            e.preventDefault();
+            const targetUrl = `course.html?code=${code}`;
+            window.location.href = `login.html?redirect=${encodeURIComponent(targetUrl)}&reason=notes`;
+          }
         });
       }
 
       if (dlBtn) {
         dlBtn.addEventListener('click', (e) => {
-          const href = dlBtn.getAttribute('href');
-          if (href && href !== '#' && href !== '') {
-            e.preventDefault();
+          e.preventDefault();
+          if (!isUserLoggedIn()) {
+            const targetUrl = `course.html?code=${code}`;
+            window.location.href = `login.html?redirect=${encodeURIComponent(targetUrl)}&reason=notes`;
+            return;
+          }
+          const href = dlBtn.getAttribute('data-href') || dlBtn.getAttribute('href');
+          if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
             if (typeof openPdfSecurely === 'function') openPdfSecurely(href, `${code}_Notes.pdf`);
             else window.open(href, '_blank');
           } else {

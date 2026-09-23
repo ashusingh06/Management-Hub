@@ -342,7 +342,8 @@ function showLoginRequiredModal(customMsg = null, redirectUrl = null) {
 
 function openPdfSecurely(url, filename = 'document.pdf') {
   if (!isUserLoggedIn()) {
-    showLoginRequiredModal('Study notes and academic materials require an active student account. Please sign in or register to view this document.');
+    const currentRedirect = window.location.pathname + window.location.search;
+    window.location.href = `login.html?redirect=${encodeURIComponent(currentRedirect)}&reason=notes`;
     return;
   }
   if (!url || url === '#' || url === '') return;
@@ -360,7 +361,8 @@ function openPdfSecurely(url, filename = 'document.pdf') {
 
 async function downloadPdfSecurely(url, filename = 'document.pdf') {
   if (!isUserLoggedIn()) {
-    showLoginRequiredModal('Study notes and academic materials require an active student account. Please sign in or register to download this document.');
+    const currentRedirect = window.location.pathname + window.location.search;
+    window.location.href = `login.html?redirect=${encodeURIComponent(currentRedirect)}&reason=notes`;
     return;
   }
   if (!url || url === '#' || url === '') return;

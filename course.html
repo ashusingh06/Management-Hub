@@ -13,6 +13,23 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
   <script src="firebase-config.js?v=20260923_notesauth"></script>
+  <script>
+    (function() {
+      function isUserLoggedInFast() {
+        try {
+          var u = JSON.parse(localStorage.getItem('mghub_user') || 'null');
+          if (u && (u.email || u.uid)) return true;
+        } catch(e) {}
+        if (sessionStorage.getItem('mghub_admin_auth') === 'true') return true;
+        if (localStorage.getItem('mghub_jwt')) return true;
+        return false;
+      }
+      if (!isUserLoggedInFast()) {
+        var target = window.location.pathname + window.location.search;
+        window.location.replace('login.html?redirect=' + encodeURIComponent(target) + '&reason=notes');
+      }
+    })();
+  </script>
   <style>
     .course-page-container {
       max-width: 1140px;
@@ -469,7 +486,23 @@
   </footer>
 
   <script>
+    function isUserLoggedIn() {
+      try {
+        const user = JSON.parse(localStorage.getItem('mghub_user') || 'null');
+        if (user && (user.email || user.uid)) return true;
+      } catch (e) {}
+      if (sessionStorage.getItem('mghub_admin_auth') === 'true') return true;
+      if (localStorage.getItem('mghub_jwt')) return true;
+      return false;
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
+      if (!isUserLoggedIn()) {
+        const target = window.location.pathname + window.location.search;
+        window.location.replace(`login.html?redirect=${encodeURIComponent(target)}&reason=notes`);
+        return;
+      }
+
       const urlParams = new URLSearchParams(window.location.search);
       const courseCode = (urlParams.get('code') || 'BSMA1001').toUpperCase().trim();
 

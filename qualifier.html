@@ -805,6 +805,20 @@
         }
       }
 
+      // Guard all links to course notes
+      document.querySelectorAll('a[href^="course.html"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          let u = null;
+          try { u = JSON.parse(localStorage.getItem('mghub_user') || 'null'); } catch(err) {}
+          const isAuthed = (u && (u.email || u.uid)) || sessionStorage.getItem('mghub_admin_auth') === 'true' || localStorage.getItem('mghub_jwt');
+          if (!isAuthed) {
+            e.preventDefault();
+            const dest = link.getAttribute('href');
+            window.location.href = `login.html?redirect=${encodeURIComponent(dest)}&reason=notes`;
+          }
+        });
+      });
+
       // Qualifier Checker Logic
       const qMath = document.getElementById('qMath');
       const qCT = document.getElementById('qCT');
