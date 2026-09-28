@@ -325,11 +325,11 @@ function showLoginRequiredModal(customMsg = null, redirectUrl = null) {
       <div class="auth-gate-modal-body">
         <h3 class="auth-gate-title">Sign In Required</h3>
         <p class="auth-gate-text">
-          ${customMsg || 'Study notes and academic materials are reserved for verified IITM BS students. Please sign in or register to access and download notes.'}
+          ${customMsg || 'Study notes and academic materials are reserved for verified IITM BS students. Please sign in with your Google account to access and download notes.'}
         </p>
       </div>
       <div class="auth-gate-modal-footer">
-        <a href="${loginUrl}" class="auth-gate-btn-login">Sign In / Register ↗</a>
+        <a href="${loginUrl}" class="auth-gate-btn-login">Sign In with Google ↗</a>
         <button type="button" class="auth-gate-btn-cancel" onclick="document.getElementById('loginRequiredModal').classList.remove('active')">Not Now</button>
       </div>
     </div>

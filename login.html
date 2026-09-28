@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Login & Registration | [Management Hub]</title>
+  <title>Sign In with Google | [Management Hub]</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -27,22 +27,18 @@
     .auth-container {
       background: #ffffff;
       border: 1px solid #e2e2e8;
-      border-radius: 20px;
-      padding: 36px 40px;
+      border-radius: 22px;
+      padding: 40px 38px;
       width: 100%;
-      max-width: 450px;
-      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.08);
+      max-width: 440px;
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
       animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: center;
     }
 
     @keyframes modalSlide {
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    .auth-header {
-      text-align: center;
-      margin-bottom: 24px;
     }
 
     .brand-pill {
@@ -55,159 +51,98 @@
       letter-spacing: 0.05em;
       background: #09090b;
       color: #ffffff;
-      padding: 4px 12px;
+      padding: 5px 14px;
       border-radius: 9999px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .auth-header h1 {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 6px;
+      letter-spacing: -0.025em;
+      color: #09090b;
+      margin-bottom: 8px;
+      line-height: 1.25;
     }
 
     .auth-header p {
-      font-size: 13.5px;
+      font-size: 14px;
       color: #71717a;
+      line-height: 1.5;
+      margin-bottom: 24px;
     }
 
     .btn-google-auth {
       width: 100%;
-      padding: 12px 16px;
+      padding: 14px 20px;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: #09090b;
       background: #ffffff;
-      border: 1px solid #e4e4e7;
-      border-radius: 12px;
+      border: 1.5px solid #e4e4e7;
+      border-radius: 14px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      transition: all 0.15s ease;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-      margin-bottom: 18px;
+      gap: 12px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .btn-google-auth:hover {
       background: #fafafc;
       border-color: #09090b;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
     }
 
-    .auth-divider {
+    .btn-google-auth:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-google-auth:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .auth-perks {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid #f4f4f5;
       display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 18px 0;
-      color: #a1a1aa;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .auth-divider::before, .auth-divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid #e4e4e7;
-    }
-
-    .auth-divider span {
-      padding: 0 12px;
-    }
-
-    /* Tabs */
-    .tab-switch {
-      display: flex;
-      background: #f4f4f5;
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 24px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      font-family: inherit;
-      font-size: 13.5px;
-      font-weight: 700;
-      padding: 8px 12px;
-      border: none;
-      background: transparent;
-      color: #71717a;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .tab-btn.active {
-      background: #ffffff;
-      color: #09090b;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-    }
-
-    .form-group {
-      margin-bottom: 16px;
+      flex-direction: column;
+      gap: 10px;
       text-align: left;
     }
 
-    .form-group label {
-      display: block;
+    .auth-perk-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: #71717a;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+      color: #52525b;
+      font-weight: 500;
     }
 
-    .form-group input {
-      width: 100%;
-      padding: 11px 14px;
-      font-family: inherit;
-      font-size: 14px;
-      color: #09090b;
-      background: #fafafc;
-      border: 1px solid #e4e4e7;
-      border-radius: 10px;
-      outline: none;
-      transition: all 0.15s ease;
-    }
-
-    .form-group input:focus {
-      border-color: #09090b;
-      background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .btn-submit {
-      width: 100%;
-      padding: 12px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 700;
-      color: #ffffff;
-      background: #09090b;
-      border: 1px solid #09090b;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: all 0.15s ease;
-    }
-
-    .btn-submit:hover {
-      background: #27272a;
+    .auth-perk-item svg {
+      width: 16px;
+      height: 16px;
+      color: #166534;
+      flex-shrink: 0;
     }
 
     .alert-box {
-      padding: 10px 14px;
-      border-radius: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
       font-size: 13px;
-      margin-bottom: 16px;
+      line-height: 1.45;
+      margin-bottom: 20px;
       display: none;
+      text-align: left;
     }
 
     .alert-error {
@@ -222,10 +157,16 @@
       color: #166534;
     }
 
+    .alert-info {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
     .auth-footer {
       text-align: center;
-      margin-top: 24px;
-      padding-top: 16px;
+      margin-top: 26px;
+      padding-top: 18px;
       border-top: 1px solid #f4f4f5;
       font-size: 13px;
     }
@@ -235,6 +176,9 @@
       text-decoration: none;
       font-weight: 600;
       transition: color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .auth-footer a:hover {
@@ -247,13 +191,18 @@
   <div class="auth-container">
     <div class="auth-header">
       <div class="brand-pill">[Management Hub]</div>
-      <h1 id="formHeading">Sign In</h1>
-      <p id="formSubheading">Access your personalized notes and calculators</p>
+      <h1 id="formHeading">Sign In with Google</h1>
+      <p id="formSubheading">Access your IITM BS Management & Data Science study notes, past papers, and student tools.</p>
     </div>
 
-    <!-- 1-Click Google Sign In (Primary) -->
+    <!-- Notification Message Box -->
+    <div class="alert-box alert-error" id="errorBox"></div>
+    <div class="alert-box alert-success" id="successBox"></div>
+    <div class="alert-box alert-info" id="infoBox"></div>
+
+    <!-- 1-Click Google Sign In (Only Authentication Method) -->
     <button type="button" class="btn-google-auth" id="googleSignInBtn">
-      <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+      <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -262,39 +211,21 @@
       <span>Continue with Google</span>
     </button>
 
-    <div class="auth-divider">
-      <span>or sign in with email</span>
+    <!-- Student Access Perks -->
+    <div class="auth-perks">
+      <div class="auth-perk-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>Instant 1-click access — no passwords needed</span>
+      </div>
+      <div class="auth-perk-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>View and download curated PDF Study Notes</span>
+      </div>
+      <div class="auth-perk-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>Access Previous Year Question Papers (PYQs)</span>
+      </div>
     </div>
-
-    <!-- Toggle Tabs -->
-    <div class="tab-switch">
-      <button class="tab-btn active" id="tabLoginBtn" type="button">Sign In</button>
-      <button class="tab-btn" id="tabRegisterBtn" type="button">Create Account</button>
-    </div>
-
-    <!-- Notification Message Box -->
-    <div class="alert-box alert-error" id="errorBox"></div>
-    <div class="alert-box alert-success" id="successBox"></div>
-
-    <!-- Login & Registration Form -->
-    <form id="authForm">
-      <div class="form-group" id="nameGroup" style="display: none;">
-        <label>Full Name</label>
-        <input type="text" id="nameInput" placeholder="Enter your full name" />
-      </div>
-
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="emailInput" placeholder="name@example.com" required />
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="passwordInput" placeholder="Enter your password" required />
-      </div>
-
-      <button type="submit" class="btn-submit" id="submitBtn">Sign In</button>
-    </form>
 
     <div class="auth-footer">
       <a href="/index.html">← Return to Student Main Dashboard</a>
@@ -302,23 +233,60 @@
   </div>
 
   <script>
-    let isRegisterMode = false;
-
-    const tabLoginBtn = document.getElementById('tabLoginBtn');
-    const tabRegisterBtn = document.getElementById('tabRegisterBtn');
-    const nameGroup = document.getElementById('nameGroup');
-    const formHeading = document.getElementById('formHeading');
-    const formSubheading = document.getElementById('formSubheading');
-    const submitBtn = document.getElementById('submitBtn');
-    const authForm = document.getElementById('authForm');
     const errorBox = document.getElementById('errorBox');
     const successBox = document.getElementById('successBox');
+    const infoBox = document.getElementById('infoBox');
     const googleSignInBtn = document.getElementById('googleSignInBtn');
+
+    function showError(msg) {
+      if (!errorBox) return;
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+      if (successBox) successBox.style.display = 'none';
+      if (infoBox) infoBox.style.display = 'none';
+    }
+
+    function showSuccess(msg) {
+      if (!successBox) return;
+      successBox.textContent = msg;
+      successBox.style.display = 'block';
+      if (errorBox) errorBox.style.display = 'none';
+      if (infoBox) infoBox.style.display = 'none';
+    }
+
+    function showInfo(msg) {
+      if (!infoBox) return;
+      infoBox.textContent = msg;
+      infoBox.style.display = 'block';
+      if (errorBox) errorBox.style.display = 'none';
+      if (successBox) successBox.style.display = 'none';
+    }
+
+    // Check query params for redirect & reasons
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get('redirect');
+    const reasonParam = urlParams.get('reason');
+
+    if (reasonParam === 'notes') {
+      showInfo('🔒 Sign In Required: Please sign in with your Google account to view and download study notes and PYQs.');
+    }
+
+    // If user is already logged in, redirect them directly
+    try {
+      const existingUser = JSON.parse(localStorage.getItem('mghub_user') || 'null');
+      if (existingUser && (existingUser.email || existingUser.uid)) {
+        showSuccess(`You are already signed in as ${existingUser.name || existingUser.email}. Redirecting...`);
+        setTimeout(() => {
+          window.location.href = redirectParam || (existingUser.role === 'admin' ? '/inmycontrol' : '/index.html');
+        }, 500);
+      }
+    } catch (e) {}
 
     if (googleSignInBtn) {
       googleSignInBtn.addEventListener('click', async () => {
-        errorBox.style.display = 'none';
-        successBox.style.display = 'none';
+        if (errorBox) errorBox.style.display = 'none';
+        if (successBox) successBox.style.display = 'none';
+        if (infoBox) infoBox.style.display = 'none';
         googleSignInBtn.disabled = true;
         googleSignInBtn.innerHTML = '<span>Connecting to Google...</span>';
 
@@ -331,10 +299,10 @@
           }, 600);
         } catch (err) {
           console.error(err);
-          showError(err.message || 'Google authentication was cancelled or failed. Please try again.');
+          showError(err.message || 'Google sign in was cancelled or failed. Please try again.');
           googleSignInBtn.disabled = false;
           googleSignInBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -345,117 +313,6 @@
         }
       });
     }
-
-    // Check if error or redirect passed via query params
-    const urlParams = new URLSearchParams(window.location.search);
-    const errParam = urlParams.get('error');
-    const redirectParam = urlParams.get('redirect');
-    const reasonParam = urlParams.get('reason');
-
-    if (reasonParam === 'notes') {
-      showError('🔒 Sign In Required: Please sign in or register with your student account to access and download study notes.');
-    } else if (errParam === 'unauthorized') {
-      showError('Please sign in with administrator credentials to access the Admin Dashboard.');
-    } else if (errParam === 'forbidden') {
-      showError('Access Denied: Your account does not have Administrator privileges.');
-    }
-
-    function setTab(registerMode) {
-      isRegisterMode = registerMode;
-      errorBox.style.display = 'none';
-      successBox.style.display = 'none';
-
-      if (isRegisterMode) {
-        tabRegisterBtn.classList.add('active');
-        tabLoginBtn.classList.remove('active');
-        nameGroup.style.display = 'block';
-        formHeading.textContent = 'Create Account';
-        formSubheading.textContent = 'Register as a Student on Management Hub';
-        submitBtn.textContent = 'Register Account';
-      } else {
-        tabLoginBtn.classList.add('active');
-        tabRegisterBtn.classList.remove('active');
-        nameGroup.style.display = 'none';
-        formHeading.textContent = 'Sign In';
-        formSubheading.textContent = 'Sign in to access your dashboard';
-        submitBtn.textContent = 'Sign In';
-      }
-    }
-
-    tabLoginBtn.addEventListener('click', () => setTab(false));
-    tabRegisterBtn.addEventListener('click', () => setTab(true));
-
-    function showError(msg) {
-      errorBox.textContent = msg;
-      errorBox.style.display = 'block';
-      successBox.style.display = 'none';
-    }
-
-    function showSuccess(msg) {
-      successBox.textContent = msg;
-      successBox.style.display = 'block';
-      errorBox.style.display = 'none';
-    }
-
-    authForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errorBox.style.display = 'none';
-      successBox.style.display = 'none';
-
-      const email = document.getElementById('emailInput').value.trim();
-      const password = document.getElementById('passwordInput').value.trim();
-      const name = document.getElementById('nameInput').value.trim();
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Verifying...';
-
-      try {
-        const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
-        const payload = isRegisterMode ? { name, email, password } : { email, password };
-
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          // Store session info locally for fast client UX
-          if (data.token) localStorage.setItem('mghub_jwt', data.token);
-          if (data.user) localStorage.setItem('mghub_user', JSON.stringify(data.user));
-
-          showSuccess('Authentication successful! Redirecting...');
-          
-          setTimeout(() => {
-            const dest = redirectParam || (data.user && data.user.role === 'admin' ? '/inmycontrol' : '/index.html');
-            window.location.href = dest;
-          }, 600);
-        } else {
-          showError(data.error || data.message || 'Authentication failed. Please check your credentials.');
-          submitBtn.disabled = false;
-          submitBtn.textContent = isRegisterMode ? 'Register Account' : 'Sign In';
-        }
-      } catch (err) {
-        // Check offline Admin authentication fallback for Netlify
-        if (!isRegisterMode && email.toLowerCase() === 'aashishsinghh06@gmail.com' && (password === 'admin2026' || password === 'Admin@2026' || password === 'admin')) {
-          sessionStorage.setItem('mghub_admin_auth', 'true');
-          sessionStorage.setItem('mghub_admin_email', email);
-          localStorage.setItem('mghub_user', JSON.stringify({ email: 'aashishsinghh06@gmail.com', role: 'admin', name: 'Administrator' }));
-          showSuccess('Admin authentication verified! Opening Admin Panel...');
-          setTimeout(() => {
-            const dest = redirectParam || '/inmycontrol';
-            window.location.href = dest;
-          }, 500);
-          return;
-        }
-
-        showError('Network connection error. If you are the admin, please check your passcode.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = isRegisterMode ? 'Register Account' : 'Sign In';
-      }
-    });
   </script>
 </body>
 </html>

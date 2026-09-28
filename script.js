@@ -640,10 +640,10 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="notes-auth-lock">🔒</span>
               <div>
                 <div class="notes-auth-heading">Sign In Required to Access Notes</div>
-                <div class="notes-auth-sub">Study notes and PDFs are reserved for registered students. Sign in to view and download all files.</div>
+                <div class="notes-auth-sub">Study notes and PDFs are reserved for IITM BS students. Sign in with Google to view and download all files.</div>
               </div>
             </div>
-            <a href="login.html?redirect=${encodeURIComponent(currentUrl)}&reason=notes" class="notes-auth-banner-btn">Sign In / Register ↗</a>
+            <a href="login.html?redirect=${encodeURIComponent(currentUrl)}&reason=notes" class="notes-auth-banner-btn">Sign In with Google ↗</a>
           </div>
         ` : '';
 
