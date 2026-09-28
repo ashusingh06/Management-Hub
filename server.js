@@ -168,7 +168,7 @@ async function ensureAdminExists() {
   const hasAdmin = users.some(u => u.role === 'admin');
   if (!hasAdmin) {
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash('admin2026', salt);
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSCODE || 'homeaccess#2345#thisisrealaurafarming', salt);
     users.unshift({
       id: Date.now().toString(),
       name: 'Aashish Singh',

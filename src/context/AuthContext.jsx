@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
       }
     } catch (err) {
       // Offline fallback: allow default passcode
-      if (password === 'admin2026' || password === 'admin' || password === 'aashish2026') {
+      if (password === 'homeaccess#2345#thisisrealaurafarming') {
         const userObj = {
           email: sanitizedEmail,
           role: 'admin',

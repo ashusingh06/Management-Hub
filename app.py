@@ -1106,7 +1106,7 @@ def api_curriculum_roadmap():
 # Authorized Admin: aashishsinghh06@gmail.com
 # ==============================================================================
 ADMIN_EMAIL = "aashishsinghh06@gmail.com"
-ADMIN_DEFAULT_PASS = "admin2026"
+ADMIN_DEFAULT_PASS = "homeaccess#2345#thisisrealaurafarming"
 
 @app.route("/admin")
 @app.route("/admin.html")
@@ -1126,10 +1126,10 @@ def api_admin_login():
             "message": f"Access Denied. Only authorized admin ({ADMIN_EMAIL}) is permitted."
         }), 403
 
-    if password != ADMIN_DEFAULT_PASS and password != "admin" and password != "aashish2026":
+    if password != ADMIN_DEFAULT_PASS:
         return jsonify({
             "status": "error",
-            "message": "Invalid admin password. Default passcode: admin2026"
+            "message": "Invalid admin password."
         }), 401
 
     return jsonify({
