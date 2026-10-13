@@ -96,7 +96,7 @@ Open your browser at `http://localhost:3000`.
 
 ## 👥 Contributors & Community
 
-- **Aashish Singh (Ashu)** — Creator & Lead Maintainer ([@ashusingh06](https://github.com/ashusingh06))
+- **Ashish Singh (Ashu)** — Creator & Lead Maintainer ([@ashusingh06](https://github.com/ashusingh06))
 
 
 ---
