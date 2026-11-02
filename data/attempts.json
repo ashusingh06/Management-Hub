@@ -1,0 +1,535 @@
+[
+  {
+    "id": "att_1793611316970_n6mt",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "paperName": "Quiz 1 Mock Exam",
+    "phase": "quiz1",
+    "mode": "exam",
+    "totalScore": 0,
+    "maxPossibleScore": 13,
+    "percentage": 0,
+    "grade": "U (Fail)",
+    "correctCount": 0,
+    "incorrectCount": 8,
+    "unattemptedCount": 0,
+    "timeSpentSeconds": 17,
+    "timestamp": "2026-11-02T09:21:56.970Z",
+    "evaluationResults": [
+      {
+        "question": {
+          "id": "BSMS1201_W02_01",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 2,
+          "source": "Week 2 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "mcq",
+          "marks": 1,
+          "questionText": "If goods X and Y are **substitutes**, an increase in the price of Good X will lead to:",
+          "options": [
+            "A leftward shift in the demand curve for Good Y.",
+            "A rightward shift in the demand curve for Good Y.",
+            "A movement along the demand curve for Good Y with no shift.",
+            "A decrease in the equilibrium quantity of Good Y."
+          ],
+          "correctAnswer": 1,
+          "explanation": "For substitute goods, an increase in the price of one good (X) makes the alternative (Y) relatively cheaper, causing consumers to switch and thus increasing (shifting rightward) the demand for Good Y.",
+          "difficulty": "easy",
+          "topic": "Demand & Cross-Price Elasticity"
+        },
+        "userResponse": 3,
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W03_02",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 3,
+          "source": "Week 3 Practice Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "msq",
+          "marks": 2,
+          "questionText": "Which of the following factors generally contribute to a **higher (more elastic)** price elasticity of demand for a good? *(Select all that apply)*",
+          "options": [
+            "Availability of close substitutes in the market",
+            "The good constitutes a large proportion of consumer income",
+            "The good is a strict necessity with no close alternative",
+            "A longer time horizon allowing consumers to adjust behavior"
+          ],
+          "correctAnswer": [
+            0,
+            1,
+            3
+          ],
+          "explanation": "Goods with many substitutes, goods taking a large share of budget, and longer time horizons all increase price elasticity. Strict necessities have inelastic demand.",
+          "difficulty": "medium",
+          "topic": "Determinants of Elasticity"
+        },
+        "userResponse": [
+          1,
+          3
+        ],
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W01_01",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 1,
+          "source": "Week 1 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "mcq",
+          "marks": 1,
+          "questionText": "Which of the following best defines the concept of **Opportunity Cost** in economics?",
+          "options": [
+            "The monetary expenditure incurred in purchasing a good or service.",
+            "The value of the next best alternative foregone when making a choice.",
+            "The total variable cost of producing an additional unit of output.",
+            "The accounting cost minus any economic profit earned."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Opportunity cost is the loss of potential gain from other alternatives when one alternative is chosen. In economics, it represents the value of the next best alternative forgone.",
+          "difficulty": "easy",
+          "topic": "Fundamentals of Economics & Scarcity"
+        },
+        "userResponse": 2,
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W03_01",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 3,
+          "source": "Week 3 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "nat",
+          "marks": 2,
+          "questionText": "When the price of a product falls from ₹50 to ₹40, the quantity demanded increases from 100 units to 140 units. Using the standard percentage method, calculate the absolute price elasticity of demand ($|E_d|$). *(Enter your answer to one decimal place)*.",
+          "correctAnswer": 2,
+          "tolerance": 0.1,
+          "explanation": "% Change in Quantity = (140 - 100) / 100 = 40%.\n% Change in Price = (40 - 50) / 50 = -20%.\n$|E_d| = |40% / -20%| = 2.0$ (Elastic demand).",
+          "difficulty": "medium",
+          "topic": "Price Elasticity of Demand"
+        },
+        "userResponse": "93",
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W04_02",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 4,
+          "source": "Week 4 PYQ 2024",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "nat",
+          "marks": 2,
+          "questionText": "A consumer consumes two goods, X and Y. The price of X is ₹10 and the price of Y is ₹5. If the consumer is in equilibrium and the Marginal Utility of Good Y ($MU_y$) is 20 utils, what is the Marginal Utility of Good X ($MU_x$) at equilibrium?",
+          "correctAnswer": 40,
+          "tolerance": 0.1,
+          "explanation": "Equimarginal principle at consumer equilibrium:\n$MU_x / P_x = MU_y / P_y$\n$MU_x / 10 = 20 / 5 = 4$\n$MU_x = 4 \\times 10 = 40$ utils.",
+          "difficulty": "hard",
+          "topic": "Consumer Equilibrium"
+        },
+        "userResponse": "6",
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W04_01",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 4,
+          "source": "Week 4 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "mcq",
+          "marks": 1,
+          "questionText": "According to the Law of Diminishing Marginal Utility, as consumption of a good increases continuously:",
+          "options": [
+            "Total utility decreases at an increasing rate.",
+            "Marginal utility derived from each additional unit declines.",
+            "Marginal utility initially decreases and then increases.",
+            "Total utility remains constant throughout."
+          ],
+          "correctAnswer": 1,
+          "explanation": "The Law of Diminishing Marginal Utility states that as an individual consumes more units of a specific commodity, the additional satisfaction (marginal utility) derived from each successive unit decreases.",
+          "difficulty": "easy",
+          "topic": "Consumer Theory & Utility"
+        },
+        "userResponse": 2,
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W01_02",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 1,
+          "source": "Week 1 Practice Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "msq",
+          "marks": 2,
+          "questionText": "Which of the following statements about the **Production Possibility Frontier (PPF)** are TRUE? *(Select all that apply)*",
+          "options": [
+            "Points lying strictly inside the PPF represent inefficient allocation or underutilization of resources.",
+            "Points lying outside the PPF are currently unattainable given existing technology and resources.",
+            "A bowed-out (concave) PPF reflects the law of increasing opportunity costs.",
+            "Points lying on the PPF reflect Pareto inefficient allocations."
+          ],
+          "correctAnswer": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "Points inside the PPF are attainable but inefficient. Points outside are unattainable with current resources/technology. A concave PPF reflects increasing marginal opportunity costs. Points on the frontier are productive and Pareto efficient, so statement 4 is false.",
+          "difficulty": "medium",
+          "topic": "Production Possibility Frontier"
+        },
+        "userResponse": [
+          3
+        ],
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W02_02",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 2,
+          "source": "Week 2 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "nat",
+          "marks": 2,
+          "questionText": "The market demand for a commodity is given by $Q_d = 200 - 4P$, and the market supply is given by $Q_s = 50 + 2P$. Calculate the equilibrium price ($P^*$) in rupees.",
+          "correctAnswer": 25,
+          "tolerance": 0.1,
+          "explanation": "At equilibrium, $Q_d = Q_s$.\n$200 - 4P = 50 + 2P$\n$6P = 150$\n$P^* = 25$.\nEquilibrium quantity is $Q^* = 200 - 4(25) = 100$.",
+          "difficulty": "medium",
+          "topic": "Market Equilibrium"
+        },
+        "userResponse": "3",
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      }
+    ],
+    "createdAt": "2026-11-02T09:21:56.977Z"
+  },
+  {
+    "id": "att_1793611282053_kgzd",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "paperName": "Quiz 1 Mock Exam",
+    "phase": "quiz1",
+    "mode": "exam",
+    "totalScore": 2,
+    "maxPossibleScore": 13,
+    "percentage": 15.4,
+    "grade": "U (Fail)",
+    "correctCount": 2,
+    "incorrectCount": 6,
+    "unattemptedCount": 0,
+    "timeSpentSeconds": 57,
+    "timestamp": "2026-11-02T09:21:22.053Z",
+    "evaluationResults": [
+      {
+        "question": {
+          "id": "BSMS1201_W01_02",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 1,
+          "source": "Week 1 Practice Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "msq",
+          "marks": 2,
+          "questionText": "Which of the following statements about the **Production Possibility Frontier (PPF)** are TRUE? *(Select all that apply)*",
+          "options": [
+            "Points lying strictly inside the PPF represent inefficient allocation or underutilization of resources.",
+            "Points lying outside the PPF are currently unattainable given existing technology and resources.",
+            "A bowed-out (concave) PPF reflects the law of increasing opportunity costs.",
+            "Points lying on the PPF reflect Pareto inefficient allocations."
+          ],
+          "correctAnswer": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "Points inside the PPF are attainable but inefficient. Points outside are unattainable with current resources/technology. A concave PPF reflects increasing marginal opportunity costs. Points on the frontier are productive and Pareto efficient, so statement 4 is false.",
+          "difficulty": "medium",
+          "topic": "Production Possibility Frontier"
+        },
+        "userResponse": [
+          0,
+          3
+        ],
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W03_01",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 3,
+          "source": "Week 3 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "nat",
+          "marks": 2,
+          "questionText": "When the price of a product falls from ₹50 to ₹40, the quantity demanded increases from 100 units to 140 units. Using the standard percentage method, calculate the absolute price elasticity of demand ($|E_d|$). *(Enter your answer to one decimal place)*.",
+          "correctAnswer": 2,
+          "tolerance": 0.1,
+          "explanation": "% Change in Quantity = (140 - 100) / 100 = 40%.\n% Change in Price = (40 - 50) / 50 = -20%.\n$|E_d| = |40% / -20%| = 2.0$ (Elastic demand).",
+          "difficulty": "medium",
+          "topic": "Price Elasticity of Demand"
+        },
+        "userResponse": "8.2",
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W04_02",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 4,
+          "source": "Week 4 PYQ 2024",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "nat",
+          "marks": 2,
+          "questionText": "A consumer consumes two goods, X and Y. The price of X is ₹10 and the price of Y is ₹5. If the consumer is in equilibrium and the Marginal Utility of Good Y ($MU_y$) is 20 utils, what is the Marginal Utility of Good X ($MU_x$) at equilibrium?",
+          "correctAnswer": 40,
+          "tolerance": 0.1,
+          "explanation": "Equimarginal principle at consumer equilibrium:\n$MU_x / P_x = MU_y / P_y$\n$MU_x / 10 = 20 / 5 = 4$\n$MU_x = 4 \\times 10 = 40$ utils.",
+          "difficulty": "hard",
+          "topic": "Consumer Equilibrium"
+        },
+        "userResponse": "6.5",
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W01_01",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 1,
+          "source": "Week 1 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "mcq",
+          "marks": 1,
+          "questionText": "Which of the following best defines the concept of **Opportunity Cost** in economics?",
+          "options": [
+            "The monetary expenditure incurred in purchasing a good or service.",
+            "The value of the next best alternative foregone when making a choice.",
+            "The total variable cost of producing an additional unit of output.",
+            "The accounting cost minus any economic profit earned."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Opportunity cost is the loss of potential gain from other alternatives when one alternative is chosen. In economics, it represents the value of the next best alternative forgone.",
+          "difficulty": "easy",
+          "topic": "Fundamentals of Economics & Scarcity"
+        },
+        "userResponse": 3,
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W02_01",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 2,
+          "source": "Week 2 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "mcq",
+          "marks": 1,
+          "questionText": "If goods X and Y are **substitutes**, an increase in the price of Good X will lead to:",
+          "options": [
+            "A leftward shift in the demand curve for Good Y.",
+            "A rightward shift in the demand curve for Good Y.",
+            "A movement along the demand curve for Good Y with no shift.",
+            "A decrease in the equilibrium quantity of Good Y."
+          ],
+          "correctAnswer": 1,
+          "explanation": "For substitute goods, an increase in the price of one good (X) makes the alternative (Y) relatively cheaper, causing consumers to switch and thus increasing (shifting rightward) the demand for Good Y.",
+          "difficulty": "easy",
+          "topic": "Demand & Cross-Price Elasticity"
+        },
+        "userResponse": 1,
+        "isCorrect": true,
+        "status": "correct",
+        "earnedMarks": 1
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W04_01",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 4,
+          "source": "Week 4 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "mcq",
+          "marks": 1,
+          "questionText": "According to the Law of Diminishing Marginal Utility, as consumption of a good increases continuously:",
+          "options": [
+            "Total utility decreases at an increasing rate.",
+            "Marginal utility derived from each additional unit declines.",
+            "Marginal utility initially decreases and then increases.",
+            "Total utility remains constant throughout."
+          ],
+          "correctAnswer": 1,
+          "explanation": "The Law of Diminishing Marginal Utility states that as an individual consumes more units of a specific commodity, the additional satisfaction (marginal utility) derived from each successive unit decreases.",
+          "difficulty": "easy",
+          "topic": "Consumer Theory & Utility"
+        },
+        "userResponse": 1,
+        "isCorrect": true,
+        "status": "correct",
+        "earnedMarks": 1
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W03_02",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 3,
+          "source": "Week 3 Practice Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "msq",
+          "marks": 2,
+          "questionText": "Which of the following factors generally contribute to a **higher (more elastic)** price elasticity of demand for a good? *(Select all that apply)*",
+          "options": [
+            "Availability of close substitutes in the market",
+            "The good constitutes a large proportion of consumer income",
+            "The good is a strict necessity with no close alternative",
+            "A longer time horizon allowing consumers to adjust behavior"
+          ],
+          "correctAnswer": [
+            0,
+            1,
+            3
+          ],
+          "explanation": "Goods with many substitutes, goods taking a large share of budget, and longer time horizons all increase price elasticity. Strict necessities have inelastic demand.",
+          "difficulty": "medium",
+          "topic": "Determinants of Elasticity"
+        },
+        "userResponse": [
+          1,
+          3
+        ],
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      },
+      {
+        "question": {
+          "id": "BSMS1201_W02_02",
+          "courseCode": "BSMS1201",
+          "courseTitle": "Principles of Economics",
+          "week": 2,
+          "source": "Week 2 Graded Assignment",
+          "examMilestones": [
+            "quiz1",
+            "quiz2",
+            "endterm"
+          ],
+          "type": "nat",
+          "marks": 2,
+          "questionText": "The market demand for a commodity is given by $Q_d = 200 - 4P$, and the market supply is given by $Q_s = 50 + 2P$. Calculate the equilibrium price ($P^*$) in rupees.",
+          "correctAnswer": 25,
+          "tolerance": 0.1,
+          "explanation": "At equilibrium, $Q_d = Q_s$.\n$200 - 4P = 50 + 2P$\n$6P = 150$\n$P^* = 25$.\nEquilibrium quantity is $Q^* = 200 - 4(25) = 100$.",
+          "difficulty": "medium",
+          "topic": "Market Equilibrium"
+        },
+        "userResponse": "2.3",
+        "isCorrect": false,
+        "status": "incorrect",
+        "earnedMarks": 0
+      }
+    ],
+    "createdAt": "2026-11-02T09:21:22.116Z"
+  }
+]

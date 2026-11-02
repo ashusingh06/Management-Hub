@@ -1,0 +1,870 @@
+[
+  {
+    "id": "BSMS1201_W01_01",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 1,
+    "source": "Week 1 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "questionText": "Which of the following best defines the concept of **Opportunity Cost** in economics?",
+    "options": [
+      "The monetary expenditure incurred in purchasing a good or service.",
+      "The value of the next best alternative foregone when making a choice.",
+      "The total variable cost of producing an additional unit of output.",
+      "The accounting cost minus any economic profit earned."
+    ],
+    "correctAnswer": 1,
+    "explanation": "Opportunity cost is the loss of potential gain from other alternatives when one alternative is chosen. In economics, it represents the value of the next best alternative forgone.",
+    "difficulty": "easy",
+    "topic": "Fundamentals of Economics & Scarcity"
+  },
+  {
+    "id": "BSMS1201_W01_02",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 1,
+    "source": "Week 1 Practice Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "questionText": "Which of the following statements about the **Production Possibility Frontier (PPF)** are TRUE? *(Select all that apply)*",
+    "options": [
+      "Points lying strictly inside the PPF represent inefficient allocation or underutilization of resources.",
+      "Points lying outside the PPF are currently unattainable given existing technology and resources.",
+      "A bowed-out (concave) PPF reflects the law of increasing opportunity costs.",
+      "Points lying on the PPF reflect Pareto inefficient allocations."
+    ],
+    "correctAnswer": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "Points inside the PPF are attainable but inefficient. Points outside are unattainable with current resources/technology. A concave PPF reflects increasing marginal opportunity costs. Points on the frontier are productive and Pareto efficient, so statement 4 is false.",
+    "difficulty": "medium",
+    "topic": "Production Possibility Frontier"
+  },
+  {
+    "id": "BSMS1201_W02_01",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 2,
+    "source": "Week 2 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "questionText": "If goods X and Y are **substitutes**, an increase in the price of Good X will lead to:",
+    "options": [
+      "A leftward shift in the demand curve for Good Y.",
+      "A rightward shift in the demand curve for Good Y.",
+      "A movement along the demand curve for Good Y with no shift.",
+      "A decrease in the equilibrium quantity of Good Y."
+    ],
+    "correctAnswer": 1,
+    "explanation": "For substitute goods, an increase in the price of one good (X) makes the alternative (Y) relatively cheaper, causing consumers to switch and thus increasing (shifting rightward) the demand for Good Y.",
+    "difficulty": "easy",
+    "topic": "Demand & Cross-Price Elasticity"
+  },
+  {
+    "id": "BSMS1201_W02_02",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 2,
+    "source": "Week 2 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "questionText": "The market demand for a commodity is given by $Q_d = 200 - 4P$, and the market supply is given by $Q_s = 50 + 2P$. Calculate the equilibrium price ($P^*$) in rupees.",
+    "correctAnswer": 25,
+    "tolerance": 0.1,
+    "explanation": "At equilibrium, $Q_d = Q_s$.\n$200 - 4P = 50 + 2P$\n$6P = 150$\n$P^* = 25$.\nEquilibrium quantity is $Q^* = 200 - 4(25) = 100$.",
+    "difficulty": "medium",
+    "topic": "Market Equilibrium"
+  },
+  {
+    "id": "BSMS1201_W03_01",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 3,
+    "source": "Week 3 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "questionText": "When the price of a product falls from ₹50 to ₹40, the quantity demanded increases from 100 units to 140 units. Using the standard percentage method, calculate the absolute price elasticity of demand ($|E_d|$). *(Enter your answer to one decimal place)*.",
+    "correctAnswer": 2,
+    "tolerance": 0.1,
+    "explanation": "% Change in Quantity = (140 - 100) / 100 = 40%.\n% Change in Price = (40 - 50) / 50 = -20%.\n$|E_d| = |40% / -20%| = 2.0$ (Elastic demand).",
+    "difficulty": "medium",
+    "topic": "Price Elasticity of Demand"
+  },
+  {
+    "id": "BSMS1201_W03_02",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 3,
+    "source": "Week 3 Practice Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "questionText": "Which of the following factors generally contribute to a **higher (more elastic)** price elasticity of demand for a good? *(Select all that apply)*",
+    "options": [
+      "Availability of close substitutes in the market",
+      "The good constitutes a large proportion of consumer income",
+      "The good is a strict necessity with no close alternative",
+      "A longer time horizon allowing consumers to adjust behavior"
+    ],
+    "correctAnswer": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "Goods with many substitutes, goods taking a large share of budget, and longer time horizons all increase price elasticity. Strict necessities have inelastic demand.",
+    "difficulty": "medium",
+    "topic": "Determinants of Elasticity"
+  },
+  {
+    "id": "BSMS1201_W04_01",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 4,
+    "source": "Week 4 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "questionText": "According to the Law of Diminishing Marginal Utility, as consumption of a good increases continuously:",
+    "options": [
+      "Total utility decreases at an increasing rate.",
+      "Marginal utility derived from each additional unit declines.",
+      "Marginal utility initially decreases and then increases.",
+      "Total utility remains constant throughout."
+    ],
+    "correctAnswer": 1,
+    "explanation": "The Law of Diminishing Marginal Utility states that as an individual consumes more units of a specific commodity, the additional satisfaction (marginal utility) derived from each successive unit decreases.",
+    "difficulty": "easy",
+    "topic": "Consumer Theory & Utility"
+  },
+  {
+    "id": "BSMS1201_W04_02",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 4,
+    "source": "Week 4 PYQ 2024",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "questionText": "A consumer consumes two goods, X and Y. The price of X is ₹10 and the price of Y is ₹5. If the consumer is in equilibrium and the Marginal Utility of Good Y ($MU_y$) is 20 utils, what is the Marginal Utility of Good X ($MU_x$) at equilibrium?",
+    "correctAnswer": 40,
+    "tolerance": 0.1,
+    "explanation": "Equimarginal principle at consumer equilibrium:\n$MU_x / P_x = MU_y / P_y$\n$MU_x / 10 = 20 / 5 = 4$\n$MU_x = 4 \\times 10 = 40$ utils.",
+    "difficulty": "hard",
+    "topic": "Consumer Equilibrium"
+  },
+  {
+    "id": "BSMS1202_W01_01",
+    "courseCode": "BSMS1202",
+    "courseTitle": "Financial Accounting",
+    "week": 1,
+    "source": "Week 1 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "questionText": "Which fundamental accounting convention requires business transactions to be recorded under the assumption that the entity will continue operating for the foreseeable future?",
+    "options": [
+      "Conservatism Principle",
+      "Going Concern Concept",
+      "Periodicity Concept",
+      "Materiality Principle"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The Going Concern Concept assumes that an enterprise has neither the intention nor the necessity of liquidation or curtailing materially the scale of operations in the foreseeable future.",
+    "difficulty": "easy",
+    "topic": "Accounting Principles & Concepts"
+  },
+  {
+    "id": "BSMS1202_W01_02",
+    "courseCode": "BSMS1202",
+    "courseTitle": "Financial Accounting",
+    "week": 1,
+    "source": "Week 1 Practice Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "questionText": "A firm has Total Assets of ₹8,50,000 and Owner's Equity of ₹5,20,000. Applying the fundamental accounting equation (Assets = Liabilities + Equity), calculate Total Liabilities in rupees.",
+    "correctAnswer": 330000,
+    "tolerance": 1,
+    "explanation": "Assets = Liabilities + Owner's Equity\nLiabilities = Assets - Owner's Equity\nLiabilities = ₹8,50,000 - ₹5,20,000 = ₹3,30,000.",
+    "difficulty": "easy",
+    "topic": "The Accounting Equation"
+  },
+  {
+    "id": "BSMS1202_W02_01",
+    "courseCode": "BSMS1202",
+    "courseTitle": "Financial Accounting",
+    "week": 2,
+    "source": "Week 2 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "questionText": "Under the **Accrual Accounting System**, which of the following events require recording an entry during the current accounting period? *(Select all that apply)*",
+    "options": [
+      "Services rendered to a client on credit for which payment will be received next month.",
+      "Salary incurred for the month of March that remains unpaid as of March 31st.",
+      "An informal conversation agreeing to interview prospective candidates next quarter.",
+      "Advance cash received from a customer for goods to be manufactured and delivered next year."
+    ],
+    "correctAnswer": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "Under accrual accounting, revenues are recognized when earned and expenses when incurred. Accrued revenue (services delivered on credit) and accrued expenses (unpaid salary) are recorded. Unearned revenue (cash advance) is recorded as a liability. An informal conversation has no financial impact.",
+    "difficulty": "medium",
+    "topic": "Accrual Accounting & Adjusting Entries"
+  },
+  {
+    "id": "BSMS1202_W03_01",
+    "courseCode": "BSMS1202",
+    "courseTitle": "Financial Accounting",
+    "week": 3,
+    "source": "Week 3 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "questionText": "A machine purchased for ₹2,00,000 has an estimated useful life of 5 years and a salvage value of ₹20,000. Under the Straight-Line Depreciation Method, what is the annual depreciation expense?",
+    "options": [
+      "₹40,000",
+      "₹36,000",
+      "₹44,000",
+      "₹20,000"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Annual Depreciation = (Cost - Salvage Value) / Useful Life = (2,00,000 - 20,000) / 5 = 1,80,000 / 5 = ₹36,000.",
+    "difficulty": "easy",
+    "topic": "Depreciation Accounting"
+  },
+  {
+    "id": "BSMS1203_W01_01",
+    "courseCode": "BSMS1203",
+    "courseTitle": "Business Statistics",
+    "week": 1,
+    "source": "Week 1 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "questionText": "Which measure of central tendency is least sensitive to extreme outliers in a skewed data distribution?",
+    "options": [
+      "Arithmetic Mean",
+      "Median",
+      "Midrange",
+      "Standard Deviation"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The median is a positional measure of central tendency and is resistant to extreme outliers, unlike the arithmetic mean which is heavily shifted by skewed extreme values.",
+    "difficulty": "easy",
+    "topic": "Measures of Central Tendency"
+  },
+  {
+    "id": "BSMS1203_W02_01",
+    "courseCode": "BSMS1203",
+    "courseTitle": "Business Statistics",
+    "week": 2,
+    "source": "Week 2 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "questionText": "Consider the dataset: {4, 8, 6, 5, 7}. Calculate the sample variance ($s^2$). *(Enter exact numeric value)*.",
+    "correctAnswer": 2.5,
+    "tolerance": 0.05,
+    "explanation": "Sample mean $\\bar{x} = (4+8+6+5+7)/5 = 30/5 = 6$.\nDeviations: (4-6)^2=4, (8-6)^2=4, (6-6)^2=0, (5-6)^2=1, (7-6)^2=1.\nSum of squared deviations $\\sum(x - \\bar{x})^2 = 4 + 4 + 0 + 1 + 1 = 10$.\nSample variance $s^2 = \\sum(x - \\bar{x})^2 / (n - 1) = 10 / (5 - 1) = 10 / 4 = 2.5$.",
+    "difficulty": "medium",
+    "topic": "Measures of Dispersion"
+  },
+  {
+    "id": "BSMS1203_W03_01",
+    "courseCode": "BSMS1203",
+    "courseTitle": "Business Statistics",
+    "week": 3,
+    "source": "Week 3 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "questionText": "Let A and B be two independent events with probabilities $P(A) = 0.4$ and $P(B) = 0.5$. Which of the following statements are TRUE? *(Select all that apply)*",
+    "options": [
+      "$P(A \\cap B) = 0.20$",
+      "$P(A \\cup B) = 0.70$",
+      "$P(A | B) = 0.40$",
+      "Events A and B are mutually exclusive"
+    ],
+    "correctAnswer": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "For independent events:\n1. $P(A \\cap B) = P(A) \\times P(B) = 0.4 \\times 0.5 = 0.20$.\n2. $P(A \\cup B) = P(A) + P(B) - P(A \\cap B) = 0.4 + 0.5 - 0.2 = 0.70$.\n3. $P(A | B) = P(A) = 0.40$.\n4. Since $P(A \\cap B) = 0.20 \\neq 0$, they are NOT mutually exclusive.",
+    "difficulty": "medium",
+    "topic": "Probability Rules & Independence"
+  },
+  {
+    "id": "BSMA1001_W01_01",
+    "courseCode": "BSMA1001",
+    "courseTitle": "Mathematics for Data Science I",
+    "week": 1,
+    "source": "Week 1 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "questionText": "Let $f: \\mathbb{R} \\to \\mathbb{R}$ be defined by $f(x) = 3x - 5$. What is the inverse function $f^{-1}(y)$?",
+    "options": [
+      "$(y + 5) / 3$",
+      "$(y - 5) / 3$",
+      "$3y + 5$",
+      "$1 / (3x - 5)$"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Let $y = 3x - 5$.\n$y + 5 = 3x$\n$x = (y + 5) / 3$.\nThus, $f^{-1}(y) = (y + 5) / 3$.",
+    "difficulty": "easy",
+    "topic": "Functions & Inverses"
+  },
+  {
+    "id": "BSMA1001_W02_01",
+    "courseCode": "BSMA1001",
+    "courseTitle": "Mathematics for Data Science I",
+    "week": 2,
+    "source": "Week 2 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "questionText": "Evaluate the limit: $\\lim_{x \\to 3} \\frac{x^2 - 9}{x - 3}$.",
+    "correctAnswer": 6,
+    "tolerance": 0.01,
+    "explanation": "Factoring the numerator: $x^2 - 9 = (x - 3)(x + 3)$.\nFor $x \\neq 3$, $\\frac{(x - 3)(x + 3)}{x - 3} = x + 3$.\nTaking the limit as $x \\to 3$: $3 + 3 = 6$.",
+    "difficulty": "easy",
+    "topic": "Limits & Continuity"
+  },
+  {
+    "id": "BSMA1001_W03_01",
+    "courseCode": "BSMA1001",
+    "courseTitle": "Mathematics for Data Science I",
+    "week": 3,
+    "source": "Week 3 Graded Assignment",
+    "examMilestones": [
+      "quiz1",
+      "quiz2",
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "questionText": "Which of the following functions are strictly increasing for all $x \\in \\mathbb{R}$? *(Select all that apply)*",
+    "options": [
+      "$f(x) = e^x$",
+      "$f(x) = x^3$",
+      "$f(x) = x^2$",
+      "$f(x) = 5x + 2$"
+    ],
+    "correctAnswer": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "$e^x$ has $f'(x) = e^x > 0$ for all $x$.\n$x^3$ has $f'(x) = 3x^2 \\ge 0$ (strictly increasing on $\\mathbb{R}$).\n$5x + 2$ has $f'(x) = 5 > 0$.\n$x^2$ is decreasing for $x < 0$ and increasing for $x > 0$, so it is not strictly increasing on all of $\\mathbb{R}$.",
+    "difficulty": "medium",
+    "topic": "Calculus & Derivatives"
+  },
+  {
+    "id": "BSMS1201_W05_01",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 5,
+    "source": "Week 5 Graded Assignment",
+    "examMilestones": [
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "questionText": "In the short-run, a firm experiences **Diminishing Marginal Returns** because:",
+    "options": [
+      "All factors of production are fixed in the short run.",
+      "At least one factor of production is fixed while variable inputs are added.",
+      "Workers become less motivated over time.",
+      "Firms face decreasing returns to scale across all facilities."
+    ],
+    "correctAnswer": 1,
+    "explanation": "Diminishing returns occur in the short run when successive units of a variable input (e.g. labor) are applied to a fixed input (e.g. capital/land), causing the marginal product of the variable input to decline.",
+    "difficulty": "medium",
+    "topic": "Theory of Production"
+  },
+  {
+    "id": "BSMS1201_W06_01",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 6,
+    "source": "Week 6 Graded Assignment",
+    "examMilestones": [
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "questionText": "A perfectly competitive firm faces a constant market price of ₹60 per unit. Its total cost function is given by $TC = 100 + 10Q + 2Q^2$. Find the profit-maximizing output quantity ($Q^*$).",
+    "correctAnswer": 12.5,
+    "tolerance": 0.1,
+    "explanation": "Profit maximization condition: $MR = MC$.\nFor perfect competition, $MR = P = 60$.\nMarginal Cost $MC = d(TC)/dQ = 10 + 4Q$.\nEquating: $10 + 4Q = 60 \\implies 4Q = 50 \\implies Q^* = 12.5$ units.",
+    "difficulty": "hard",
+    "topic": "Cost Functions & Perfect Competition"
+  },
+  {
+    "id": "BSMA1001_2023_T1_Q01",
+    "courseCode": "BSMA1001",
+    "courseTitle": "Mathematics for Data Science I",
+    "week": 1,
+    "source": "Term 1 (Jan 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "difficulty": "easy",
+    "topic": "Relations and Functions",
+    "questionText": "Let $A = \\{1, 2, 3, 4\\}$. A relation $R$ on $A$ is defined as $R = \\{(1,1), (2,2), (3,3), (4,4), (1,2), (2,1), (2,3), (3,2)\\}$. Which of the following statements is TRUE regarding $R$?",
+    "options": [
+      "$R$ is an equivalence relation.",
+      "$R$ is reflexive and symmetric, but not transitive.",
+      "$R$ is symmetric and transitive, but not reflexive.",
+      "$R$ is reflexive and transitive, but not symmetric."
+    ],
+    "correctAnswer": 1,
+    "explanation": "Reflexive: $(a, a) \\in R$ for all $a \\in \\{1,2,3,4\\}$. Symmetric: $(1,2) \\in R \\implies (2,1) \\in R$ and $(2,3) \\in R \\implies (3,2) \\in R$. Transitive check: $(1,2) \\in R$ and $(2,3) \\in R$, but $(1,3) \\notin R$. Hence, $R$ is not transitive. Thus, $R$ is reflexive and symmetric, but not transitive."
+  },
+  {
+    "id": "BSMA1001_2023_T1_Q02",
+    "courseCode": "BSMA1001",
+    "courseTitle": "Mathematics for Data Science I",
+    "week": 2,
+    "source": "Term 1 (Jan 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Coordinate Geometry & Lines",
+    "questionText": "Find the perpendicular distance from the point $(3, -2)$ to the straight line $4x - 3y + 7 = 0$. *(Enter the exact numerical value)*.",
+    "correctAnswer": 5,
+    "tolerance": 0.05,
+    "explanation": "The perpendicular distance from $(x_1, y_1)$ to $Ax + By + C = 0$ is $d = \\frac{|Ax_1 + By_1 + C|}{\\sqrt{A^2 + B^2}}$. Here $A = 4, B = -3, C = 7$ and $(x_1, y_1) = (3, -2)$. $d = \\frac{|4(3) - 3(-2) + 7|}{\\sqrt{4^2 + (-3)^2}} = \\frac{|12 + 6 + 7|}{\\sqrt{16 + 9}} = \\frac{25}{5} = 5$."
+  },
+  {
+    "id": "BSMA1001_2023_T2_Q03",
+    "courseCode": "BSMA1001",
+    "courseTitle": "Mathematics for Data Science I",
+    "week": 3,
+    "source": "Term 2 (May 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Matrices & Determinants",
+    "questionText": "Let $A$ be a $3 \\times 3$ real matrix such that $\\det(A) = 4$. Which of the following statements are TRUE? *(Select all that apply)*",
+    "options": [
+      "$\\det(2A) = 32$",
+      "$\\det(A^{-1}) = 0.25$",
+      "$\\det(A^T A) = 16$",
+      "$\\det(A^2) = 8$"
+    ],
+    "correctAnswer": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "For an $n \\times n$ matrix $A$ (here $n = 3$): 1. $\\det(kA) = k^n \\det(A) \\implies \\det(2A) = 2^3 \\times 4 = 32$ (True). 2. $\\det(A^{-1}) = \\frac{1}{\\det(A)} = 0.25$ (True). 3. $\\det(A^T A) = (\\det A)^2 = 16$ (True). 4. $\\det(A^2) = (\\det A)^2 = 16 \\neq 8$ (False)."
+  },
+  {
+    "id": "BSMA1001_2023_T3_Q04",
+    "courseCode": "BSMA1001",
+    "courseTitle": "Mathematics for Data Science I",
+    "week": 4,
+    "source": "Term 3 (Sep 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "difficulty": "medium",
+    "topic": "System of Linear Equations",
+    "questionText": "Consider the system of equations: $x + 2y + 3z = 4$, $2x + 4y + 6z = 8$, $3x + 6y + 9z = 12$. Which of the following describes the set of solutions?",
+    "options": [
+      "The system has a unique solution $(x, y, z) = (1, 0, 1)$.",
+      "The system is inconsistent and has no solution.",
+      "The system has infinitely many solutions with 2 free variables.",
+      "The system has infinitely many solutions with 1 free variable."
+    ],
+    "correctAnswer": 2,
+    "explanation": "Notice that equation 2 is 2 times equation 1, and equation 3 is 3 times equation 1. The augmented matrix reduces to a single rank-1 row: $x + 2y + 3z = 4$. With 3 unknowns and rank 1, there are $3 - 1 = 2$ free variables, yielding infinitely many solutions."
+  },
+  {
+    "id": "BSMA1001_2024_T1_Q05",
+    "courseCode": "BSMA1001",
+    "courseTitle": "Mathematics for Data Science I",
+    "week": 6,
+    "source": "Term 1 (Jan 2024) Quiz 2 Paper",
+    "examMilestones": [
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "difficulty": "hard",
+    "topic": "Eigenvalues and Trace",
+    "questionText": "A $2 \\times 2$ matrix $M$ has trace $\\text{Tr}(M) = 7$ and determinant $\\det(M) = 10$. What is the LARGER eigenvalue of $M$?",
+    "correctAnswer": 5,
+    "tolerance": 0.05,
+    "explanation": "The characteristic equation is $\\lambda^2 - \\text{Tr}(M)\\lambda + \\det(M) = 0 \\implies \\lambda^2 - 7\\lambda + 10 = 0 \\implies (\\lambda - 5)(\\lambda - 2) = 0$. Eigenvalues are 5 and 2. The larger eigenvalue is 5."
+  },
+  {
+    "id": "BSCS1001_2023_T1_Q01",
+    "courseCode": "BSCS1001",
+    "courseTitle": "Computational Thinking",
+    "week": 1,
+    "source": "Term 1 (Jan 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "difficulty": "easy",
+    "topic": "Boolean Logic & Flowcharts",
+    "questionText": "Given three boolean variables $A = \\text{True}, B = \\text{False}, C = \\text{True}$, what is the evaluated result of the expression: $(A \\text{ AND } B) \\text{ OR } (\\text{NOT } B \\text{ AND } C)$?",
+    "options": [
+      "True",
+      "False",
+      "Undefined",
+      "Syntax Error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "$A \\text{ AND } B = \\text{False}$. $\\text{NOT } B = \\text{True}$. $\\text{NOT } B \\text{ AND } C = \\text{True}$. False OR True = True."
+  },
+  {
+    "id": "BSCS1001_2023_T2_Q02",
+    "courseCode": "BSCS1001",
+    "courseTitle": "Computational Thinking",
+    "week": 2,
+    "source": "Term 2 (May 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Pseudocode Iteration & Counters",
+    "questionText": "Consider the following pseudocode execution:\\n\\n`X = 1`\\n`Count = 0`\\n`while X < 50:`\\n`    X = X * 2 + 1`\\n`    Count = Count + 1`\\n\\nWhat is the final value of **Count** when the loop terminates?",
+    "correctAnswer": 5,
+    "tolerance": 0,
+    "explanation": "Tracing: X starts at 1. Iteration 1: X=3, Count=1. Iteration 2: X=7, Count=2. Iteration 3: X=15, Count=3. Iteration 4: X=31, Count=4. Iteration 5: X=63, Count=5. Since 63 is not < 50, the loop terminates with Count = 5."
+  },
+  {
+    "id": "BSCS1001_2023_T3_Q03",
+    "courseCode": "BSCS1001",
+    "courseTitle": "Computational Thinking",
+    "week": 3,
+    "source": "Term 3 (Sep 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Algorithmic Filtering",
+    "questionText": "A dataset contains test scores: $L = [42, 85, 91, 55, 68, 74, 91, 38]$. Which of the following conditions correctly select all scores **strictly above the median** of $L$? *(Select all that apply)*",
+    "options": [
+      "Score $> 71$",
+      "Score $\\ge 74$",
+      "Score $> 68$",
+      "Score $> 74$"
+    ],
+    "correctAnswer": [
+      0,
+      1
+    ],
+    "explanation": "Sorted list: $[38, 42, 55, 68, 74, 85, 91, 91]$. Median is the average of 68 and 74, which is 71. Strictly above median means Score > 71. For integer scores, this is equivalent to Score >= 74."
+  },
+  {
+    "id": "BSMS1202_2023_T1_Q01",
+    "courseCode": "BSMS1202",
+    "courseTitle": "Financial Accounting",
+    "week": 1,
+    "source": "Term 1 (Jan 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "difficulty": "easy",
+    "topic": "Accounting Equation",
+    "questionText": "A firm purchases office equipment worth ₹1,20,000 by paying ₹40,000 in cash and taking a short-term bank loan for the remaining balance. What is the net effect of this transaction on the fundamental Accounting Equation ($Assets = Liabilities + Equity$)?",
+    "options": [
+      "Total Assets increase by ₹80,000; Total Liabilities increase by ₹80,000; Equity remains unchanged.",
+      "Total Assets increase by ₹1,20,000; Total Liabilities increase by ₹80,000; Equity increases by ₹40,000.",
+      "Total Assets decrease by ₹40,000; Total Liabilities increase by ₹80,000; Equity decreases by ₹40,000.",
+      "Total Assets and Total Liabilities both increase by ₹1,20,000."
+    ],
+    "correctAnswer": 0,
+    "explanation": "Equipment (+₹1,20,000) minus Cash (-₹40,000) = net Assets increase of ₹80,000. Liabilities (bank loan) increase by ₹80,000. Equity remains unaffected."
+  },
+  {
+    "id": "BSMS1202_2023_T2_Q02",
+    "courseCode": "BSMS1202",
+    "courseTitle": "Financial Accounting",
+    "week": 3,
+    "source": "Term 2 (May 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Straight Line Depreciation",
+    "questionText": "A machine is purchased on 1st April 2022 for ₹5,00,000 with installation charges of ₹50,000. Its estimated useful life is 5 years with an expected scrap value of ₹50,000. Using the **Straight Line Method (SLM)**, calculate the annual depreciation charge in rupees.",
+    "correctAnswer": 100000,
+    "tolerance": 100,
+    "explanation": "Total cost = ₹5,50,000. Depreciable base = Cost - Scrap Value = ₹5,50,000 - ₹50,000 = ₹5,00,000. Annual depreciation = ₹5,00,000 / 5 = ₹1,00,000."
+  },
+  {
+    "id": "BSMS1202_2023_T3_Q03",
+    "courseCode": "BSMS1202",
+    "courseTitle": "Financial Accounting",
+    "week": 4,
+    "source": "Term 3 (Sep 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Accounting Principles & Concepts",
+    "questionText": "Which of the following conventions and accounting concepts require that expenses incurred to generate revenue must be recognized in the same accounting period as the revenue? *(Select all that apply)*",
+    "options": [
+      "Matching Principle",
+      "Accrual Concept",
+      "Conservatism Concept",
+      "Money Measurement Concept"
+    ],
+    "correctAnswer": [
+      0,
+      1
+    ],
+    "explanation": "The Matching Principle requires matching expenses with associated revenues. The Accrual Concept requires transactions to be recorded when they occur, rather than when cash is transferred."
+  },
+  {
+    "id": "BSMS1203_2023_T1_Q01",
+    "courseCode": "BSMS1203",
+    "courseTitle": "Business Statistics",
+    "week": 2,
+    "source": "Term 1 (Jan 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Probability & Bayes Theorem",
+    "questionText": "Machine A produces 60% of daily output and Machine B produces 40%. Defective rate for A is 2% and for B is 4%. If a randomly chosen product is defective, calculate the probability that it was produced by Machine B. *(Enter answer as a decimal rounded to two decimal places, e.g. 0.57)*.",
+    "correctAnswer": 0.57,
+    "tolerance": 0.02,
+    "explanation": "P(B|D) = [P(B)*P(D|B)] / [P(A)*P(D|A) + P(B)*P(D|B)] = [0.40 * 0.04] / [0.60 * 0.02 + 0.40 * 0.04] = 0.016 / (0.012 + 0.016) = 0.016 / 0.028 = 4/7 approx 0.57."
+  },
+  {
+    "id": "BSMS1203_2023_T2_Q02",
+    "courseCode": "BSMS1203",
+    "courseTitle": "Business Statistics",
+    "week": 3,
+    "source": "Term 2 (May 2023) Quiz 1 Paper",
+    "examMilestones": [
+      "quiz1",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "difficulty": "easy",
+    "topic": "Skewness & Measures of Central Tendency",
+    "questionText": "For a unimodal salary distribution of employees, the mean salary is ₹85,000, median salary is ₹72,000, and modal salary is ₹58,000. What is the nature of this distribution?",
+    "options": [
+      "Positively skewed (Right-skewed)",
+      "Negatively skewed (Left-skewed)",
+      "Symmetric (Normal)",
+      "Bimodal distribution"
+    ],
+    "correctAnswer": 0,
+    "explanation": "When Mean > Median > Mode (₹85,000 > ₹72,000 > ₹58,000), the tail extends towards higher values on the right, meaning the distribution is Positively Skewed."
+  },
+  {
+    "id": "BSMS1201_2023_T2_Q01",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 6,
+    "source": "Term 2 (May 2023) Quiz 2 Paper",
+    "examMilestones": [
+      "quiz2",
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Short-Run Cost Curves",
+    "questionText": "A competitive firm has a Total Cost function given by $TC(Q) = 200 + 10Q + 2Q^2$. Calculate the Marginal Cost ($MC$) when the firm produces $Q = 15$ units of output.",
+    "correctAnswer": 70,
+    "tolerance": 0.1,
+    "explanation": "MC = d(TC)/dQ = 10 + 4Q. At Q = 15, MC = 10 + 4(15) = 10 + 60 = 70."
+  },
+  {
+    "id": "BSMS1201_2023_T3_Q02",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 7,
+    "source": "Term 3 (Sep 2023) Quiz 2 Paper",
+    "examMilestones": [
+      "quiz2",
+      "endterm"
+    ],
+    "type": "mcq",
+    "marks": 1,
+    "difficulty": "medium",
+    "topic": "Perfect Competition Shutdown",
+    "questionText": "In the short run, a perfectly competitive price-taking firm will decide to **shut down production completely** if the market price ($P$) falls below:",
+    "options": [
+      "The minimum of Average Total Cost ($ATC$)",
+      "The minimum of Average Variable Cost ($AVC$)",
+      "Average Fixed Cost ($AFC$)",
+      "Marginal Cost ($MC$)"
+    ],
+    "correctAnswer": 1,
+    "explanation": "In the short run, a firm shuts down if price is less than average variable cost (P < min AVC). As long as P >= min AVC, it operates to cover variable costs and some fixed costs."
+  },
+  {
+    "id": "BSMS1201_2023_ET_Q03",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 10,
+    "source": "Term 3 (Dec 2023) End Term Exam",
+    "examMilestones": [
+      "endterm"
+    ],
+    "type": "nat",
+    "marks": 2,
+    "difficulty": "hard",
+    "topic": "Monopoly Profit Maximization",
+    "questionText": "A monopolist faces market demand $P = 100 - 2Q$ with constant marginal cost $MC = 20$. Calculate the profit-maximizing output quantity ($Q^*$).",
+    "correctAnswer": 20,
+    "tolerance": 0.1,
+    "explanation": "TR = (100 - 2Q)*Q = 100Q - 2Q^2. MR = d(TR)/dQ = 100 - 4Q. Setting MR = MC gives 100 - 4Q = 20 => 4Q = 80 => Q* = 20."
+  },
+  {
+    "id": "BSMS1201_2024_T1_Q04",
+    "courseCode": "BSMS1201",
+    "courseTitle": "Principles of Economics",
+    "week": 11,
+    "source": "Term 1 (Apr 2024) End Term Exam",
+    "examMilestones": [
+      "endterm"
+    ],
+    "type": "msq",
+    "marks": 2,
+    "difficulty": "medium",
+    "topic": "Public Goods and Externalities",
+    "questionText": "Which of the following are distinguishing characteristics of **Pure Public Goods**? *(Select all that apply)*",
+    "options": [
+      "Non-rivalry in consumption (one person consumption does not reduce availability for others)",
+      "Non-excludability (individuals cannot be effectively prevented from using the good)",
+      "Subject to the Free-Rider problem in free market provision",
+      "Excludable and rival in consumption"
+    ],
+    "correctAnswer": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "Pure public goods are non-rival and non-excludable. Because users cannot be excluded, free markets face the free-rider problem. Option 4 describes private goods."
+  }
+]

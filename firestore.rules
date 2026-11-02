@@ -1,17 +1,177 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Full public access for courses and settings (admin controls via app only)
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: courses
+    // Document ID: {courseCode} (e.g. "BSMA1001", 2 to 20 alphanumeric characters)
+    // Fields:
+    //   - code: string (required, 2-20 chars, must match document ID, immutable on update)
+    //   - title: string (required, 2-150 chars)
+    //   - level: string (optional, 1-50 chars, e.g. "foundation", "diploma", "degree")
+    //   - credits: number (optional, 0-20)
+    //   - description: string (optional, max 2000 chars)
+    //   - pdf_url: string (optional, max 1000 chars)
+    //   - prerequisites: list (optional, max 50 items)
+    //   - pyqs: list (optional, max 100 items)
+    //   - notesList: list (optional, max 300 items)
+    //   - notes: map (optional)
+    //   - id: number / string (optional)
+    //   - updatedAt: string (optional, ISO date string, max 60 chars)
+    //   - createdAt: string (optional, ISO date string, max 60 chars)
+    //
+    // Collection: settings
+    // Document IDs:
+    //   - courses: { list: list (max 300 courses), updatedAt: string }
+    //   - portal_links: { list: list (max 150 link items), updatedAt: string }
+    //   - contributors: { list: list (max 200 contributor items), updatedAt: string }
+    //   - community: { title: string, subtitle: string, whatsapp: map, telegram: map, customChannels: list, updatedAt: string }
+    //   - downloads: { [key: string]: int } (atomic download counters for course resources)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the user is authenticated with Firebase Auth
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if authenticated user is an authorized administrator
+    // Grants access via custom claim (request.auth.token.admin == true) or verified admin email
+    function isAdmin() {
+      return isAuthenticated() && (
+        (request.auth.token.admin == true) ||
+        ('email' in request.auth.token &&
+         request.auth.token.email is string &&
+         request.auth.token.email.matches('(?i)aashishsinghh06@gmail[.]com'))
+      );
+    }
+
+    // Validate optional string field with length boundaries
+    function isValidOptionalString(field, minLen, maxLen) {
+      return !(field in request.resource.data) ||
+        request.resource.data[field] == null ||
+        (request.resource.data[field] is string &&
+         request.resource.data[field].size() >= minLen &&
+         request.resource.data[field].size() <= maxLen);
+    }
+
+    // Validate optional numeric field within range
+    function isValidOptionalNumber(field, minVal, maxVal) {
+      return !(field in request.resource.data) ||
+        request.resource.data[field] == null ||
+        ((request.resource.data[field] is int || request.resource.data[field] is float) &&
+         request.resource.data[field] >= minVal &&
+         request.resource.data[field] <= maxVal);
+    }
+
+    // Validate optional list field with size cap
+    function isValidOptionalList(field, maxSize) {
+      return !(field in request.resource.data) ||
+        request.resource.data[field] == null ||
+        (request.resource.data[field] is list &&
+         request.resource.data[field].size() <= maxSize);
+    }
+
+    // Validate optional map field
+    function isValidOptionalMap(field) {
+      return !(field in request.resource.data) ||
+        request.resource.data[field] == null ||
+        (request.resource.data[field] is map);
+    }
+
+    // Domain validator for courses documents
+    function isValidCourse(courseCode) {
+      let data = request.resource.data;
+      return data.code is string &&
+             data.code == courseCode &&
+             data.code.size() >= 2 && data.code.size() <= 20 &&
+             data.title is string &&
+             data.title.size() >= 2 && data.title.size() <= 150 &&
+             isValidOptionalString('level', 1, 50) &&
+             isValidOptionalString('description', 0, 2000) &&
+             isValidOptionalString('pdf_url', 0, 1000) &&
+             isValidOptionalString('updatedAt', 0, 60) &&
+             isValidOptionalString('createdAt', 0, 60) &&
+             isValidOptionalNumber('credits', 0, 20) &&
+             isValidOptionalList('prerequisites', 50) &&
+             isValidOptionalList('pyqs', 100) &&
+             isValidOptionalList('notesList', 300) &&
+             isValidOptionalMap('notes');
+    }
+
+    // Domain validator for initial creation of /settings/downloads counter document
+    function isValidDownloadCountCreate() {
+      let keys = request.resource.data.keys();
+      return keys.size() == 1 &&
+             keys[0].size() >= 3 && keys[0].size() <= 128 &&
+             keys[0].matches('^[a-zA-Z0-9_-]+$') &&
+             request.resource.data[keys[0]] is int &&
+             request.resource.data[keys[0]] >= 1 &&
+             request.resource.data[keys[0]] <= 1000;
+    }
+
+    // Domain validator for updating /settings/downloads counter document:
+    // - Prevents arbitrary document replacement: no existing keys can be removed
+    // - Enforces atomic single-field increment: exactly 1 key affected per update
+    // - Prevents document exhaustion: capped at 5000 keys
+    function isValidDownloadCountUpdate() {
+      let diff = request.resource.data.diff(resource.data);
+      return diff.removedKeys().size() == 0 &&
+             diff.affectedKeys().size() == 1 &&
+             request.resource.data.keys().size() <= 5000;
+    }
+
+    // Domain validator for administrative settings documents
+    function isValidSettingsDoc(docId) {
+      return (
+        (docId == 'courses' && isValidOptionalList('list', 300)) ||
+        (docId == 'portal_links' && isValidOptionalList('list', 150)) ||
+        (docId == 'contributors' && isValidOptionalList('list', 200)) ||
+        (docId == 'community' && isValidOptionalString('title', 1, 200)) ||
+        (docId == 'downloads' && request.resource.data.keys().size() <= 5000) ||
+        (docId != 'courses' && docId != 'portal_links' && docId != 'contributors' && docId != 'community' && docId != 'downloads')
+      ) && isValidOptionalString('updatedAt', 0, 60);
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    // Courses Collection:
+    // - Public read: Any student (authenticated or unauthenticated) can view course materials
+    // - Admin write: Only authenticated administrators can create, update, or delete courses
+    // - Schema integrity: Enforces valid course schema and immutable course code
     match /courses/{courseCode} {
-      allow read, write: if true;
+      allow read: if true;
+      allow create: if isAdmin() && isValidCourse(courseCode);
+      allow update: if isAdmin() && isValidCourse(courseCode) && request.resource.data.code == resource.data.code;
+      allow delete: if isAdmin();
     }
-    
-    match /settings/{document} {
-      allow read, write: if true;
+
+    // Settings Collection:
+    // - Public read: Configuration and counters are publicly viewable
+    // - Admin write: Full administrative control over portal settings
+    // - Downloads counter: Allows atomic FieldValue.increment(1) while preventing document wiping/replacement
+    match /settings/{docId} {
+      allow read: if true;
+
+      allow create: if (isAdmin() && isValidSettingsDoc(docId)) ||
+                       (docId == 'downloads' && isValidDownloadCountCreate());
+
+      allow update: if (isAdmin() && isValidSettingsDoc(docId)) ||
+                       (docId == 'downloads' && isValidDownloadCountUpdate());
+
+      allow delete: if isAdmin();
     }
-    
-    // Block everything else
+
+    // Default Deny: All other paths are strictly blocked
     match /{document=**} {
       allow read, write: if false;
     }

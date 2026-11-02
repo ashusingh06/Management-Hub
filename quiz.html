@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Practice & Exam Simulator | [Management Hub]</title>
+  
+  <!-- Typography Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- KaTeX for Fast Mathematical Formula Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Clean QuizPractice Stylesheet -->
+  <link rel="stylesheet" href="quiz.css?v=20261019_qp">
+  <!-- Razorpay Standard Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       Top Navigation Header (Clean QuizPractice.space Design)
+       ========================================================================== -->
+  <header class="qp-header">
+    <div class="qp-header-container">
+      <!-- Left: Logo Badge & Title -->
+      <div class="qp-header-left">
+        <a href="index.html" class="qp-logo-group">
+          <div class="qp-logo-badge">MH</div>
+          <div class="qp-logo-text-wrap">
+            <span class="qp-brand-title">[Management Hub]</span>
+            <span class="qp-brand-sub">IITM BS Degree</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Navigation Links -->
+      <nav class="qp-nav-links">
+        <a href="index.html" class="qp-nav-link">Home</a>
+        <a href="index.html#notes" class="qp-nav-link">Notes</a>
+        <a href="quiz.html" class="qp-nav-link active">Quiz Practice</a>
+        <a href="index.html#calculators" class="qp-nav-link">Calculators</a>
+        <a href="index.html#links" class="qp-nav-link">Links</a>
+        <a href="index.html#contributors" class="qp-nav-link">Contributors</a>
+        <a href="index.html#about" class="qp-nav-link">About</a>
+      </nav>
+
+      <!-- Right: Header Controls & Theme Toggle -->
+      <div class="qp-header-right">
+        <button type="button" class="btn-pro-upgrade" id="btnHeaderPro">
+          <span>👑 Get Pro Pass</span>
+        </button>
+        <div class="pro-badge-active" id="proBadgeActive" style="display: none;">
+          <span class="pro-crown">👑</span> PRO PASS
+        </div>
+        <button type="button" class="btn-theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+          <span id="themeToggleIcon">🌙</span>
+        </button>
+        <button type="button" class="btn-exit-portal" id="btnHeaderExit" style="display: none;">
+          <span>← Exit Exam</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Main Application Container
+       ========================================================================== -->
+  <main class="qp-main-container">
+
+    <!-- ======================================================================
+         SCREEN 1: Landing & Selection Gateway (Exact QuizPractice.space UI)
+         ====================================================================== -->
+    <div class="qp-landing-view" id="screenSetup">
+      <!-- 1. Latest Update Notification Capsule -->
+      <div class="qp-update-banner-wrap">
+        <div class="qp-update-pill">
+          <span class="qp-rainbow-dot"></span>
+          <span><strong>latest update :</strong> practice authentic IITM BS previous year papers (Quiz 1, Quiz 2, End Term) with detailed solutions and attempt tracking.</span>
+        </div>
+      </div>
+
+      <!-- Student Practice & Mock Exam Progress Dashboard -->
+      <div class="qp-progress-dashboard" id="userProgressDashboard" style="display: none;">
+        <div class="qp-progress-header">
+          <div class="qp-progress-title-wrap">
+            <span class="qp-progress-badge">🎯 My Practice &amp; Mock Exam Progress</span>
+            <span class="qp-progress-sub">Track your scores and progress across past exam papers</span>
+          </div>
+          <button type="button" class="btn-toggle-history" id="btnToggleHistory">
+            <span id="historyToggleText">View Recent History (0) ▾</span>
+          </button>
+        </div>
+
+        <!-- Last Appeared Test Highlight Card -->
+        <div class="qp-last-test-card" id="lastTestHighlightCard">
+          <div class="last-test-left">
+            <div class="last-test-label-row">
+              <span class="last-test-tag">LAST ATTEMPTED</span>
+              <span class="last-test-time" id="lastTestTimestamp">Just now</span>
+              <span class="last-test-mode-badge" id="lastTestModeBadge">Timed Exam</span>
+            </div>
+            <h4 class="last-test-title" id="lastTestCourseTitle">BSMS1201 — Principles of Economics</h4>
+            <div class="last-test-paper-name" id="lastTestPaperName">Quiz 1 Mock Exam • 15 Questions</div>
+          </div>
+
+          <div class="last-test-right">
+            <div class="last-test-score-group">
+              <div class="last-test-score-num" id="lastTestScoreText">14 / 15</div>
+              <div class="last-test-grade-pill" id="lastTestGradePill">S Grade (93.3%)</div>
+            </div>
+            <div class="last-test-actions">
+              <button type="button" class="btn-review-attempt" id="btnReviewLastAttempt">
+                <span>👁️ Review Solutions</span>
+              </button>
+              <button type="button" class="btn-retake-attempt" id="btnRetakeLastAttempt">
+                <span>↺ Retake Paper</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Metrics Row -->
+        <div class="qp-progress-metrics-row">
+          <div class="qp-p-metric">
+            <span class="qp-p-val" id="metricTotalMocks">0</span>
+            <span class="qp-p-lbl">Mocks Attempted</span>
+          </div>
+          <div class="qp-p-metric">
+            <span class="qp-p-val" style="color: #7c3aed;" id="metricAvgScore">0%</span>
+            <span class="qp-p-lbl">Average Score</span>
+          </div>
+          <div class="qp-p-metric">
+            <span class="qp-p-val" style="color: #10b981;" id="metricBestScore">0%</span>
+            <span class="qp-p-lbl">Best Score</span>
+          </div>
+          <div class="qp-p-metric">
+            <span class="qp-p-val" id="metricQuestionsSolved">0</span>
+            <span class="qp-p-lbl">Questions Solved</span>
+          </div>
+        </div>
+
+        <!-- Collapsible Recent History List -->
+        <div class="qp-history-collapse" id="historyCollapseContainer" style="display: none;">
+          <h5 style="font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #71717a; text-transform: uppercase;">Previous Exam History</h5>
+          <div class="qp-history-list" id="historyListContainer">
+            <!-- Dynamically populated attempts list -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Giant Headline -->
+      <div class="qp-hero-section">
+        <h1 class="qp-hero-title">
+          Practice the previous<br/>
+          quiz <span class="highlight-tag">question papers</span><br/>
+          IITM BS Degree
+        </h1>
+        <p class="qp-hero-subtitle">
+          This app is independently run by students and is tailored for the IIT Madras BS in Management and Data Science.
+        </p>
+
+        <!-- 3. The 4 Milestone Pill Action Buttons (Image 2) -->
+        <div class="milestone-pill-row">
+          <button type="button" class="milestone-pill-btn active" data-phase="quiz1" id="pillQuiz1">Practice Quiz 1</button>
+          <button type="button" class="milestone-pill-btn" data-phase="quiz2" id="pillQuiz2">Practice Quiz 2</button>
+          <button type="button" class="milestone-pill-btn" data-phase="endterm" id="pillEndterm">Practice End Term Quiz <span class="pill-pro-tag">PRO</span></button>
+          <button type="button" class="milestone-pill-btn" data-phase="all" id="pillAll">Practice Mixed Sets</button>
+        </div>
+      </div>
+
+      <!-- 4. Available Courses Row (Image 2) -->
+      <div class="available-courses-section">
+        <h3 class="section-subheading">Available Courses</h3>
+        <div class="degree-stream-grid">
+          <div class="degree-stream-card" data-stream="ds">
+            <div class="stream-info">
+              <h4>BS in Data Science and Applications</h4>
+            </div>
+            <div class="stream-icon">&lt; &gt;</div>
+          </div>
+
+          <div class="degree-stream-card" data-stream="es">
+            <div class="stream-info">
+              <h4>BS in Electronic Systems</h4>
+            </div>
+            <div class="stream-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+            </div>
+          </div>
+
+          <div class="degree-stream-card active" data-stream="management">
+            <div class="stream-info">
+              <h4>BS in Management and Data Science</h4>
+              <span class="stream-curated-badge">● Curated Hub</span>
+            </div>
+            <div class="stream-icon">&lt; &gt;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Question Papers Filter & Selection Box (Image 3) -->
+      <div class="qp-selection-container" id="selectionSection">
+        <h2 class="qp-phase-heading" id="selectedPhaseHeading">QUIZ 1 - QUESTION PAPERS</h2>
+
+        <!-- Filters Row -->
+        <div class="qp-filter-row">
+          <div class="qp-filter-group">
+            <label for="courseSelect">Select Course</label>
+            <div class="qp-select-wrap">
+              <select id="courseSelect" class="qp-select">
+                <option value="BSMS1201">BSMS1201 — Principles of Economics</option>
+                <option value="BSMS1202">BSMS1202 — Financial Accounting</option>
+                <option value="BSMS1203">BSMS1203 — Business Statistics</option>
+                <option value="BSMA1001">BSMA1001 — Mathematics for Data Science I</option>
+              </select>
+              <span class="qp-select-arrow">↕</span>
+            </div>
+          </div>
+
+          <div class="qp-filter-group">
+            <label for="yearSelect">Year</label>
+            <div class="qp-select-wrap">
+              <select id="yearSelect" class="qp-select">
+                <option value="all">All</option>
+                <option value="2024">Term 2024 (Latest)</option>
+                <option value="2023">Term 2023</option>
+                <option value="assignments">Graded Assignments Only</option>
+              </select>
+              <span class="qp-select-arrow">⌵</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="qp-filter-helper">
+          There may be some courses in different name. eg: You might see Economics (BSMS1201) and Financial Accounting (BSMS1202) listed. Each one will have different Question Papers.
+        </p>
+
+        <!-- Environment & Question Count Sub-Bar -->
+        <div class="qp-config-subbar">
+          <div class="qp-mode-toggle">
+            <button type="button" class="mode-btn active" data-mode="exam" id="modeBtnExam">
+              <span>⏱️ Exam Mode</span>
+            </button>
+            <button type="button" class="mode-btn" data-mode="practice" id="modeBtnPractice">
+              <span>💡 Learning Mode</span>
+            </button>
+          </div>
+
+          <div class="qp-count-toggle">
+            <label for="countSelect">Question Count:</label>
+            <select id="countSelect" class="qp-select-sm">
+              <option value="10">10 Questions (Blitz)</option>
+              <option value="15" selected>15 Questions (Standard)</option>
+              <option value="20">20 Questions (Intensive)</option>
+              <option value="30">30 Questions (Full Mock)</option>
+            </select>
+          </div>
+
+          <div class="qp-type-toggle">
+            <label for="typeFilterSelect">Type:</label>
+            <select id="typeFilterSelect" class="qp-select-sm">
+              <option value="all">All (MCQ + MSQ + NAT)</option>
+              <option value="mcq">MCQ Only</option>
+              <option value="msq">MSQ Only</option>
+              <option value="nat">NAT Only</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Launch Ready Card -->
+        <div class="qp-launch-card" id="launchReadyCard">
+          <div class="qp-launch-card-left">
+            <div class="qp-launch-title" id="launchPaperTitle">BSMS1201 — Principles of Economics • Quiz 1 Paper</div>
+            <div class="qp-launch-meta" id="availableQHint">Loading questions dataset...</div>
+          </div>
+          <button type="button" class="btn-qp-start" id="btnStartQuiz">
+            <span>Start Practice ↗</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         SCREEN 2: Exam / Practice Simulator Frame (Exact Image 1 Layout)
+         ====================================================================== -->
+    <div class="qp-exam-view" id="screenExam" style="display: none;">
+      <!-- Left Column: Fixed / Sticky Control Sidebar (320px) -->
+      <aside class="qp-sidebar">
+        <!-- 1. Meta Details Card -->
+        <div class="qp-meta-card">
+          <div class="qp-meta-row">
+            <span class="qp-meta-lbl">Exam :</span>
+            <span class="qp-meta-val" id="metaExam">Quiz 1</span>
+          </div>
+          <div class="qp-meta-row">
+            <span class="qp-meta-lbl">Subject :</span>
+            <span class="qp-meta-val" id="metaSubject">Principles of Economics</span>
+          </div>
+          <div class="qp-meta-row">
+            <span class="qp-meta-lbl">Total Marks :</span>
+            <span class="qp-meta-val" id="metaMarks">15.00</span>
+          </div>
+          <div class="qp-meta-row">
+            <span class="qp-meta-lbl">QP :</span>
+            <span class="qp-meta-val" id="metaQp">Indian Institute Of Technology, Madras</span>
+          </div>
+        </div>
+
+        <!-- 2. Mode Toggle (Exam vs Learning) -->
+        <div class="qp-sidebar-mode-group">
+          <button type="button" class="qp-sidebar-mode-btn active" id="sideModeExam">Exam Mode</button>
+          <button type="button" class="qp-sidebar-mode-btn" id="sideModeLearning">Learning Mode</button>
+        </div>
+
+        <!-- 3. Summary & Download Pill Buttons -->
+        <div class="qp-sidebar-actions">
+          <button type="button" class="qp-pill-action purple" id="btnSideSummary">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>View Question Paper Summary</span>
+          </button>
+          <button type="button" class="qp-pill-action blue" id="btnSideDownload">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download PDF</span>
+          </button>
+        </div>
+
+        <!-- 4. QUESTION MENU Section (Image 1) -->
+        <div class="qp-sidebar-section">
+          <div class="qp-section-divider-title">QUESTION MENU</div>
+          <div class="qp-question-menu-grid" id="paletteGrid">
+            <!-- Dynamically populated chips (1, 2, 3...) -->
+          </div>
+        </div>
+
+        <!-- 5. TIMER Section (Image 1) -->
+        <div class="qp-sidebar-section">
+          <div class="qp-section-divider-title">TIMER</div>
+          <div class="qp-timer-box">
+            <span class="qp-timer-digits" id="timerDisplay">30:00</span>
+            <div class="qp-timer-controls">
+              <button type="button" class="qp-timer-icon-btn" id="btnTimerPause" title="Pause / Resume">⏸</button>
+              <button type="button" class="qp-timer-icon-btn red" id="btnTimerReset" title="Reset Timer">🔄</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. CONTROLS Section (Image 1) -->
+        <div class="qp-sidebar-section">
+          <div class="qp-section-divider-title">CONTROLS</div>
+          <button type="button" class="btn-qp-submit-exam" id="btnSubmitExam">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>SUBMIT EXAM</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Right Column: Question Content Pane (Image 1) -->
+      <section class="qp-content-pane">
+        <!-- Question Item Card -->
+        <div class="qp-question-card">
+          <!-- Top Question Bar (Image 1) -->
+          <div class="qp-question-header-bar">
+            <div class="qp-header-left-title">
+              <span id="qDisplayNumId">Question 1 : 6406532159032</span>
+            </div>
+            <div class="qp-header-right-meta">
+              <span>Total Mark : <strong id="qMarksBadge">1.00</strong></span>
+              <span class="meta-pipe">|</span>
+              <span>Type : <strong id="qTypeBadge">MCQ</strong></span>
+            </div>
+          </div>
+
+          <!-- Question Body (Text + Formula + Tables) -->
+          <div class="qp-question-body">
+            <div class="qp-question-text" id="questionText">
+              <!-- Dynamically rendered markdown & KaTeX -->
+            </div>
+
+            <!-- Dynamic Answer Area (MCQ / MSQ / NAT) -->
+            <div id="answerContainer">
+              <!-- Dynamically populated options -->
+            </div>
+
+            <!-- Practice Mode Instant Feedback Box -->
+            <div class="practice-feedback-card" id="practiceFeedbackBox" style="display: none;"></div>
+          </div>
+
+          <!-- Bottom Action Bar & Tools (Image 1) -->
+          <div class="qp-question-footer-tools">
+            <!-- Left Navigation & Status -->
+            <div class="qp-footer-nav-left">
+              <button type="button" class="btn-qp-action" id="btnClearResp">Clear Response</button>
+              <button type="button" class="btn-qp-action" id="btnMarkReview">Mark for Review</button>
+              <button type="button" class="btn-qp-action" id="btnCheckAnswer" style="display: none;">Check Solution 💡</button>
+            </div>
+
+            <!-- Right Question Utility Tools (Image 1) -->
+            <div class="qp-footer-tools-right">
+              <button type="button" class="btn-qp-tool orange" id="btnReportFormat">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                <span>Broken Format?</span>
+              </button>
+              <button type="button" class="btn-qp-tool black" id="btnSnapshot" title="Snapshot Question">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom Next / Prev Controls -->
+          <div class="qp-question-nav-row">
+            <button type="button" class="btn-qp-nav" id="btnPrev">← Previous Question</button>
+            <button type="button" class="btn-qp-nav primary" id="btnSaveNext">Save &amp; Next Question →</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ======================================================================
+         SCREEN 3: Results & Diagnostic Scorecard
+         ====================================================================== -->
+    <div class="qp-result-view" id="screenResult" style="display: none;">
+      <div class="scorecard-header">
+        <div class="scorecard-pill">Performance Scorecard</div>
+        <div class="scorecard-score-big" id="resScoreVal">14 / 15</div>
+        <div class="scorecard-grade-badge" id="resGradeVal">93.3% • S Grade (Outstanding)</div>
+
+        <!-- Metrics Grid -->
+        <div class="score-metrics-grid">
+          <div class="metric-box">
+            <span class="metric-val" id="resAccuracy">93%</span>
+            <span class="metric-label">Accuracy Rate</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-val" style="color: #16a34a;" id="resCorrectCount">14</span>
+            <span class="metric-label">Correct Answers</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-val" style="color: #dc2626;" id="resIncorrectCount">1</span>
+            <span class="metric-label">Incorrect Answers</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-val" style="color: #71717a;" id="resSkippedCount">0</span>
+            <span class="metric-label">Unattempted</span>
+          </div>
+        </div>
+
+        <!-- Action Row -->
+        <div class="result-action-row">
+          <button type="button" class="btn-start-quiz" id="btnRetakeQuiz">
+            <span>Retake This Quiz ↺</span>
+          </button>
+          <button type="button" class="btn-header-back" id="btnNewQuiz">
+            <span>Configure Another Exam ⚙</span>
+          </button>
+          <a href="index.html" class="btn-header-back">
+            <span>Return to Management Hub ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Question-by-Question Review Section -->
+      <div class="review-section">
+        <h3 class="review-section-title">
+          <span>📝 Question-by-Question Detailed Review &amp; Solutions</span>
+        </h3>
+        <div id="reviewList">
+          <!-- Dynamically populated review cards -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Razorpay Pro Upgrade Modal -->
+    <div class="custom-modal-overlay" id="proUpgradeModal" style="display: none;">
+      <div class="custom-modal-card pro-modal-card">
+        <button type="button" class="pro-modal-close" id="btnCloseProModal" aria-label="Close">&times;</button>
+        <div class="pro-modal-header">
+          <div class="pro-crown-badge">👑</div>
+          <h2 class="pro-modal-title">Upgrade to Management Hub Pro</h2>
+          <p class="pro-modal-subtitle">Unlock authentic IITM End-Term exam simulators, all 37+ PYQs, and detailed step-by-step solutions.</p>
+        </div>
+
+        <!-- Plan Selection Cards -->
+        <div class="pro-plans-grid">
+          <div class="pro-plan-box active" data-plan="term_pass" id="planBoxTerm">
+            <div class="plan-popular-tag">MOST POPULAR</div>
+            <div class="plan-head">
+              <h4 class="plan-name">IITM BS Term Pro Pass</h4>
+              <div class="plan-duration">4 Months (1 Term)</div>
+            </div>
+            <div class="plan-price-row">
+              <span class="plan-currency">₹</span>
+              <span class="plan-amount">149</span>
+              <span class="plan-period">/ term</span>
+            </div>
+            <p class="plan-desc">Full End-Term Exam Simulators & authentic PYQs for the ongoing term.</p>
+          </div>
+
+          <div class="pro-plan-box" data-plan="annual_pass" id="planBoxAnnual">
+            <div class="plan-savings-tag">SAVE 33%</div>
+            <div class="plan-head">
+              <h4 class="plan-name">Annual Master Pass</h4>
+              <div class="plan-duration">12 Months (3 Terms)</div>
+            </div>
+            <div class="plan-price-row">
+              <span class="plan-currency">₹</span>
+              <span class="plan-amount">299</span>
+              <span class="plan-period">/ year</span>
+            </div>
+            <p class="plan-desc">Unlimited access across all Foundation, Diploma & Degree courses.</p>
+          </div>
+        </div>
+
+        <!-- Features Checklist -->
+        <div class="pro-features-wrap">
+          <h5 class="pro-features-heading">WHAT'S INCLUDED IN PRO:</h5>
+          <div class="pro-features-list">
+            <div class="pro-feature-item">
+              <span class="feat-check">✓</span>
+              <span><strong>Full Timed End-Term Exam Simulator</strong> (45-min / 2.5-hr authentic interface)</span>
+            </div>
+            <div class="pro-feature-item">
+              <span class="feat-check">✓</span>
+              <span><strong>Complete IITM BS PYQ Bank</strong> with step-by-step verified solutions</span>
+            </div>
+            <div class="pro-feature-item">
+              <span class="feat-check">✓</span>
+              <span><strong>KaTeX Math & Code Syntax</strong> identical to the official exam portal</span>
+            </div>
+            <div class="pro-feature-item">
+              <span class="feat-check">✓</span>
+              <span><strong>Detailed Performance Analytics</strong> with weakness detection & retake history</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkout Action Button -->
+        <div class="pro-modal-actions">
+          <button type="button" class="btn-checkout-rzp" id="btnProceedCheckout">
+            <span id="checkoutBtnText">Pay ₹149 via Razorpay (UPI / Cards)</span>
+            <span class="rzp-lock-icon">🔒</span>
+          </button>
+        </div>
+
+        <div class="pro-trust-footer">
+          <span>⚡ Instant Activation • 100% Secure via Razorpay (GPay, PhonePe, Paytm, Cards, NetBanking)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Professional Custom Confirmation Dialog -->
+    <div class="custom-modal-overlay" id="customConfirmModal" style="display: none;">
+      <div class="custom-modal-card">
+        <div class="custom-modal-icon-wrap" id="customConfirmIconWrap">
+          <span id="customConfirmIcon">⚠️</span>
+        </div>
+        <h3 class="custom-modal-title" id="customConfirmTitle">Confirm Action</h3>
+        <div class="custom-modal-message" id="customConfirmMessage">Are you sure?</div>
+        <div class="custom-modal-actions">
+          <button type="button" class="btn-custom-modal-cancel" id="btnCustomConfirmCancel">Cancel</button>
+          <button type="button" class="btn-custom-modal-action" id="btnCustomConfirmAction">Proceed</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Floating Container -->
+    <div class="app-toast-container" id="appToastContainer"></div>
+
+  </main>
+
+  <!-- Script Execution -->
+  <script src="quiz.js?v=20261019_qp"></script>
+</body>
+</html>

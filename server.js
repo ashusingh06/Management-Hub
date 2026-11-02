@@ -10,6 +10,8 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { DEFAULT_COURSES } from './src/data/defaultCourses.js';
 import { v2 as cloudinary } from 'cloudinary';
+import Razorpay from 'razorpay';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +28,110 @@ const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const COURSES_FILE = path.join(DATA_DIR, 'courses.json');
 const ANALYTICS_FILE = path.join(DATA_DIR, 'analytics.json');
 const COMMUNITY_FILE = path.join(DATA_DIR, 'community.json');
+const PAYMENTS_FILE = path.join(DATA_DIR, 'payments.json');
+
+function getPayments() {
+  try {
+    if (!fs.existsSync(PAYMENTS_FILE)) return [];
+    return JSON.parse(fs.readFileSync(PAYMENTS_FILE, 'utf-8'));
+  } catch (e) {
+    return [];
+  }
+}
+
+function savePayments(payments) {
+  fs.writeFileSync(PAYMENTS_FILE, JSON.stringify(payments, null, 2));
+}
+
+// Razorpay Instance & Pro Subscription Plans
+const PRO_PLANS = {
+  term_pass: {
+    id: 'term_pass',
+    name: 'IITM BS Term Pro Pass',
+    badge: 'TERM PRO',
+    price: 149,
+    amount: 14900, // in paise (₹149)
+    currency: 'INR',
+    durationDays: 120, // 4 months
+    description: 'Complete End-Term Simulator & Full Authentic PYQs for Current Term',
+    features: [
+      'Full 45-min & 2.5-hour Timed End-Term Exam Simulators',
+      'All Authentic Previous Year Exam Papers (Quiz 1, 2 & End-Term)',
+      'Step-by-step Explanations & KaTeX Formulas',
+      'Personalized Attempt Tracking & Detailed Performance Reports'
+    ]
+  },
+  annual_pass: {
+    id: 'annual_pass',
+    name: 'All-Course Annual Master Pass',
+    badge: 'ANNUAL PRO',
+    price: 299,
+    amount: 29900, // in paise (₹299)
+    currency: 'INR',
+    durationDays: 365, // 1 year
+    description: 'All Foundation, Diploma & Degree PYQs for 3 Consecutive Terms',
+    features: [
+      'Everything in Term Pro Pass for 3 consecutive terms',
+      'Priority access to newly solved PYQ papers',
+      'Downloadable PDF Solution Keys & LaTeX Formula Cheatsheets',
+      'Special Pro Scholar Badge on Student Dashboard'
+    ]
+  }
+};
+
+let razorpayInstance = null;
+const RZP_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
+const RZP_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
+
+if (RZP_KEY_ID && RZP_KEY_SECRET && !RZP_KEY_ID.includes('placeholder')) {
+  try {
+    razorpayInstance = new Razorpay({
+      key_id: RZP_KEY_ID,
+      key_secret: RZP_KEY_SECRET
+    });
+    console.log('[Razorpay] Initialized with live/test key:', RZP_KEY_ID);
+  } catch (err) {
+    console.warn('[Razorpay] Initialization warning:', err.message);
+  }
+}
+
+function checkIfUserIsPro(req) {
+  // 1. Check signed pro cookie or header
+  const proToken = req.cookies?.mghub_pro_token || req.headers['x-pro-token'];
+  if (proToken) {
+    try {
+      const decoded = jwt.verify(proToken, JWT_SECRET);
+      if (decoded && decoded.isPremium && new Date(decoded.expiresAt) > new Date()) {
+        return { isPro: true, plan: decoded.plan, expiresAt: decoded.expiresAt };
+      }
+    } catch (e) {}
+  }
+
+  // 2. Check standard auth token
+  let token = req.cookies?.mghub_auth_token;
+  if (!token && req.headers.authorization) {
+    const parts = req.headers.authorization.split(' ');
+    if (parts.length === 2 && parts[0] === 'Bearer') {
+      token = parts[1];
+    }
+  }
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      if (decoded.role === 'admin') {
+        return { isPro: true, plan: 'admin_lifetime', expiresAt: '2099-12-31T23:59:59.000Z' };
+      }
+      const users = getUsers();
+      const user = users.find(u => u.id === decoded.id || u.email.toLowerCase() === decoded.email?.toLowerCase());
+      if (user && user.isPremium && (!user.premiumExpiry || new Date(user.premiumExpiry) > new Date())) {
+        return { isPro: true, plan: user.premiumPlan || 'term_pass', expiresAt: user.premiumExpiry };
+      }
+    } catch (e) {}
+  }
+
+  return { isPro: false };
+}
 
 const DEFAULT_COMMUNITY_SETTINGS = {
   title: "Join Our Community",
@@ -165,14 +271,15 @@ const upload = multer({
 // Ensure default admin account exists with bcrypt hash
 async function ensureAdminExists() {
   const users = getUsers();
-  const hasAdmin = users.some(u => u.role === 'admin');
+  const adminEmail = (process.env.ADMIN_EMAIL || 'aashishsinghh06@gmail.com').toLowerCase().trim();
+  const hasAdmin = users.some(u => u.role === 'admin' || u.email.toLowerCase() === adminEmail);
   if (!hasAdmin) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSCODE || 'homeaccess#2345#thisisrealaurafarming', salt);
     users.unshift({
       id: Date.now().toString(),
-      name: 'Aashish Singh',
-      email: 'aashishsinghh06@gmail.com',
+      name: process.env.ADMIN_NAME || 'Aashish Singh',
+      email: adminEmail,
       password: hashedPassword,
       role: 'admin',
       createdAt: new Date().toISOString()
@@ -196,22 +303,9 @@ app.use(express.urlencoded({ extended: true }));
 // ==============================================================================
 
 /**
- * Extracts and verifies JWT from HTTP-Only cookie, Authorization Bearer header, or Admin validation headers
+ * Extracts and verifies JWT from HTTP-Only cookie or Authorization Bearer header
  */
 function authenticateToken(req, res, next) {
-  const adminEmail = req.headers['x-admin-email'] || req.headers['x-user-email'];
-  const adminAuthFlag = req.headers['x-admin-auth'];
-
-  if (adminAuthFlag === 'true' || (adminEmail && adminEmail.toLowerCase() === 'aashishsinghh06@gmail.com')) {
-    req.user = {
-      id: 'admin_master',
-      name: 'Aashish Singh',
-      email: 'aashishsinghh06@gmail.com',
-      role: 'admin'
-    };
-    return next();
-  }
-
   let token = req.cookies?.mghub_auth_token;
 
   if (!token && req.headers.authorization) {
@@ -219,16 +313,6 @@ function authenticateToken(req, res, next) {
     if (parts.length === 2 && parts[0] === 'Bearer') {
       token = parts[1];
     }
-  }
-
-  if (token === 'mghub_admin_token_authenticated_2026') {
-    req.user = {
-      id: 'admin_master',
-      name: 'Aashish Singh',
-      email: 'aashishsinghh06@gmail.com',
-      role: 'admin'
-    };
-    return next();
   }
 
   if (!token) {
@@ -252,13 +336,6 @@ function authenticateToken(req, res, next) {
  * Strictly enforces that req.user has role === 'admin'
  */
 function requireAdmin(req, res, next) {
-  const adminEmail = req.headers['x-admin-email'] || req.headers['x-user-email'];
-  const adminAuthFlag = req.headers['x-admin-auth'];
-
-  if (adminAuthFlag === 'true' || (adminEmail && adminEmail.toLowerCase() === 'aashishsinghh06@gmail.com')) {
-    return next();
-  }
-
   if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({
       error: 'Forbidden: Access denied. Administrator privileges required.'
@@ -547,7 +624,507 @@ app.get('/api/community', (req, res) => {
 });
 
 // ==============================================================================
-// Strictly Protected Admin API Endpoints (Middleware: authenticateToken + requireAdmin)
+// Quiz Practice Platform API Endpoints (Exam Simulator & Question Bank)
+// ==============================================================================
+const QUESTIONS_FILE = path.join(DATA_DIR, 'questions.json');
+
+function getQuestions() {
+  try {
+    if (!fs.existsSync(QUESTIONS_FILE)) return [];
+    return JSON.parse(fs.readFileSync(QUESTIONS_FILE, 'utf-8'));
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveQuestions(questions) {
+  fs.writeFileSync(QUESTIONS_FILE, JSON.stringify(questions, null, 2));
+}
+
+// Public Endpoint: Fetch Filtered Questions for Practice / Exam Simulator
+app.get('/api/quiz/questions', (req, res) => {
+  const { course, phase, week, type, limit } = req.query;
+  let questions = getQuestions();
+
+  if (course && course !== 'all') {
+    questions = questions.filter(q => q.courseCode.toUpperCase() === course.toUpperCase().trim());
+  }
+
+  if (phase && phase !== 'all') {
+    const p = phase.toLowerCase().trim();
+    if (p === 'quiz1') {
+      questions = questions.filter(q => (q.examMilestones && q.examMilestones.includes('quiz1')) || (q.week && q.week <= 4));
+    } else if (p === 'quiz2') {
+      questions = questions.filter(q => (q.examMilestones && q.examMilestones.includes('quiz2')) || (q.week && q.week <= 8));
+    } else if (p === 'endterm') {
+      questions = questions.filter(q => (q.examMilestones && q.examMilestones.includes('endterm')) || (q.week && q.week <= 12));
+    }
+  }
+
+  if (week && week !== 'all') {
+    const w = parseInt(week);
+    if (!isNaN(w)) {
+      questions = questions.filter(q => q.week === w);
+    }
+  }
+
+  if (type && type !== 'all') {
+    questions = questions.filter(q => q.type.toLowerCase() === type.toLowerCase().trim());
+  }
+
+  const proStatus = checkIfUserIsPro(req);
+  const isEndTerm = (phase && phase.toLowerCase().trim() === 'endterm');
+
+  // Freemium rule: If requesting full End-Term mock simulator without Pro Pass, provide 3 sample preview questions
+  let isPreviewOnly = false;
+  if (isEndTerm && !proStatus.isPro) {
+    isPreviewOnly = true;
+  }
+
+  // Shuffle questions randomly
+  for (let i = questions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+  }
+
+  const maxLimit = isPreviewOnly ? 3 : (parseInt(limit) || questions.length);
+  const result = questions.slice(0, maxLimit);
+
+  res.json({
+    total: questions.length,
+    returned: result.length,
+    isPro: proStatus.isPro,
+    isPreviewOnly,
+    message: isPreviewOnly
+      ? 'Preview mode: 3 sample questions unlocked. Upgrade to Pro Pass (₹149) for full mock papers & step-by-step solutions.'
+      : undefined,
+    questions: result
+  });
+});
+
+// Public Endpoint: Get Available Quiz Courses and Question Counts
+app.get('/api/quiz/courses', (req, res) => {
+  const questions = getQuestions();
+  const summary = {};
+
+  questions.forEach(q => {
+    const code = q.courseCode.toUpperCase();
+    if (!summary[code]) {
+      summary[code] = {
+        code,
+        title: q.courseTitle || code,
+        totalQuestions: 0,
+        quiz1Questions: 0,
+        quiz2Questions: 0,
+        endtermQuestions: 0,
+        weeks: new Set(),
+        types: { mcq: 0, msq: 0, nat: 0 }
+      };
+    }
+    summary[code].totalQuestions++;
+    if (q.week) summary[code].weeks.add(q.week);
+    if (q.type && summary[code].types[q.type.toLowerCase()] !== undefined) {
+      summary[code].types[q.type.toLowerCase()]++;
+    }
+    if ((q.examMilestones && q.examMilestones.includes('quiz1')) || (q.week && q.week <= 4)) {
+      summary[code].quiz1Questions++;
+    }
+    if ((q.examMilestones && q.examMilestones.includes('quiz2')) || (q.week && q.week <= 8)) {
+      summary[code].quiz2Questions++;
+    }
+    if ((q.examMilestones && q.examMilestones.includes('endterm')) || (q.week && q.week <= 12)) {
+      summary[code].endtermQuestions++;
+    }
+  });
+
+  const list = Object.values(summary).map(item => ({
+    ...item,
+    weeks: Array.from(item.weeks).sort((a, b) => a - b)
+  }));
+
+  res.json({ courses: list, totalQuestions: questions.length });
+});
+
+// Admin Endpoint: Get All Questions (Full Unshuffled List)
+app.get('/api/admin/quiz/questions', authenticateToken, requireAdmin, (req, res) => {
+  const { course, week } = req.query;
+  let questions = getQuestions();
+  if (course && course !== 'all') {
+    questions = questions.filter(q => q.courseCode && q.courseCode.toUpperCase() === course.toUpperCase().trim());
+  }
+  if (week && week !== 'all') {
+    const w = parseInt(week);
+    if (!isNaN(w)) questions = questions.filter(q => q.week === w);
+  }
+  res.json({ total: questions.length, questions });
+});
+
+// Admin Endpoint: Add / Import Questions
+app.post('/api/admin/quiz/questions', authenticateToken, requireAdmin, (req, res) => {
+  const newQuestions = req.body.questions || [req.body];
+  if (!Array.isArray(newQuestions) || newQuestions.length === 0) {
+    return res.status(400).json({ error: 'Valid questions array is required' });
+  }
+
+  const existing = getQuestions();
+  newQuestions.forEach(q => {
+    if (!q.id) q.id = `${q.courseCode || 'GEN'}_W${q.week || 0}_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    existing.push(q);
+  });
+
+  saveQuestions(existing);
+  res.json({ success: true, message: `Added ${newQuestions.length} questions`, total: existing.length });
+});
+
+// Admin Endpoint: Update an Existing Question
+app.put('/api/admin/quiz/questions/:id', authenticateToken, requireAdmin, (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+  const existing = getQuestions();
+  const idx = existing.findIndex(q => q.id === id);
+  if (idx === -1) {
+    return res.status(404).json({ error: 'Question not found' });
+  }
+  existing[idx] = { ...existing[idx], ...updatedData, id };
+  saveQuestions(existing);
+  res.json({ success: true, message: 'Question updated successfully', question: existing[idx] });
+});
+
+// Admin Endpoint: Delete a Single Question
+app.delete('/api/admin/quiz/questions/:id', authenticateToken, requireAdmin, (req, res) => {
+  const { id } = req.params;
+  let existing = getQuestions();
+  const initialLen = existing.length;
+  existing = existing.filter(q => q.id !== id);
+  if (existing.length === initialLen) {
+    return res.status(404).json({ error: 'Question not found' });
+  }
+  saveQuestions(existing);
+  res.json({ success: true, message: 'Question deleted successfully', total: existing.length });
+});
+
+// Admin Endpoint: Clear Questions by Course or All
+app.post('/api/admin/quiz/questions/clear', authenticateToken, requireAdmin, (req, res) => {
+  const { course } = req.body;
+  let existing = getQuestions();
+  if (course && course !== 'all') {
+    existing = existing.filter(q => q.courseCode && q.courseCode.toUpperCase() !== course.toUpperCase().trim());
+  } else {
+    existing = [];
+  }
+  saveQuestions(existing);
+  res.json({ success: true, message: 'Questions cleared', total: existing.length });
+});
+
+// ==============================================================================
+// Quiz Exam Attempts & Student Progress Tracking Endpoints
+// ==============================================================================
+const ATTEMPTS_FILE = path.join(DATA_DIR, 'attempts.json');
+
+function getAttempts() {
+  try {
+    if (!fs.existsSync(ATTEMPTS_FILE)) return [];
+    return JSON.parse(fs.readFileSync(ATTEMPTS_FILE, 'utf-8'));
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveAttempts(attempts) {
+  fs.writeFileSync(ATTEMPTS_FILE, JSON.stringify(attempts, null, 2));
+}
+
+// Record an exam / mock practice attempt
+app.post('/api/quiz/attempts', (req, res) => {
+  const attempt = req.body;
+  if (!attempt || typeof attempt !== 'object') {
+    return res.status(400).json({ error: 'Valid attempt data required' });
+  }
+
+  const attempts = getAttempts();
+  const newAttempt = {
+    ...attempt,
+    id: attempt.id || `ATT_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+    createdAt: new Date().toISOString()
+  };
+
+  attempts.unshift(newAttempt);
+  if (attempts.length > 1000) attempts.length = 1000;
+  saveAttempts(attempts);
+
+  res.json({ success: true, attempt: newAttempt });
+});
+
+// Get user practice / mock history
+app.get('/api/quiz/attempts', (req, res) => {
+  const { userId, courseCode, limit } = req.query;
+  let attempts = getAttempts();
+
+  if (userId) {
+    attempts = attempts.filter(a => a.userId === userId || a.userEmail === userId);
+  }
+  if (courseCode && courseCode !== 'all') {
+    attempts = attempts.filter(a => a.courseCode && a.courseCode.toUpperCase() === courseCode.toUpperCase());
+  }
+
+  const max = parseInt(limit) || 20;
+  res.json({
+    total: attempts.length,
+    attempts: attempts.slice(0, max)
+  });
+});
+
+// Get user progress summary (overall stats & latest mock)
+app.get('/api/quiz/progress', (req, res) => {
+  const { userId, courseCode } = req.query;
+  let attempts = getAttempts();
+
+  if (userId) {
+    attempts = attempts.filter(a => a.userId === userId || a.userEmail === userId);
+  }
+  if (courseCode && courseCode !== 'all') {
+    attempts = attempts.filter(a => a.courseCode && a.courseCode.toUpperCase() === courseCode.toUpperCase());
+  }
+
+  if (attempts.length === 0) {
+    return res.json({
+      hasAttempts: false,
+      totalAttempts: 0,
+      avgScorePercent: 0,
+      bestScorePercent: 0,
+      totalQuestionsAnswered: 0,
+      latestAttempt: null,
+      recentAttempts: []
+    });
+  }
+
+  let totalPct = 0;
+  let bestPct = 0;
+  let totalAnswered = 0;
+
+  attempts.forEach(a => {
+    const pct = a.percentage !== undefined ? a.percentage : (a.maxPossibleScore > 0 ? (a.totalScore / a.maxPossibleScore) * 100 : 0);
+    totalPct += pct;
+    if (pct > bestPct) bestPct = pct;
+    totalAnswered += (a.correctCount || 0) + (a.incorrectCount || 0);
+  });
+
+  res.json({
+    hasAttempts: true,
+    totalAttempts: attempts.length,
+    avgScorePercent: Math.round(totalPct / attempts.length),
+    bestScorePercent: Math.round(bestPct),
+    totalQuestionsAnswered: totalAnswered,
+    latestAttempt: attempts[0],
+    recentAttempts: attempts.slice(0, 5)
+  });
+});
+
+// Explicit Route for /quiz
+app.get('/quiz', (req, res) => {
+  res.sendFile(path.join(__dirname, 'quiz.html'));
+});
+
+// ==============================================================================
+// Razorpay Payment Gateway & Pro Pass Subscription Endpoints
+// ==============================================================================
+
+// 1. Get Payment Configuration & Pricing Plans (Public)
+app.get('/api/payment/config', (req, res) => {
+  res.json({
+    keyId: RZP_KEY_ID || 'rzp_test_placeholder',
+    isLiveConfigured: Boolean(razorpayInstance),
+    plans: PRO_PLANS
+  });
+});
+
+// 2. Check Current User Pro Subscription Status
+app.get('/api/payment/status', (req, res) => {
+  const proStatus = checkIfUserIsPro(req);
+  res.json(proStatus);
+});
+
+// 3. Create Razorpay Payment Order
+app.post('/api/payment/create-order', async (req, res) => {
+  try {
+    const { planId = 'term_pass', userEmail, userName } = req.body;
+    const plan = PRO_PLANS[planId];
+    if (!plan) {
+      return res.status(400).json({ error: 'Invalid subscription plan selected' });
+    }
+
+    const orderReceipt = `rcpt_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    let order;
+
+    if (razorpayInstance) {
+      // Real Razorpay API Order Creation
+      order = await razorpayInstance.orders.create({
+        amount: plan.amount,
+        currency: plan.currency,
+        receipt: orderReceipt,
+        notes: {
+          planId: plan.id,
+          userEmail: userEmail || '',
+          userName: userName || ''
+        }
+      });
+    } else {
+      // Demo / Test Mode (Ready to use without live keys, auto-activates when real keys are added)
+      order = {
+        id: `order_demo_${Date.now()}`,
+        entity: 'order',
+        amount: plan.amount,
+        amount_paid: 0,
+        amount_due: plan.amount,
+        currency: plan.currency,
+        receipt: orderReceipt,
+        status: 'created',
+        notes: {
+          planId: plan.id,
+          isDemoMode: true
+        },
+        created_at: Math.floor(Date.now() / 1000)
+      };
+    }
+
+    // Save pending transaction
+    const payments = getPayments();
+    payments.unshift({
+      orderId: order.id,
+      receipt: orderReceipt,
+      planId: plan.id,
+      amount: plan.amount,
+      currency: plan.currency,
+      status: 'pending',
+      userEmail: userEmail || '',
+      userName: userName || '',
+      isDemoMode: !razorpayInstance,
+      createdAt: new Date().toISOString()
+    });
+    savePayments(payments);
+
+    res.json({
+      success: true,
+      order,
+      keyId: RZP_KEY_ID || 'rzp_test_placeholder',
+      plan,
+      isDemoMode: !razorpayInstance
+    });
+  } catch (err) {
+    console.error('Razorpay order creation error:', err);
+    res.status(500).json({ error: 'Failed to initiate checkout: ' + (err.message || 'Payment gateway error') });
+  }
+});
+
+// 4. Verify Razorpay Payment Signature & Activate Pro Pass
+app.post('/api/payment/verify', async (req, res) => {
+  try {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      planId = 'term_pass',
+      userEmail
+    } = req.body;
+
+    const plan = PRO_PLANS[planId] || PRO_PLANS.term_pass;
+    let isValid = false;
+
+    if (razorpayInstance && RZP_KEY_SECRET) {
+      // Real cryptographic HMAC SHA256 verification
+      const expectedSignature = crypto
+        .createHmac('sha256', RZP_KEY_SECRET)
+        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+        .digest('hex');
+
+      isValid = (expectedSignature === razorpay_signature);
+    } else {
+      // Demo / Test mode verification
+      isValid = Boolean(razorpay_order_id && razorpay_payment_id);
+    }
+
+    if (!isValid) {
+      return res.status(400).json({ error: 'Payment verification failed: Invalid cryptographic signature.' });
+    }
+
+    // Update payment record
+    const payments = getPayments();
+    const target = payments.find(p => p.orderId === razorpay_order_id);
+    if (target) {
+      target.status = 'paid';
+      target.paymentId = razorpay_payment_id;
+      target.signature = razorpay_signature || 'demo_signature';
+      target.paidAt = new Date().toISOString();
+    } else {
+      payments.unshift({
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        planId: plan.id,
+        amount: plan.amount,
+        currency: plan.currency,
+        status: 'paid',
+        paidAt: new Date().toISOString(),
+        isDemoMode: !razorpayInstance
+      });
+    }
+    savePayments(payments);
+
+    const expiryDate = new Date(Date.now() + plan.durationDays * 24 * 60 * 60 * 1000).toISOString();
+
+    // If authenticated user, update profile in users.json
+    let token = req.cookies?.mghub_auth_token;
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const users = getUsers();
+        const user = users.find(u => u.id === decoded.id || u.email.toLowerCase() === decoded.email?.toLowerCase());
+        if (user) {
+          user.isPremium = true;
+          user.premiumPlan = plan.id;
+          user.premiumExpiry = expiryDate;
+          saveUsers(users);
+        }
+      } catch (e) {}
+    }
+
+    // Generate signed Pro pass token
+    const proToken = jwt.sign(
+      { isPremium: true, plan: plan.id, expiresAt: expiryDate, orderId: razorpay_order_id },
+      JWT_SECRET,
+      { expiresIn: `${plan.durationDays}d` }
+    );
+
+    // Set cookie
+    res.cookie('mghub_pro_token', proToken, {
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: plan.durationDays * 24 * 60 * 60 * 1000
+    });
+
+    res.json({
+      success: true,
+      message: `🎉 Welcome to Management Hub Pro! Your ${plan.name} is now active.`,
+      isPremium: true,
+      plan: plan.id,
+      expiresAt: expiryDate,
+      proToken
+    });
+  } catch (err) {
+    console.error('Payment verification error:', err);
+    res.status(500).json({ error: 'Server error during payment verification: ' + err.message });
+  }
+});
+
+// 5. Admin Payment Logs (Protected)
+app.get('/api/admin/payments', authenticateToken, requireAdmin, (req, res) => {
+  const payments = getPayments();
+  res.json({
+    totalTransactions: payments.length,
+    paidCount: payments.filter(p => p.status === 'paid').length,
+    totalRevenueInINR: payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + (p.amount / 100), 0),
+    transactions: payments
+  });
+});
 // ==============================================================================
 
 // Update Community Settings (Protected Admin)

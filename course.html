@@ -359,9 +359,14 @@
         <span class="course-code" id="pageCourseCode">CODE</span>
         <h1 class="course-compact-title" id="pageCourseTitle">Loading Course...</h1>
       </div>
-      <button type="button" id="pageBookmarkBtn" class="btn-page-bookmark">
-        <span id="pageBookmarkIcon">★</span> <span id="pageBookmarkText">Save to Bookmarks</span>
-      </button>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <a id="pageQuizPracticeBtn" href="quiz.html" class="btn-page-bookmark" style="background: #7c3aed; color: #ffffff; border-color: #7c3aed; text-decoration: none;" title="Practice Exam Questions">
+          <span>🎯 Practice Quiz Simulator</span>
+        </a>
+        <button type="button" id="pageBookmarkBtn" class="btn-page-bookmark">
+          <span id="pageBookmarkIcon">★</span> <span id="pageBookmarkText">Save to Bookmarks</span>
+        </button>
+      </div>
     </div>
 
     <!-- 2-Column Split Layout for Study Notes & PYQs -->
@@ -714,6 +719,11 @@
         pageCourseTitle.textContent = c.title;
         pageLevelBadge.textContent = (c.level || 'foundation').toUpperCase();
         pageLevelBadge.className = `level-badge badge-${c.level || 'foundation'}`;
+
+        const quizBtn = document.getElementById('pageQuizPracticeBtn');
+        if (quizBtn && c.code) {
+          quizBtn.href = `quiz.html?course=${encodeURIComponent(c.code)}`;
+        }
 
         // Study Notes - Multi-Notes Support
         const notesListContainer = document.getElementById('notesListContainer');

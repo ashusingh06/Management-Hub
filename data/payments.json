@@ -1,0 +1,17 @@
+[
+  {
+    "orderId": "order_demo_1793613268524",
+    "receipt": "rcpt_1793613268524_368",
+    "planId": "term_pass",
+    "amount": 14900,
+    "currency": "INR",
+    "status": "paid",
+    "userEmail": "test@iitm.ac.in",
+    "userName": "",
+    "isDemoMode": true,
+    "createdAt": "2026-11-02T09:54:28.527Z",
+    "paymentId": "pay_demo_test123",
+    "signature": "demo_signature",
+    "paidAt": "2026-11-02T09:56:07.881Z"
+  }
+]
