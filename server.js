@@ -43,7 +43,6 @@ function savePayments(payments) {
   fs.writeFileSync(PAYMENTS_FILE, JSON.stringify(payments, null, 2));
 }
 
-// Razorpay Instance & Pro Subscription Plans
 const PRO_PLANS = {
   term_pass: {
     id: 'term_pass',
@@ -96,7 +95,7 @@ if (RZP_KEY_ID && RZP_KEY_SECRET && !RZP_KEY_ID.includes('placeholder')) {
 }
 
 function checkIfUserIsPro(req) {
-  // 1. Check signed pro cookie or header
+  
   const proToken = req.cookies?.mghub_pro_token || req.headers['x-pro-token'];
   if (proToken) {
     try {
@@ -107,7 +106,6 @@ function checkIfUserIsPro(req) {
     } catch (e) {}
   }
 
-  // 2. Check standard auth token
   let token = req.cookies?.mghub_auth_token;
   if (!token && req.headers.authorization) {
     const parts = req.headers.authorization.split(' ');
@@ -219,9 +217,7 @@ function saveCommunitySettings(settings) {
   fs.writeFileSync(COMMUNITY_FILE, JSON.stringify(settings, null, 2));
 }
 
-// ==============================================================================
 // Cloudinary Configuration (PDF Storage — Free 25GB, 24*7 accessible)
-// ==============================================================================
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -298,9 +294,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ==============================================================================
 // Authentication & Role-Based Authorization Middleware
-// ==============================================================================
 
 /**
  * Extracts and verifies JWT from HTTP-Only cookie or Authorization Bearer header
@@ -344,9 +338,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// ==============================================================================
 // Page-Level Protection Middleware (Blocks manual entry to /admin or /admin.html)
-// ==============================================================================
 
 function protectAdminHtml(req, res, next) {
   let token = req.cookies?.mghub_auth_token;
@@ -384,9 +376,7 @@ app.get(['/admin', '/admin.html'], protectAdminHtml, (req, res) => {
   }
 });
 
-// ==============================================================================
 // Authentication API Endpoints
-// ==============================================================================
 
 // Register a new Student / User account (Always role: 'user')
 app.post('/api/auth/register', async (req, res) => {
@@ -545,9 +535,7 @@ app.post('/api/auth/logout', (req, res) => {
   res.json({ success: true, message: 'Logged out successfully' });
 });
 
-// ==============================================================================
 // Public Course API Endpoints
-// ==============================================================================
 
 app.get('/api/courses', (req, res) => {
   const { level, q } = req.query;
@@ -623,9 +611,6 @@ app.get('/api/community', (req, res) => {
   res.json(getCommunitySettings());
 });
 
-// ==============================================================================
-// Quiz Practice Platform API Endpoints (Exam Simulator & Question Bank)
-// ==============================================================================
 const QUESTIONS_FILE = path.join(DATA_DIR, 'questions.json');
 
 function getQuestions() {
@@ -641,7 +626,6 @@ function saveQuestions(questions) {
   fs.writeFileSync(QUESTIONS_FILE, JSON.stringify(questions, null, 2));
 }
 
-// Public Endpoint: Fetch Filtered Questions for Practice / Exam Simulator
 app.get('/api/quiz/questions', (req, res) => {
   const { course, phase, week, type, limit } = req.query;
   let questions = getQuestions();
@@ -674,14 +658,11 @@ app.get('/api/quiz/questions', (req, res) => {
 
   const proStatus = checkIfUserIsPro(req);
 
-  // Pro Pass Rule: The whole Quiz Simulator is an exclusive Management Hub Pro feature.
-  // Non-Pro students get a 2-question preview of the authentic interface.
   let isPreviewOnly = false;
   if (!proStatus.isPro) {
     isPreviewOnly = true;
   }
 
-  // Shuffle questions randomly
   for (let i = questions.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [questions[i], questions[j]] = [questions[j], questions[i]];
@@ -702,7 +683,6 @@ app.get('/api/quiz/questions', (req, res) => {
   });
 });
 
-// Public Endpoint: Get Available Quiz Courses and Question Counts
 app.get('/api/quiz/courses', (req, res) => {
   const questions = getQuestions();
   const summary = {};
@@ -745,7 +725,6 @@ app.get('/api/quiz/courses', (req, res) => {
   res.json({ courses: list, totalQuestions: questions.length });
 });
 
-// Admin Endpoint: Get All Questions (Full Unshuffled List)
 app.get('/api/admin/quiz/questions', authenticateToken, requireAdmin, (req, res) => {
   const { course, week } = req.query;
   let questions = getQuestions();
@@ -759,7 +738,6 @@ app.get('/api/admin/quiz/questions', authenticateToken, requireAdmin, (req, res)
   res.json({ total: questions.length, questions });
 });
 
-// Admin Endpoint: Add / Import Questions
 app.post('/api/admin/quiz/questions', authenticateToken, requireAdmin, (req, res) => {
   const newQuestions = req.body.questions || [req.body];
   if (!Array.isArray(newQuestions) || newQuestions.length === 0) {
@@ -776,7 +754,6 @@ app.post('/api/admin/quiz/questions', authenticateToken, requireAdmin, (req, res
   res.json({ success: true, message: `Added ${newQuestions.length} questions`, total: existing.length });
 });
 
-// Admin Endpoint: Update an Existing Question
 app.put('/api/admin/quiz/questions/:id', authenticateToken, requireAdmin, (req, res) => {
   const { id } = req.params;
   const updatedData = req.body;
@@ -790,7 +767,6 @@ app.put('/api/admin/quiz/questions/:id', authenticateToken, requireAdmin, (req, 
   res.json({ success: true, message: 'Question updated successfully', question: existing[idx] });
 });
 
-// Admin Endpoint: Delete a Single Question
 app.delete('/api/admin/quiz/questions/:id', authenticateToken, requireAdmin, (req, res) => {
   const { id } = req.params;
   let existing = getQuestions();
@@ -803,7 +779,6 @@ app.delete('/api/admin/quiz/questions/:id', authenticateToken, requireAdmin, (re
   res.json({ success: true, message: 'Question deleted successfully', total: existing.length });
 });
 
-// Admin Endpoint: Clear Questions by Course or All
 app.post('/api/admin/quiz/questions/clear', authenticateToken, requireAdmin, (req, res) => {
   const { course } = req.body;
   let existing = getQuestions();
@@ -816,9 +791,6 @@ app.post('/api/admin/quiz/questions/clear', authenticateToken, requireAdmin, (re
   res.json({ success: true, message: 'Questions cleared', total: existing.length });
 });
 
-// ==============================================================================
-// Quiz Exam Attempts & Student Progress Tracking Endpoints
-// ==============================================================================
 const ATTEMPTS_FILE = path.join(DATA_DIR, 'attempts.json');
 
 function getAttempts() {
@@ -834,7 +806,6 @@ function saveAttempts(attempts) {
   fs.writeFileSync(ATTEMPTS_FILE, JSON.stringify(attempts, null, 2));
 }
 
-// Record an exam / mock practice attempt
 app.post('/api/quiz/attempts', (req, res) => {
   const attempt = req.body;
   if (!attempt || typeof attempt !== 'object') {
@@ -855,7 +826,6 @@ app.post('/api/quiz/attempts', (req, res) => {
   res.json({ success: true, attempt: newAttempt });
 });
 
-// Get user practice / mock history
 app.get('/api/quiz/attempts', (req, res) => {
   const { userId, courseCode, limit } = req.query;
   let attempts = getAttempts();
@@ -874,7 +844,6 @@ app.get('/api/quiz/attempts', (req, res) => {
   });
 });
 
-// Get user progress summary (overall stats & latest mock)
 app.get('/api/quiz/progress', (req, res) => {
   const { userId, courseCode } = req.query;
   let attempts = getAttempts();
@@ -920,16 +889,10 @@ app.get('/api/quiz/progress', (req, res) => {
   });
 });
 
-// Explicit Route for /quiz
 app.get('/quiz', (req, res) => {
   res.sendFile(path.join(__dirname, 'quiz.html'));
 });
 
-// ==============================================================================
-// Razorpay Payment Gateway & Pro Pass Subscription Endpoints
-// ==============================================================================
-
-// 1. Get Payment Configuration & Pricing Plans (Public)
 app.get('/api/payment/config', (req, res) => {
   res.json({
     keyId: RZP_KEY_ID || 'rzp_test_placeholder',
@@ -938,13 +901,11 @@ app.get('/api/payment/config', (req, res) => {
   });
 });
 
-// 2. Check Current User Pro Subscription Status
 app.get('/api/payment/status', (req, res) => {
   const proStatus = checkIfUserIsPro(req);
   res.json(proStatus);
 });
 
-// 3. Create Razorpay Payment Order
 app.post('/api/payment/create-order', async (req, res) => {
   try {
     const { planId = 'term_pass', userEmail, userName } = req.body;
@@ -957,7 +918,7 @@ app.post('/api/payment/create-order', async (req, res) => {
     let order;
 
     if (razorpayInstance) {
-      // Real Razorpay API Order Creation
+      
       order = await razorpayInstance.orders.create({
         amount: plan.amount,
         currency: plan.currency,
@@ -969,7 +930,7 @@ app.post('/api/payment/create-order', async (req, res) => {
         }
       });
     } else {
-      // Demo / Test Mode (Ready to use without live keys, auto-activates when real keys are added)
+      
       order = {
         id: `order_demo_${Date.now()}`,
         entity: 'order',
@@ -987,7 +948,6 @@ app.post('/api/payment/create-order', async (req, res) => {
       };
     }
 
-    // Save pending transaction
     const payments = getPayments();
     payments.unshift({
       orderId: order.id,
@@ -1016,7 +976,6 @@ app.post('/api/payment/create-order', async (req, res) => {
   }
 });
 
-// 4. Verify Razorpay Payment Signature & Activate Pro Pass
 app.post('/api/payment/verify', async (req, res) => {
   try {
     const {
@@ -1031,7 +990,7 @@ app.post('/api/payment/verify', async (req, res) => {
     let isValid = false;
 
     if (razorpayInstance && RZP_KEY_SECRET) {
-      // Real cryptographic HMAC SHA256 verification
+      
       const expectedSignature = crypto
         .createHmac('sha256', RZP_KEY_SECRET)
         .update(`${razorpay_order_id}|${razorpay_payment_id}`)
@@ -1039,7 +998,7 @@ app.post('/api/payment/verify', async (req, res) => {
 
       isValid = (expectedSignature === razorpay_signature);
     } else {
-      // Demo / Test mode verification
+      
       isValid = Boolean(razorpay_order_id && razorpay_payment_id);
     }
 
@@ -1047,7 +1006,6 @@ app.post('/api/payment/verify', async (req, res) => {
       return res.status(400).json({ error: 'Payment verification failed: Invalid cryptographic signature.' });
     }
 
-    // Update payment record
     const payments = getPayments();
     const target = payments.find(p => p.orderId === razorpay_order_id);
     if (target) {
@@ -1071,7 +1029,6 @@ app.post('/api/payment/verify', async (req, res) => {
 
     const expiryDate = new Date(Date.now() + plan.durationDays * 24 * 60 * 60 * 1000).toISOString();
 
-    // If authenticated user, update profile in users.json
     let token = req.cookies?.mghub_auth_token;
     if (token) {
       try {
@@ -1087,14 +1044,12 @@ app.post('/api/payment/verify', async (req, res) => {
       } catch (e) {}
     }
 
-    // Generate signed Pro pass token
     const proToken = jwt.sign(
       { isPremium: true, plan: plan.id, expiresAt: expiryDate, orderId: razorpay_order_id },
       JWT_SECRET,
       { expiresIn: `${plan.durationDays}d` }
     );
 
-    // Set cookie
     res.cookie('mghub_pro_token', proToken, {
       httpOnly: false,
       sameSite: 'lax',
@@ -1115,7 +1070,6 @@ app.post('/api/payment/verify', async (req, res) => {
   }
 });
 
-// 5. Admin Payment Logs (Protected)
 app.get('/api/admin/payments', authenticateToken, requireAdmin, (req, res) => {
   const payments = getPayments();
   res.json({
@@ -1125,7 +1079,6 @@ app.get('/api/admin/payments', authenticateToken, requireAdmin, (req, res) => {
     transactions: payments
   });
 });
-// ==============================================================================
 
 // Update Community Settings (Protected Admin)
 app.post('/api/admin/community', authenticateToken, requireAdmin, (req, res) => {

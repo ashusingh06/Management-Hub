@@ -4,30 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quiz Practice & Exam Simulator | [Management Hub]</title>
-  
-  <!-- Typography Fonts -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  
-  <!-- KaTeX for Fast Mathematical Formula Rendering -->
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-  
-  <!-- Clean QuizPractice Stylesheet -->
+
   <link rel="stylesheet" href="quiz.css?v=20261019_qp">
-  <!-- Razorpay Standard Checkout SDK -->
+  
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 
-  <!-- ==========================================================================
-       Header & Floating Rounded Navigation Bar (Exact Management Hub Design)
-       ========================================================================== -->
   <header class="site-header">
     <div class="header-container">
-      <!-- Left Brand Tag -->
+      
       <div class="header-left">
         <a href="index.html" class="brand-link">
           <span class="brand-badge">●</span>
@@ -40,7 +34,6 @@
         </a>
       </div>
 
-      <!-- Center Rounded Navbar (Floating Capsule) -->
       <div class="header-center">
         <nav class="navbar" id="navbar">
           <div class="nav-indicator" id="navIndicator"></div>
@@ -73,7 +66,6 @@
         </nav>
       </div>
 
-      <!-- Right Header Actions (Pro Pass & Exit Exam) -->
       <div class="header-right" id="headerAuthBox">
         <button type="button" class="btn-pro-upgrade" id="btnHeaderPro">
           <svg class="svg-header-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg>
@@ -89,16 +81,10 @@
     </div>
   </header>
 
-  <!-- ==========================================================================
-       Main Application Container
-       ========================================================================== -->
   <main class="qp-main-container">
 
-    <!-- ======================================================================
-         SCREEN 1: Landing & Selection Gateway (Exact QuizPractice.space UI)
-         ====================================================================== -->
     <div class="qp-landing-view" id="screenSetup">
-      <!-- 1. Real-time Exam Alert Capsule -->
+      
       <div class="mh-alert-banner">
         <div class="mh-alert-pill">
           <span class="mh-pulse-dot"></span>
@@ -106,7 +92,6 @@
         </div>
       </div>
 
-      <!-- Student Practice & Mock Exam Progress Dashboard -->
       <div class="qp-progress-dashboard" id="userProgressDashboard" style="display: none;">
         <div class="qp-progress-header">
           <div class="qp-progress-title-wrap">
@@ -118,7 +103,6 @@
           </button>
         </div>
 
-        <!-- Last Appeared Test Highlight Card -->
         <div class="qp-last-test-card" id="lastTestHighlightCard">
           <div class="last-test-left">
             <div class="last-test-label-row">
@@ -148,7 +132,6 @@
           </div>
         </div>
 
-        <!-- Progress Metrics Row -->
         <div class="qp-progress-metrics-row">
           <div class="qp-p-metric">
             <span class="qp-p-val" id="metricTotalMocks">0</span>
@@ -168,16 +151,14 @@
           </div>
         </div>
 
-        <!-- Collapsible Recent History List -->
         <div class="qp-history-collapse" id="historyCollapseContainer" style="display: none;">
           <h5 style="font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #71717a; text-transform: uppercase;">Previous Exam History</h5>
           <div class="qp-history-list" id="historyListContainer">
-            <!-- Dynamically populated attempts list -->
+            
           </div>
         </div>
       </div>
 
-      <!-- 2. Distinct Management Hub Hero Arena -->
       <section class="mh-hero-arena">
         <div class="mh-hero-badge-tag">
           <span class="mh-icon-sparkle">✦</span>
@@ -190,7 +171,6 @@
           Prepare under authentic exam hall conditions: exact countdown timers, authentic previous year questions, single &amp; multiple choice evaluation, and verified step-by-step solutions.
         </p>
 
-        <!-- Feature Highlight Chips -->
         <div class="mh-feature-chips">
           <div class="mh-chip">
             <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg>
@@ -211,7 +191,6 @@
         </div>
       </section>
 
-      <!-- 3. Target Exam Milestone Cards -->
       <section class="mh-milestones-section">
         <div class="mh-section-header">
           <div>
@@ -275,7 +254,6 @@
         </div>
       </section>
 
-      <!-- 4. Curated Core Courses Section (Replaced old Data Science / Electronics Stream Cards) -->
       <section class="mh-courses-section">
         <div class="mh-section-header">
           <div>
@@ -347,14 +325,12 @@
         </div>
       </section>
 
-      <!-- 5. Exam Configuration & Launcher Console -->
       <div class="qp-selection-container" id="selectionSection">
         <div class="qp-console-header">
           <div class="qp-console-badge">EXAM CONSOLE</div>
           <h2 class="qp-phase-heading" id="selectedPhaseHeading">QUIZ 1 - QUESTION PAPERS</h2>
         </div>
 
-        <!-- Filters Row -->
         <div class="qp-filter-row">
           <div class="qp-filter-group">
             <label for="courseSelect">Selected Course</label>
@@ -384,7 +360,6 @@
           </div>
         </div>
 
-        <!-- Environment & Question Count Sub-Bar -->
         <div class="qp-config-subbar">
           <div class="qp-mode-toggle">
             <button type="button" class="mode-btn active" data-mode="exam" id="modeBtnExam">
@@ -418,7 +393,6 @@
           </div>
         </div>
 
-        <!-- Launch Ready Card -->
         <div class="qp-launch-card" id="launchReadyCard">
           <div class="qp-launch-card-left">
             <div class="qp-launch-title" id="launchPaperTitle">BSMS1201 — Principles of Economics • Quiz 1 Paper</div>
@@ -437,13 +411,10 @@
       </div>
     </div>
 
-    <!-- ======================================================================
-         SCREEN 2: Exam / Practice Simulator Frame (Exact Image 1 Layout)
-         ====================================================================== -->
     <div class="qp-exam-view" id="screenExam" style="display: none;">
-      <!-- Left Column: Fixed / Sticky Control Sidebar (320px) -->
+      
       <aside class="qp-sidebar">
-        <!-- 1. Meta Details Card -->
+        
         <div class="qp-meta-card">
           <div class="qp-meta-row">
             <span class="qp-meta-lbl">Exam :</span>
@@ -463,13 +434,11 @@
           </div>
         </div>
 
-        <!-- 2. Mode Toggle (Exam vs Learning) -->
         <div class="qp-sidebar-mode-group">
           <button type="button" class="qp-sidebar-mode-btn active" id="sideModeExam">Exam Mode</button>
           <button type="button" class="qp-sidebar-mode-btn" id="sideModeLearning">Learning Mode</button>
         </div>
 
-        <!-- 3. Summary & Download Pill Buttons -->
         <div class="qp-sidebar-actions">
           <button type="button" class="qp-pill-action purple" id="btnSideSummary">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -481,15 +450,13 @@
           </button>
         </div>
 
-        <!-- 4. QUESTION MENU Section (Image 1) -->
         <div class="qp-sidebar-section">
           <div class="qp-section-divider-title">QUESTION MENU</div>
           <div class="qp-question-menu-grid" id="paletteGrid">
-            <!-- Dynamically populated chips (1, 2, 3...) -->
+            
           </div>
         </div>
 
-        <!-- 5. TIMER Section (Image 1) -->
         <div class="qp-sidebar-section">
           <div class="qp-section-divider-title">TIMER</div>
           <div class="qp-timer-box">
@@ -501,7 +468,6 @@
           </div>
         </div>
 
-        <!-- 6. CONTROLS Section (Image 1) -->
         <div class="qp-sidebar-section">
           <div class="qp-section-divider-title">CONTROLS</div>
           <button type="button" class="btn-qp-submit-exam" id="btnSubmitExam">
@@ -511,9 +477,8 @@
         </div>
       </aside>
 
-      <!-- Right Column: Question Content Pane (Image 1) -->
       <section class="qp-content-pane">
-        <!-- Pro Simulator Preview Alert Banner -->
+        
         <div class="qp-preview-banner" id="examPreviewBanner" style="display: none;">
           <div class="preview-banner-text">
             <span>✦ <strong>Pro Simulator Preview:</strong> Viewing 2 sample questions. Upgrade to Pro Pass to unlock all 15+ authentic questions, full timer &amp; solutions.</span>
@@ -521,9 +486,8 @@
           <button type="button" class="btn-preview-upgrade" id="btnPreviewBannerUpgrade">Unlock Full Paper (₹149)</button>
         </div>
 
-        <!-- Question Item Card -->
         <div class="qp-question-card">
-          <!-- Top Question Bar (Image 1) -->
+          
           <div class="qp-question-header-bar">
             <div class="qp-header-left-title">
               <span id="qDisplayNumId">Question 1 : 6406532159032</span>
@@ -535,31 +499,26 @@
             </div>
           </div>
 
-          <!-- Question Body (Text + Formula + Tables) -->
           <div class="qp-question-body">
             <div class="qp-question-text" id="questionText">
-              <!-- Dynamically rendered markdown & KaTeX -->
+              
             </div>
 
-            <!-- Dynamic Answer Area (MCQ / MSQ / NAT) -->
             <div id="answerContainer">
-              <!-- Dynamically populated options -->
+              
             </div>
 
-            <!-- Practice Mode Instant Feedback Box -->
             <div class="practice-feedback-card" id="practiceFeedbackBox" style="display: none;"></div>
           </div>
 
-          <!-- Bottom Action Bar & Tools (Image 1) -->
           <div class="qp-question-footer-tools">
-            <!-- Left Navigation & Status -->
+            
             <div class="qp-footer-nav-left">
               <button type="button" class="btn-qp-action" id="btnClearResp">Clear Response</button>
               <button type="button" class="btn-qp-action" id="btnMarkReview">Mark for Review</button>
               <button type="button" class="btn-qp-action" id="btnCheckAnswer" style="display: none;">Check Solution 💡</button>
             </div>
 
-            <!-- Right Question Utility Tools (Image 1) -->
             <div class="qp-footer-tools-right">
               <button type="button" class="btn-qp-tool orange" id="btnReportFormat">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
@@ -571,7 +530,6 @@
             </div>
           </div>
 
-          <!-- Bottom Next / Prev Controls -->
           <div class="qp-question-nav-row">
             <button type="button" class="btn-qp-nav" id="btnPrev">← Previous Question</button>
             <button type="button" class="btn-qp-nav primary" id="btnSaveNext">Save &amp; Next Question →</button>
@@ -580,16 +538,12 @@
       </section>
     </div>
 
-    <!-- ======================================================================
-         SCREEN 3: Results & Diagnostic Scorecard
-         ====================================================================== -->
     <div class="qp-result-view" id="screenResult" style="display: none;">
       <div class="scorecard-header">
         <div class="scorecard-pill">Performance Scorecard</div>
         <div class="scorecard-score-big" id="resScoreVal">14 / 15</div>
         <div class="scorecard-grade-badge" id="resGradeVal">93.3% • S Grade (Outstanding)</div>
 
-        <!-- Metrics Grid -->
         <div class="score-metrics-grid">
           <div class="metric-box">
             <span class="metric-val" id="resAccuracy">93%</span>
@@ -609,7 +563,6 @@
           </div>
         </div>
 
-        <!-- Action Row -->
         <div class="result-action-row">
           <button type="button" class="btn-start-quiz" id="btnRetakeQuiz">
             <span>Retake This Quiz ↺</span>
@@ -623,18 +576,16 @@
         </div>
       </div>
 
-      <!-- Question-by-Question Review Section -->
       <div class="review-section">
         <h3 class="review-section-title">
           <span>📝 Question-by-Question Detailed Review &amp; Solutions</span>
         </h3>
         <div id="reviewList">
-          <!-- Dynamically populated review cards -->
+          
         </div>
       </div>
     </div>
 
-    <!-- Razorpay Pro Upgrade Modal -->
     <div class="custom-modal-overlay" id="proUpgradeModal" style="display: none;">
       <div class="custom-modal-card pro-modal-card">
         <button type="button" class="pro-modal-close" id="btnCloseProModal" aria-label="Close">&times;</button>
@@ -646,7 +597,6 @@
           <p class="pro-modal-subtitle">Unlock the complete Quiz Simulator (Quiz 1, Quiz 2 &amp; End-Term), all 37+ PYQs, and detailed step-by-step solutions.</p>
         </div>
 
-        <!-- Plan Selection Cards -->
         <div class="pro-plans-grid">
           <div class="pro-plan-box active" data-plan="term_pass" id="planBoxTerm">
             <div class="plan-popular-tag">MOST POPULAR</div>
@@ -677,7 +627,6 @@
           </div>
         </div>
 
-        <!-- Features Checklist -->
         <div class="pro-features-wrap">
           <h5 class="pro-features-heading">WHAT'S INCLUDED IN PRO:</h5>
           <div class="pro-features-list">
@@ -700,7 +649,6 @@
           </div>
         </div>
 
-        <!-- Checkout Action Button -->
         <div class="pro-modal-actions">
           <button type="button" class="btn-checkout-rzp" id="btnProceedCheckout">
             <span id="checkoutBtnText">Pay ₹149 via Razorpay (UPI / Cards)</span>
@@ -714,7 +662,6 @@
       </div>
     </div>
 
-    <!-- Professional Custom Confirmation Dialog -->
     <div class="custom-modal-overlay" id="customConfirmModal" style="display: none;">
       <div class="custom-modal-card">
         <div class="custom-modal-icon-wrap" id="customConfirmIconWrap">
@@ -729,12 +676,10 @@
       </div>
     </div>
 
-    <!-- Toast Notification Floating Container -->
     <div class="app-toast-container" id="appToastContainer"></div>
 
   </main>
 
-  <!-- Script Execution -->
   <script src="quiz.js?v=20261019_qp"></script>
 </body>
 </html>

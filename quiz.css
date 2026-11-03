@@ -1,7 +1,4 @@
-/* ==============================================================================
-   [Management Hub] - Quiz Practice & Exam Simulator (quiz.css)
-   Exact QuizPractice.space Inspired Clean UI
-   ============================================================================== */
+
 
 :root {
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -39,7 +36,6 @@
   --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
 }
 
-/* Dark Theme Variables */
 body.dark-theme {
   --bg-page: #0f1117;
   --bg-card: #181b24;
@@ -65,19 +61,19 @@ body.dark-theme {
 body {
   font-family: var(--font-sans);
   background-color: #f8fafc;
-  /* Management Hub Pure Multi-Color Aurora Mesh (No Dots) */
+  
   background-image:
-    /* Top-Left Indigo Nebula Glow */
+    
     radial-gradient(ellipse 70% 50% at 8% 2%, rgba(99, 102, 241, 0.14), transparent 60%),
-    /* Top-Right Emerald Aurora Glow */
+    
     radial-gradient(ellipse 65% 48% at 92% 10%, rgba(16, 185, 129, 0.13), transparent 60%),
-    /* Center Warm Amber Horizon */
+    
     radial-gradient(ellipse 55% 45% at 50% 36%, rgba(245, 158, 11, 0.09), transparent 60%),
-    /* Mid-Right Rose Accent Glow */
+    
     radial-gradient(ellipse 60% 50% at 85% 72%, rgba(244, 63, 94, 0.09), transparent 60%),
-    /* Bottom-Left Cyan Lagoon Glow */
+    
     radial-gradient(ellipse 55% 45% at 14% 86%, rgba(6, 182, 212, 0.12), transparent 60%),
-    /* Subtle Precision Architecture Grid (Clean Lines, Zero Dots) */
+    
     linear-gradient(to right, rgba(99, 102, 241, 0.035) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(99, 102, 241, 0.035) 1px, transparent 1px);
   background-size:
@@ -97,21 +93,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Dark Theme Pure Colorful Cyber-Mesh (No Dots) */
 body.dark-theme {
   background-color: #090d16;
   background-image:
-    /* Top-Left Electric Violet Glow */
+    
     radial-gradient(ellipse 75% 55% at 8% 2%, rgba(99, 102, 241, 0.24), transparent 60%),
-    /* Top-Right Neon Emerald Glow */
+    
     radial-gradient(ellipse 65% 50% at 92% 10%, rgba(16, 185, 129, 0.19), transparent 60%),
-    /* Center Radiant Amber Glow */
+    
     radial-gradient(ellipse 55% 45% at 50% 36%, rgba(245, 158, 11, 0.13), transparent 60%),
-    /* Mid-Right Cyber Rose Glow */
+    
     radial-gradient(ellipse 60% 50% at 85% 72%, rgba(244, 63, 94, 0.15), transparent 60%),
-    /* Bottom-Left Electric Cyan Glow */
+    
     radial-gradient(ellipse 55% 45% at 14% 86%, rgba(6, 182, 212, 0.18), transparent 60%),
-    /* Subtle Dark Architecture Grid (Clean Lines, Zero Dots) */
+    
     linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   background-size:
@@ -125,9 +120,6 @@ body.dark-theme {
   background-attachment: fixed;
 }
 
-/* ==========================================================================
-   Header & Floating Rounded Navigation Bar (Exact Management Hub Design)
-   ========================================================================== */
 .site-header {
   position: sticky;
   top: 0;
@@ -168,7 +160,6 @@ body.dark-theme .site-header.scrolled {
   gap: 16px;
 }
 
-/* Left Brand Tag */
 .header-left {
   display: flex;
   align-items: center;
@@ -237,7 +228,6 @@ body.dark-theme .brand-text {
   display: block;
 }
 
-/* Center Rounded Navbar (Floating Aesthetic Capsule with Soft Shadow) */
 .header-center {
   display: flex;
   justify-content: center;
@@ -275,7 +265,6 @@ body.dark-theme .navbar {
               0 6px 16px -2px rgba(0, 0, 0, 0.1);
 }
 
-/* Active Sliding Black Pill */
 .nav-indicator {
   position: absolute;
   top: 4px;
@@ -301,7 +290,6 @@ body.dark-theme .nav-indicator {
   opacity: 1;
 }
 
-/* Nav Item Links */
 .nav-btn {
   position: relative;
   z-index: 2;
@@ -382,7 +370,6 @@ body.dark-theme .nav-btn:hover .nav-icon {
   stroke: #ffffff;
 }
 
-/* Active State */
 .nav-btn.active {
   color: #ffffff !important;
   font-weight: 700;
@@ -408,7 +395,6 @@ body.dark-theme .nav-btn.active .nav-icon {
   stroke-width: 2.2;
 }
 
-/* Right Header Area */
 .header-right {
   display: flex;
   justify-content: flex-end;
@@ -437,7 +423,6 @@ body.dark-theme .nav-btn.active .nav-icon {
   color: var(--text-main);
 }
 
-/* Main Container */
 .qp-main-container {
   flex: 1;
   width: 100%;
@@ -446,15 +431,11 @@ body.dark-theme .nav-btn.active .nav-icon {
   padding: 24px 24px 60px 24px;
 }
 
-/* ==============================================================================
-   SCREEN 1: Landing & Selection View (Images 2 & 3)
-   ============================================================================== */
 .qp-landing-view {
   max-width: 1060px;
   margin: 0 auto;
 }
 
-/* 1. Update Notification Banner */
 .qp-update-banner-wrap {
   display: flex;
   justify-content: center;
@@ -483,11 +464,6 @@ body.dark-theme .nav-btn.active .nav-icon {
   flex-shrink: 0;
 }
 
-/* ==========================================================================
-   Management Hub Distinct Landing Page & Exam Arena Styles
-   ========================================================================== */
-
-/* 1. Real-time Alert Capsule */
 .mh-alert-banner {
   display: flex;
   justify-content: center;
@@ -522,8 +498,6 @@ body.dark-theme .nav-btn.active .nav-icon {
   100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
-
-/* 2. Hero Arena with Animated Aura */
 .mh-hero-arena {
   position: relative;
   text-align: center;
@@ -553,7 +527,6 @@ body.dark-theme .nav-btn.active .nav-icon {
   50% { transform: translateX(-48%) scale(1.06); opacity: 1; }
   100% { transform: translateX(-52%) scale(1.0); opacity: 0.85; }
 }
-
 
 .mh-hero-badge-tag {
   display: inline-flex;
@@ -610,7 +583,6 @@ body.dark-theme .mh-text-gradient {
   line-height: 1.6;
 }
 
-/* Feature Chips Row */
 .mh-feature-chips {
   display: flex;
   align-items: center;
@@ -643,7 +615,6 @@ body.dark-theme .mh-text-gradient {
   font-size: 15px;
 }
 
-/* Section Common Header */
 .mh-section-header {
   margin-bottom: 18px;
 }
@@ -662,7 +633,6 @@ body.dark-theme .mh-text-gradient {
   margin: 0;
 }
 
-/* 3. Milestone Grid Cards */
 .mh-milestones-section {
   margin-bottom: 40px;
 }
@@ -787,7 +757,6 @@ body.dark-theme .mh-milestone-card.active .mh-mc-footer {
   transform: translateX(4px);
 }
 
-/* 4. Curated Core Courses Section */
 .mh-courses-section {
   margin-bottom: 40px;
 }
@@ -875,7 +844,6 @@ body.dark-theme .mh-milestone-card.active .mh-mc-footer {
   border-radius: 4px;
 }
 
-/* 5. Exam Console Deck */
 .qp-console-header {
   display: flex;
   align-items: center;
@@ -975,7 +943,6 @@ body.dark-theme .qp-console-badge {
   line-height: 1.5;
 }
 
-/* Config Sub-Bar */
 .qp-config-subbar {
   display: flex;
   align-items: center;
@@ -1038,7 +1005,6 @@ body.dark-theme .qp-console-badge {
   outline: none;
 }
 
-/* Launch Ready Card */
 .qp-launch-card {
   background: var(--bg-subtle);
   border: 1.5px solid var(--border-light);
@@ -1094,9 +1060,6 @@ body.dark-theme .btn-qp-start {
   transform: none;
 }
 
-/* ==============================================================================
-   SCREEN 2: Exam / Practice Simulator Frame (Exact Image 1 Layout)
-   ============================================================================== */
 .qp-exam-view {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
@@ -1104,7 +1067,6 @@ body.dark-theme .btn-qp-start {
   align-items: start;
 }
 
-/* Left Sidebar (320px) */
 .qp-sidebar {
   position: sticky;
   top: 80px;
@@ -1113,7 +1075,6 @@ body.dark-theme .btn-qp-start {
   gap: 18px;
 }
 
-/* Meta Card (Image 1) */
 .qp-meta-card {
   background: var(--bg-card);
   border: 1.5px solid var(--border-light);
@@ -1144,7 +1105,6 @@ body.dark-theme .btn-qp-start {
   word-break: break-word;
 }
 
-/* Mode Switcher Group */
 .qp-sidebar-mode-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1180,7 +1140,6 @@ body.dark-theme .qp-sidebar-mode-btn.active {
   color: #000000;
 }
 
-/* Summary & Download Buttons (Image 1) */
 .qp-sidebar-actions {
   display: flex;
   flex-direction: column;
@@ -1222,7 +1181,6 @@ body.dark-theme .qp-sidebar-mode-btn.active {
   background: #dbeafe;
 }
 
-/* Question Menu / Timer / Controls Dividers */
 .qp-sidebar-section {
   display: flex;
   flex-direction: column;
@@ -1251,7 +1209,6 @@ body.dark-theme .qp-sidebar-mode-btn.active {
 .qp-section-divider-title::before { left: 0; }
 .qp-section-divider-title::after { right: 0; }
 
-/* Question Menu Grid (Image 1: 1, 2, 3...) */
 .qp-question-menu-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -1278,21 +1235,18 @@ body.dark-theme .qp-sidebar-mode-btn.active {
   background: var(--border-medium);
 }
 
-/* Answered: Vibrant Green #22c55e (Exact Chip 2 in Image 1!) */
 .qp-menu-chip.answered {
   background: #22c55e !important;
   color: #ffffff !important;
   font-weight: 800;
 }
 
-/* Review: Purple */
 .qp-menu-chip.review,
 .qp-menu-chip.ans-review {
   background: #8b5cf6 !important;
   color: #ffffff !important;
 }
 
-/* Current: Highlighted */
 .qp-menu-chip.current {
   box-shadow: 0 0 0 2px #000000 inset;
   transform: scale(1.05);
@@ -1302,7 +1256,6 @@ body.dark-theme .qp-menu-chip.current {
   box-shadow: 0 0 0 2px #ffffff inset;
 }
 
-/* Timer Box (Image 1) */
 .qp-timer-box {
   background: var(--bg-card);
   border: 1.5px solid var(--border-light);
@@ -1356,7 +1309,6 @@ body.dark-theme .qp-menu-chip.current {
   background: #b91c1c;
 }
 
-/* Submit Exam Button (Image 1: Solid Green) */
 .btn-qp-submit-exam {
   background: #16a34a;
   color: #ffffff;
@@ -1383,7 +1335,6 @@ body.dark-theme .qp-menu-chip.current {
   box-shadow: 0 6px 18px rgba(22, 163, 74, 0.4);
 }
 
-/* Right Content Pane */
 .qp-content-pane {
   display: flex;
   flex-direction: column;
@@ -1398,7 +1349,6 @@ body.dark-theme .qp-menu-chip.current {
   box-shadow: var(--shadow-card);
 }
 
-/* Question Header Bar (Image 1) */
 .qp-question-header-bar {
   display: flex;
   align-items: center;
@@ -1430,7 +1380,6 @@ body.dark-theme .qp-menu-chip.current {
   margin: 0 4px;
 }
 
-/* Question Text & Tables */
 .qp-question-text {
   font-size: 15.5px;
   line-height: 1.7;
@@ -1462,7 +1411,6 @@ body.dark-theme .qp-menu-chip.current {
   color: var(--text-main);
 }
 
-/* Options List */
 .options-list {
   display: flex;
   flex-direction: column;
@@ -1551,7 +1499,6 @@ body.dark-theme .option-item.selected .option-marker {
   margin-bottom: 16px;
 }
 
-/* NAT Virtual Keypad Box */
 .nat-input-container {
   background: var(--bg-subtle);
   border: 1.5px solid var(--border-light);
@@ -1607,7 +1554,6 @@ body.dark-theme .option-item.selected .option-marker {
   background: var(--border-light);
 }
 
-/* Question Footer Tools (Image 1) */
 .qp-question-footer-tools {
   display: flex;
   align-items: center;
@@ -1649,7 +1595,6 @@ body.dark-theme .option-item.selected .option-marker {
   gap: 8px;
 }
 
-/* Broken Format & Camera Snapshot (Image 1) */
 .btn-qp-tool {
   border-radius: 8px;
   font-family: inherit;
@@ -1686,7 +1631,6 @@ body.dark-theme .option-item.selected .option-marker {
   background: #27272a;
 }
 
-/* Bottom Nav Buttons Row */
 .qp-question-nav-row {
   display: flex;
   align-items: center;
@@ -1730,7 +1674,6 @@ body.dark-theme .btn-qp-nav.primary {
   transform: translateY(-1px);
 }
 
-/* Practice Mode Feedback Card */
 .practice-feedback-card {
   margin-top: 18px;
   padding: 16px 20px;
@@ -1751,9 +1694,6 @@ body.dark-theme .btn-qp-nav.primary {
   color: #b91c1c;
 }
 
-/* ==============================================================================
-   SCREEN 3: Results & Diagnostic Scorecard
-   ============================================================================== */
 .qp-result-view {
   max-width: 900px;
   margin: 0 auto;
@@ -1886,9 +1826,6 @@ body.dark-theme .btn-qp-nav.primary {
   line-height: 1.6;
 }
 
-/* ==============================================================================
-   Mobile & Tablet Responsive Breakpoints
-   ============================================================================== */
 @media (max-width: 992px) {
   .qp-exam-view {
     grid-template-columns: 1fr;
@@ -1927,8 +1864,6 @@ body.dark-theme .btn-qp-nav.primary {
   }
 }
 
-
-/* Student Progress & Last Test Dashboard */
 .qp-progress-dashboard {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
@@ -2179,10 +2114,6 @@ body.dark-theme .btn-qp-nav.primary {
   font-size: 14px;
 }
 
-
-/* ==============================================================================
-   Professional Modern Modal Confirmation Dialog & Toast System
-   ============================================================================== */
 .custom-modal-overlay {
   position: fixed;
   inset: 0;
@@ -2318,7 +2249,6 @@ body.dark-theme .btn-qp-nav.primary {
   background: #b91c1c;
 }
 
-/* Floating Toast Container */
 .app-toast-container {
   position: fixed;
   top: 24px;
@@ -2398,10 +2328,6 @@ body.dark-theme .btn-qp-nav.primary {
 .app-toast.warning { border-left: 4px solid #f59e0b; }
 .app-toast.info { border-left: 4px solid #7c3aed; }
 
-/* ==========================================================================
-   Management Hub Pro Pass & Razorpay Checkout Styles
-   ========================================================================== */
-
 .btn-pro-upgrade {
   display: inline-flex;
   align-items: center;
@@ -2452,7 +2378,6 @@ body.dark-theme .btn-qp-nav.primary {
   line-height: 1;
 }
 
-/* Pro Upgrade Modal */
 .pro-modal-card {
   max-width: 580px;
   position: relative;
@@ -2695,7 +2620,6 @@ body.dark-theme .btn-qp-nav.primary {
   margin-top: 12px;
 }
 
-
 .mh-course-card[data-course="BSMS1201"]:hover {
   border-color: #10b981;
   box-shadow: 0 10px 25px rgba(16, 185, 129, 0.16);
@@ -2734,10 +2658,6 @@ body.dark-theme .btn-qp-nav.primary {
   box-shadow: 0 10px 24px rgba(139, 92, 246, 0.18);
 }
 
-
-/* ==========================================================================
-   Professional Minimalist SVG Icons
-   ========================================================================== */
 .svg-inline-icon {
   width: 14px;
   height: 14px;
@@ -2777,7 +2697,6 @@ body.dark-theme .btn-qp-nav.primary {
   flex-shrink: 0;
 }
 
-/* Pro Launch Actions & Preview Banner */
 .qp-launch-actions {
   display: flex;
   align-items: center;

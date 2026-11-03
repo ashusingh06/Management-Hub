@@ -1,29 +1,17 @@
-/**
- * ==============================================================================
- * [Management Hub] - Quiz Practice & Exam Simulator Engine (quiz.js)
- * Clean QuizPractice.space Architecture:
- * - Milestone Selection (Quiz 1 / Quiz 2 / End-Term / All)
- * - 2-Column TCS iON Style Exam Mode & Instant Learning Mode
- * - Timer with Pause & Reset
- * - Question Menu with Vibrant Green Answered Indicators
- * - Formula Notation & Data Tables
- * - Management Hub Pro Pass Simulator Access Gating
- * - Permanent Clean Management Hub Aesthetic
- * ==============================================================================
- */
+
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Application State
+  
   let availableCourses = [];
   let currentQuestions = [];
   let currentIndex = 0;
-  let userResponses = {}; // { [qId]: optionIdx (MCQ) | [indices] (MSQ) | string/number (NAT) }
-  let questionStatus = {}; // { [qId]: 'not-visited' | 'not-answered' | 'answered' | 'review' | 'ans-review' }
+  let userResponses = {}; 
+  let questionStatus = {}; 
   
   let quizConfig = {
     courseCode: 'BSMS1201',
-    phase: 'quiz1', // 'quiz1' | 'quiz2' | 'endterm' | 'all'
-    mode: 'exam', // 'exam' | 'practice'  
+    phase: 'quiz1', 
+    mode: 'exam', 
     typeFilter: 'all',
     questionCount: 15,
     durationMinutes: 30
@@ -34,20 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let isTimerPaused = false;
   let initialDurationSeconds = 0;
 
-  // Management Hub Pro & Razorpay State
   let isUserPro = false;
   let selectedProPlan = 'term_pass';
   let paymentPlansConfig = null;
 
-  // DOM Elements - Screens
   const screenSetup = document.getElementById('screenSetup');
   const screenExam = document.getElementById('screenExam');
   const screenResult = document.getElementById('screenResult');
 
-  // DOM Elements - Header & Exit
   const btnHeaderExit = document.getElementById('btnHeaderExit');
 
-  // DOM Elements - Landing & Setup
   const milestonePills = document.querySelectorAll('.milestone-pill-btn');
   const courseCards = document.querySelectorAll('.mh-course-card');
   const selectedPhaseHeading = document.getElementById('selectedPhaseHeading');
@@ -65,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const examPreviewBanner = document.getElementById('examPreviewBanner');
   const btnPreviewBannerUpgrade = document.getElementById('btnPreviewBannerUpgrade');
 
-  // DOM Elements - Exam Sidebar (Image 1)
   const metaExam = document.getElementById('metaExam');
   const metaSubject = document.getElementById('metaSubject');
   const metaMarks = document.getElementById('metaMarks');
@@ -80,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnTimerReset = document.getElementById('btnTimerReset');
   const btnSubmitExam = document.getElementById('btnSubmitExam');
 
-  // DOM Elements - Question Pane (Image 1)
   const qDisplayNumId = document.getElementById('qDisplayNumId');
   const qMarksBadge = document.getElementById('qMarksBadge');
   const qTypeBadge = document.getElementById('qTypeBadge');
@@ -95,9 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnPrev = document.getElementById('btnPrev');
   const btnSaveNext = document.getElementById('btnSaveNext');
 
-  // ==============================================================================
-  // Professional Toast & Confirmation Dialog Engine
-  // ==============================================================================
   const appToastContainer = document.getElementById('appToastContainer');
   const customConfirmModal = document.getElementById('customConfirmModal');
   const customConfirmTitle = document.getElementById('customConfirmTitle');
@@ -340,7 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     quizConfig.durationMinutes = Math.max(10, Math.round(quizConfig.questionCount * 1.5));
   }
-
 
   // ==============================================================================
   // Management Hub Pro & Razorpay Integration
