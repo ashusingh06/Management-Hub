@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let quizConfig = {
     courseCode: 'BSMS1201',
     phase: 'quiz1', // 'quiz1' | 'quiz2' | 'endterm' | 'all'
-    mode: 'exam', // 'exam' | 'practice'
+    mode: 'exam', // 'exam' | 'practice'  
     typeFilter: 'all',
     questionCount: 15,
     durationMinutes: 30
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // DOM Elements - Landing & Setup
   const milestonePills = document.querySelectorAll('.milestone-pill-btn');
-  const streamCards = document.querySelectorAll('.degree-stream-card');
+  const courseCards = document.querySelectorAll('.mh-course-card');
   const selectedPhaseHeading = document.getElementById('selectedPhaseHeading');
   const courseSelect = document.getElementById('courseSelect');
   const yearSelect = document.getElementById('yearSelect');
@@ -300,6 +300,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (courses.length > 0) {
       quizConfig.courseCode = courses[0].code;
     }
+    document.querySelectorAll('.mh-course-card').forEach(card => {
+      card.classList.toggle('active', card.getAttribute('data-course') === quizConfig.courseCode);
+    });
 
     if (prePhase && ['quiz1', 'quiz2', 'endterm', 'all'].includes(prePhase.toLowerCase())) {
       setPhase(prePhase.toLowerCase());
@@ -569,18 +572,28 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Stream Cards
-    streamCards.forEach(card => {
+    // Curated Course Cards
+    courseCards.forEach(card => {
       card.addEventListener('click', () => {
-        streamCards.forEach(c => c.classList.remove('active'));
+        const code = card.getAttribute('data-course');
+        courseCards.forEach(c => c.classList.remove('active'));
         card.classList.add('active');
+        if (courseSelect) {
+          courseSelect.value = code;
+          quizConfig.courseCode = code;
+          updateSetupHints();
+          document.getElementById('selectionSection')?.scrollIntoView({ behavior: 'smooth' });
+        }
       });
     });
 
-    // Course select
+    // Course select dropdown
     courseSelect?.addEventListener('change', (e) => {
       quizConfig.courseCode = e.target.value;
       updateSetupHints();
+      document.querySelectorAll('.mh-course-card').forEach(card => {
+        card.classList.toggle('active', card.getAttribute('data-course') === quizConfig.courseCode);
+      });
     });
 
     // Count select

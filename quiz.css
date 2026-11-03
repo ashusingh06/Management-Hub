@@ -64,15 +64,71 @@ body.dark-theme {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-page);
-  background-image: radial-gradient(var(--border-light) 1.2px, transparent 1.2px);
-  background-size: 24px 24px;
+  background-color: #f8fafc;
+  /* Management Hub Multi-Color Ambient Mesh + Precision Grid Pattern */
+  background-image:
+    /* Top-Left Indigo Nebula Glow */
+    radial-gradient(ellipse 70% 50% at 8% 2%, rgba(99, 102, 241, 0.16), transparent 60%),
+    /* Top-Right Emerald Aurora Glow */
+    radial-gradient(ellipse 65% 48% at 92% 10%, rgba(16, 185, 129, 0.15), transparent 60%),
+    /* Center Warm Amber Horizon */
+    radial-gradient(ellipse 55% 45% at 50% 36%, rgba(245, 158, 11, 0.10), transparent 60%),
+    /* Mid-Right Rose Accent Glow */
+    radial-gradient(ellipse 60% 50% at 85% 72%, rgba(244, 63, 94, 0.10), transparent 60%),
+    /* Bottom-Left Cyan Lagoon Glow */
+    radial-gradient(ellipse 55% 45% at 14% 86%, rgba(6, 182, 212, 0.14), transparent 60%),
+    /* High-Precision Blueprint Tech Grid */
+    linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+    /* Soft Starlight Matrix Dots */
+    radial-gradient(rgba(99, 102, 241, 0.18) 1.2px, transparent 1.2px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    36px 36px,
+    36px 36px,
+    18px 18px;
+  background-attachment: fixed;
   color: var(--text-main);
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Dark Theme Colorful Cyber-Mesh Background */
+body.dark-theme {
+  background-color: #090d16;
+  background-image:
+    /* Top-Left Electric Violet Glow */
+    radial-gradient(ellipse 75% 55% at 8% 2%, rgba(99, 102, 241, 0.28), transparent 60%),
+    /* Top-Right Neon Emerald Glow */
+    radial-gradient(ellipse 65% 50% at 92% 10%, rgba(16, 185, 129, 0.22), transparent 60%),
+    /* Center Radiant Amber Glow */
+    radial-gradient(ellipse 55% 45% at 50% 36%, rgba(245, 158, 11, 0.16), transparent 60%),
+    /* Mid-Right Cyber Rose Glow */
+    radial-gradient(ellipse 60% 50% at 85% 72%, rgba(244, 63, 94, 0.18), transparent 60%),
+    /* Bottom-Left Electric Cyan Glow */
+    radial-gradient(ellipse 55% 45% at 14% 86%, rgba(6, 182, 212, 0.22), transparent 60%),
+    /* Precision Dark Matrix Grid */
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    /* Bright Starlight Dots */
+    radial-gradient(rgba(255, 255, 255, 0.16) 1.2px, transparent 1.2px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    36px 36px,
+    36px 36px,
+    18px 18px;
+  background-attachment: fixed;
 }
 
 /* ==============================================================================
@@ -82,7 +138,9 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1.5px solid var(--border-light);
@@ -92,7 +150,9 @@ body {
 }
 
 body.dark-theme .qp-header {
-  background: rgba(24, 27, 36, 0.95);
+  background: rgba(14, 18, 28, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .qp-header-container {
@@ -283,40 +343,135 @@ body.dark-theme .qp-logo-badge {
   flex-shrink: 0;
 }
 
-/* 2. Giant Hero Section (Image 2) */
-.qp-hero-section {
-  text-align: center;
-  margin-bottom: 48px;
+/* ==========================================================================
+   Management Hub Distinct Landing Page & Exam Arena Styles
+   ========================================================================== */
+
+/* 1. Real-time Alert Capsule */
+.mh-alert-banner {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
 }
 
-.qp-hero-title {
-  font-size: 56px;
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.035em;
-  color: var(--text-main);
-  margin-bottom: 18px;
-}
-
-.highlight-tag {
-  background: #10b981;
-  color: #ffffff;
-  padding: 2px 18px;
-  border-radius: 12px;
-  display: inline-block;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
-}
-
-.qp-hero-subtitle {
-  font-size: 14.5px;
+.mh-alert-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 13px;
   color: var(--text-muted);
-  max-width: 620px;
-  margin: 0 auto 32px auto;
+  box-shadow: var(--shadow-subtle);
+}
+
+.mh-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  animation: pulseGreen 2s infinite;
+}
+
+@keyframes pulseGreen {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+
+/* 2. Hero Arena with Animated Aura */
+.mh-hero-arena {
+  position: relative;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 40px auto;
+  padding: 10px 16px;
+}
+
+.mh-hero-arena::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 520px;
+  height: 260px;
+  background: radial-gradient(ellipse, rgba(99, 102, 241, 0.22) 0%, rgba(16, 185, 129, 0.16) 40%, rgba(245, 158, 11, 0.10) 70%, transparent 100%);
+  filter: blur(45px);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  animation: ambientAuraPulse 9s ease-in-out infinite alternate;
+}
+
+@keyframes ambientAuraPulse {
+  0% { transform: translateX(-50%) scale(0.95); opacity: 0.75; }
+  50% { transform: translateX(-48%) scale(1.06); opacity: 1; }
+  100% { transform: translateX(-52%) scale(1.0); opacity: 0.85; }
+}
+
+
+.mh-hero-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+body.dark-theme .mh-hero-badge-tag {
+  background: rgba(129, 140, 248, 0.12);
+  color: #a5b4fc;
+  border-color: rgba(129, 140, 248, 0.3);
+}
+
+.mh-icon-sparkle {
+  color: #f59e0b;
+}
+
+.mh-hero-title {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  margin: 0 0 16px 0;
+}
+
+.mh-text-gradient {
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.dark-theme .mh-text-gradient {
+  background: linear-gradient(135deg, #818cf8 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.mh-hero-lead {
+  font-size: 15.5px;
+  color: var(--text-muted);
+  max-width: 720px;
+  margin: 0 auto 28px auto;
   line-height: 1.6;
 }
 
-/* 3. The 4 Milestone Pill Buttons (Image 2) */
-.milestone-pill-row {
+/* Feature Chips Row */
+.mh-feature-chips {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -324,108 +479,293 @@ body.dark-theme .qp-logo-badge {
   flex-wrap: wrap;
 }
 
-.milestone-pill-btn {
-  background: #000000;
-  color: #ffffff;
-  border: 1.5px solid #000000;
-  border-radius: var(--radius-pill);
-  padding: 11px 24px;
-  font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.mh-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  box-shadow: var(--shadow-subtle);
+  transition: all 0.2s ease;
 }
 
-body.dark-theme .milestone-pill-btn {
-  background: #272c3d;
-  border-color: #3d455d;
+.mh-chip:hover {
+  border-color: #6366f1;
+  transform: translateY(-1px);
 }
 
-.milestone-pill-btn:hover {
-  background: #262626;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+.mh-chip-icon {
+  font-size: 15px;
 }
 
-.milestone-pill-btn.active {
-  background: #000000;
-  border-color: #000000;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.45);
+/* Section Common Header */
+.mh-section-header {
+  margin-bottom: 18px;
 }
 
-/* 4. Available Courses Row (Image 2) */
-.available-courses-section {
-  margin-bottom: 48px;
-}
-
-.section-subheading {
-  font-size: 16px;
+.mh-section-title {
+  font-size: 18px;
   font-weight: 800;
   color: var(--text-main);
-  margin-bottom: 14px;
   letter-spacing: -0.01em;
+  margin: 0 0 4px 0;
 }
 
-.degree-stream-grid {
+.mh-section-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* 3. Milestone Grid Cards */
+.mh-milestones-section {
+  margin-bottom: 40px;
+}
+
+.mh-milestone-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
 
-.degree-stream-card {
+@media (max-width: 900px) {
+  .mh-milestone-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .mh-milestone-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mh-milestone-card {
+  position: relative;
   background: var(--bg-card);
-  border: 1.5px solid var(--border-light);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid var(--border-light);
   border-radius: 14px;
-  padding: 22px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  padding: 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  text-align: left;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: var(--shadow-subtle);
 }
 
-.degree-stream-card:hover {
-  border-color: var(--text-main);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+.mh-milestone-card:hover {
+  border-color: #6366f1;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.12);
 }
 
-.degree-stream-card.active {
-  border: 2px solid var(--text-main);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+.mh-milestone-card.active {
+  border-color: #4f46e5;
+  background: var(--bg-card);
+  box-shadow: 0 0 0 2px #4f46e5, 0 10px 24px rgba(79, 70, 229, 0.15);
 }
 
-.stream-info h4 {
-  font-size: 15px;
+body.dark-theme .mh-milestone-card.active {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 2px #818cf8, 0 10px 24px rgba(129, 140, 248, 0.2);
+}
+
+.mh-mc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.mh-mc-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+}
+
+.mh-mc-badge.pro {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.mh-mc-time {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+.mh-mc-title {
+  font-size: 16px;
   font-weight: 800;
   color: var(--text-main);
-  margin-bottom: 4px;
-  line-height: 1.3;
+  margin: 0 0 6px 0;
 }
 
-.stream-curated-badge {
-  font-size: 11px;
-  font-weight: 700;
-  color: #10b981;
-}
-
-.stream-icon {
-  font-size: 20px;
-  font-weight: 700;
+.mh-mc-desc {
+  font-size: 12px;
   color: var(--text-muted);
+  line-height: 1.45;
+  margin: 0 0 16px 0;
+  min-height: 35px;
+}
+
+.mh-mc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-faint);
+  border-top: 1px dashed var(--border-light);
+  padding-top: 12px;
+}
+
+.mh-milestone-card.active .mh-mc-footer {
+  color: #4f46e5;
+}
+
+body.dark-theme .mh-milestone-card.active .mh-mc-footer {
+  color: #818cf8;
+}
+
+.mh-mc-arrow {
+  font-size: 14px;
+  transition: transform 0.15s ease;
+}
+
+.mh-milestone-card:hover .mh-mc-arrow {
+  transform: translateX(4px);
+}
+
+/* 4. Curated Core Courses Section */
+.mh-courses-section {
+  margin-bottom: 40px;
+}
+
+.mh-courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.mh-course-card {
+  position: relative;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid var(--border-light);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-subtle);
+}
+
+.mh-course-card:hover {
+  border-color: var(--text-main);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.mh-course-card.active {
+  border: 2px solid #10b981;
+  background: var(--bg-card);
+  box-shadow: 0 0 0 1px #10b981, 0 8px 20px rgba(16, 185, 129, 0.12);
+}
+
+.mh-cc-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
   flex-shrink: 0;
 }
 
-/* 5. Question Papers Selection Box (Image 3) */
+.mh-cc-body {
+  flex: 1;
+}
+
+.mh-cc-code {
+  font-size: 11px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.mh-cc-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.35;
+  margin: 0 0 4px 0;
+}
+
+.mh-cc-meta {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin: 0;
+}
+
+.mh-cc-status {
+  font-size: 10px;
+  font-weight: 800;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* 5. Exam Console Deck */
+.qp-console-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.qp-console-badge {
+  background: rgba(79, 70, 229, 0.1);
+  color: #4f46e5;
+  border: 1px solid rgba(79, 70, 229, 0.25);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+body.dark-theme .qp-console-badge {
+  background: rgba(129, 140, 248, 0.12);
+  color: #a5b4fc;
+}
+
 .qp-selection-container {
   background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1.5px solid var(--border-light);
   border-radius: 16px;
-  padding: 36px 40px;
+  padding: 32px;
   box-shadow: var(--shadow-card);
 }
 
@@ -2213,4 +2553,43 @@ body.dark-theme .btn-qp-nav.primary {
   font-size: 11px;
   color: var(--text-faint);
   margin-top: 12px;
+}
+
+
+.mh-course-card[data-course="BSMS1201"]:hover {
+  border-color: #10b981;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.16);
+}
+.mh-course-card[data-course="BSMS1202"]:hover {
+  border-color: #6366f1;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.16);
+}
+.mh-course-card[data-course="BSMS1203"]:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.16);
+}
+.mh-course-card[data-course="BSMA1001"]:hover {
+  border-color: #ec4899;
+  box-shadow: 0 10px 25px rgba(236, 72, 153, 0.16);
+}
+.mh-course-card[data-course="BSCS1001"]:hover {
+  border-color: #06b6d4;
+  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.16);
+}
+
+.mh-milestone-card[data-phase="quiz1"]:hover {
+  border-color: #10b981;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.18);
+}
+.mh-milestone-card[data-phase="quiz2"]:hover {
+  border-color: #6366f1;
+  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.18);
+}
+.mh-milestone-card[data-phase="endterm"]:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.22);
+}
+.mh-milestone-card[data-phase="all"]:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 10px 24px rgba(139, 92, 246, 0.18);
 }

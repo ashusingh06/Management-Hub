@@ -76,11 +76,11 @@
          SCREEN 1: Landing & Selection Gateway (Exact QuizPractice.space UI)
          ====================================================================== -->
     <div class="qp-landing-view" id="screenSetup">
-      <!-- 1. Latest Update Notification Capsule -->
-      <div class="qp-update-banner-wrap">
-        <div class="qp-update-pill">
-          <span class="qp-rainbow-dot"></span>
-          <span><strong>latest update :</strong> practice authentic IITM BS previous year papers (Quiz 1, Quiz 2, End Term) with detailed solutions and attempt tracking.</span>
+      <!-- 1. Real-time Exam Alert Capsule -->
+      <div class="mh-alert-banner">
+        <div class="mh-alert-pill">
+          <span class="mh-pulse-dot"></span>
+          <span><strong>Term Exam Simulator :</strong> Real-paper countdown, KaTeX equations &amp; verified step-by-step solutions for IITM BS scholars.</span>
         </div>
       </div>
 
@@ -153,80 +153,194 @@
         </div>
       </div>
 
-      <!-- 2. Giant Headline -->
-      <div class="qp-hero-section">
-        <h1 class="qp-hero-title">
-          Practice the previous<br/>
-          quiz <span class="highlight-tag">question papers</span><br/>
-          IITM BS Degree
+      <!-- 2. Distinct Management Hub Hero Arena -->
+      <section class="mh-hero-arena">
+        <div class="mh-hero-badge-tag">
+          <span class="mh-icon-sparkle">✦</span>
+          <span>MANAGEMENT HUB EXAM ARENA</span>
+        </div>
+        <h1 class="mh-hero-title">
+          Master Your IITM BS Degree with <span class="mh-text-gradient">Authentic Timed Mocks</span>
         </h1>
-        <p class="qp-hero-subtitle">
-          This app is independently run by students and is tailored for the IIT Madras BS in Management and Data Science.
+        <p class="mh-hero-lead">
+          Prepare under authentic exam hall conditions: exact countdown timers, KaTeX mathematical formulas, single &amp; multiple choice evaluation, and verified step-by-step solutions.
         </p>
 
-        <!-- 3. The 4 Milestone Pill Action Buttons (Image 2) -->
-        <div class="milestone-pill-row">
-          <button type="button" class="milestone-pill-btn active" data-phase="quiz1" id="pillQuiz1">Practice Quiz 1</button>
-          <button type="button" class="milestone-pill-btn" data-phase="quiz2" id="pillQuiz2">Practice Quiz 2</button>
-          <button type="button" class="milestone-pill-btn" data-phase="endterm" id="pillEndterm">Practice End Term Quiz <span class="pill-pro-tag">PRO</span></button>
-          <button type="button" class="milestone-pill-btn" data-phase="all" id="pillAll">Practice Mixed Sets</button>
-        </div>
-      </div>
-
-      <!-- 4. Available Courses Row (Image 2) -->
-      <div class="available-courses-section">
-        <h3 class="section-subheading">Available Courses</h3>
-        <div class="degree-stream-grid">
-          <div class="degree-stream-card" data-stream="ds">
-            <div class="stream-info">
-              <h4>BS in Data Science and Applications</h4>
-            </div>
-            <div class="stream-icon">&lt; &gt;</div>
+        <!-- Feature Highlight Chips -->
+        <div class="mh-feature-chips">
+          <div class="mh-chip">
+            <span class="mh-chip-icon">⏱️</span>
+            <span>45m &amp; 2.5h Exam Timers</span>
           </div>
-
-          <div class="degree-stream-card" data-stream="es">
-            <div class="stream-info">
-              <h4>BS in Electronic Systems</h4>
-            </div>
-            <div class="stream-icon">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
-            </div>
+          <div class="mh-chip">
+            <span class="mh-chip-icon">📚</span>
+            <span>37+ Verified PYQ Papers</span>
           </div>
-
-          <div class="degree-stream-card active" data-stream="management">
-            <div class="stream-info">
-              <h4>BS in Management and Data Science</h4>
-              <span class="stream-curated-badge">● Curated Hub</span>
-            </div>
-            <div class="stream-icon">&lt; &gt;</div>
+          <div class="mh-chip">
+            <span class="mh-chip-icon">📐</span>
+            <span>KaTeX Mathematics &amp; Code</span>
+          </div>
+          <div class="mh-chip">
+            <span class="mh-chip-icon">🎯</span>
+            <span>MCQ • MSQ • NAT Evaluation</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- 5. Question Papers Filter & Selection Box (Image 3) -->
+      <!-- 3. Target Exam Milestone Cards -->
+      <section class="mh-milestones-section">
+        <div class="mh-section-header">
+          <div>
+            <h3 class="mh-section-title">Select Exam Target</h3>
+            <p class="mh-section-desc">Choose the exam milestone you are preparing for</p>
+          </div>
+        </div>
+
+        <div class="mh-milestone-grid">
+          <div class="mh-milestone-card milestone-pill-btn active" data-phase="quiz1" id="pillQuiz1">
+            <div class="mh-mc-top">
+              <span class="mh-mc-badge">WEEKS 1–4</span>
+              <span class="mh-mc-time">⏱️ 45 Mins</span>
+            </div>
+            <h4 class="mh-mc-title">Quiz 1 Exam</h4>
+            <p class="mh-mc-desc">Foundational concepts &amp; core computational practice.</p>
+            <div class="mh-mc-footer">
+              <span>Standard 15 Questions</span>
+              <span class="mh-mc-arrow">→</span>
+            </div>
+          </div>
+
+          <div class="mh-milestone-card milestone-pill-btn" data-phase="quiz2" id="pillQuiz2">
+            <div class="mh-mc-top">
+              <span class="mh-mc-badge">WEEKS 5–8</span>
+              <span class="mh-mc-time">⏱️ 45 Mins</span>
+            </div>
+            <h4 class="mh-mc-title">Quiz 2 Exam</h4>
+            <p class="mh-mc-desc">Intermediate problem solving &amp; analytical applications.</p>
+            <div class="mh-mc-footer">
+              <span>Standard 15 Questions</span>
+              <span class="mh-mc-arrow">→</span>
+            </div>
+          </div>
+
+          <div class="mh-milestone-card milestone-pill-btn pro-card" data-phase="endterm" id="pillEndterm">
+            <div class="mh-mc-top">
+              <span class="mh-mc-badge pro">WEEKS 1–12</span>
+              <span class="pill-pro-tag">👑 PRO</span>
+            </div>
+            <h4 class="mh-mc-title">End-Term Simulator</h4>
+            <p class="mh-mc-desc">Full 2.5-hour complete curriculum comprehensive simulation.</p>
+            <div class="mh-mc-footer">
+              <span>Full 30 Questions Mock</span>
+              <span class="mh-mc-arrow">→</span>
+            </div>
+          </div>
+
+          <div class="mh-milestone-card milestone-pill-btn" data-phase="all" id="pillAll">
+            <div class="mh-mc-top">
+              <span class="mh-mc-badge">ALL MODULES</span>
+              <span class="mh-mc-time">⚡ Sprint</span>
+            </div>
+            <h4 class="mh-mc-title">Mixed Question Drill</h4>
+            <p class="mh-mc-desc">Cross-topic practice sets shuffled from all course weeks.</p>
+            <div class="mh-mc-footer">
+              <span>Customized Question Count</span>
+              <span class="mh-mc-arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Curated Core Courses Section (Replaced old Data Science / Electronics Stream Cards) -->
+      <section class="mh-courses-section">
+        <div class="mh-section-header">
+          <div>
+            <h3 class="mh-section-title">Curated Degree Courses</h3>
+            <p class="mh-section-desc">Select a course to load its verified previous year papers</p>
+          </div>
+        </div>
+
+        <div class="mh-courses-grid">
+          <div class="mh-course-card active" data-course="BSMS1201">
+            <div class="mh-cc-icon-wrap" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">📈</div>
+            <div class="mh-cc-body">
+              <div class="mh-cc-code">BSMS1201</div>
+              <h4 class="mh-cc-title">Principles of Economics</h4>
+              <p class="mh-cc-meta">Micro &amp; Macro • Elasticity • Market Structures</p>
+            </div>
+            <div class="mh-cc-status">● Ready</div>
+          </div>
+
+          <div class="mh-course-card" data-course="BSMS1202">
+            <div class="mh-cc-icon-wrap" style="background: rgba(79, 70, 229, 0.12); color: #6366f1;">📑</div>
+            <div class="mh-cc-body">
+              <div class="mh-cc-code">BSMS1202</div>
+              <h4 class="mh-cc-title">Financial Accounting</h4>
+              <p class="mh-cc-meta">Ledgers • Trial Balance • Balance Sheets &amp; P&amp;L</p>
+            </div>
+            <div class="mh-cc-status">● Ready</div>
+          </div>
+
+          <div class="mh-course-card" data-course="BSMS1203">
+            <div class="mh-cc-icon-wrap" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">📊</div>
+            <div class="mh-cc-body">
+              <div class="mh-cc-code">BSMS1203</div>
+              <h4 class="mh-cc-title">Business Statistics</h4>
+              <p class="mh-cc-meta">Probability • Normal Distribution • Hypothesis</p>
+            </div>
+            <div class="mh-cc-status">● Ready</div>
+          </div>
+
+          <div class="mh-course-card" data-course="BSMA1001">
+            <div class="mh-cc-icon-wrap" style="background: rgba(236, 72, 153, 0.12); color: #ec4899;">∫dx</div>
+            <div class="mh-cc-body">
+              <div class="mh-cc-code">BSMA1001</div>
+              <h4 class="mh-cc-title">Mathematics for Data Science I</h4>
+              <p class="mh-cc-meta">Calculus • Limits &amp; Continuity • Vectors</p>
+            </div>
+            <div class="mh-cc-status">● Ready</div>
+          </div>
+
+          <div class="mh-course-card" data-course="BSCS1001">
+            <div class="mh-cc-icon-wrap" style="background: rgba(6, 182, 212, 0.12); color: #06b6d4;">&lt;/&gt;</div>
+            <div class="mh-cc-body">
+              <div class="mh-cc-code">BSCS1001</div>
+              <h4 class="mh-cc-title">Programming in Python</h4>
+              <p class="mh-cc-meta">Data Types • Loops • Recursion &amp; Dictionaries</p>
+            </div>
+            <div class="mh-cc-status">● Ready</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Exam Configuration & Launcher Console -->
       <div class="qp-selection-container" id="selectionSection">
-        <h2 class="qp-phase-heading" id="selectedPhaseHeading">QUIZ 1 - QUESTION PAPERS</h2>
+        <div class="qp-console-header">
+          <div class="qp-console-badge">EXAM CONSOLE</div>
+          <h2 class="qp-phase-heading" id="selectedPhaseHeading">QUIZ 1 - QUESTION PAPERS</h2>
+        </div>
 
         <!-- Filters Row -->
         <div class="qp-filter-row">
           <div class="qp-filter-group">
-            <label for="courseSelect">Select Course</label>
+            <label for="courseSelect">Selected Course</label>
             <div class="qp-select-wrap">
               <select id="courseSelect" class="qp-select">
                 <option value="BSMS1201">BSMS1201 — Principles of Economics</option>
                 <option value="BSMS1202">BSMS1202 — Financial Accounting</option>
                 <option value="BSMS1203">BSMS1203 — Business Statistics</option>
                 <option value="BSMA1001">BSMA1001 — Mathematics for Data Science I</option>
+                <option value="BSCS1001">BSCS1001 — Programming in Python</option>
               </select>
               <span class="qp-select-arrow">↕</span>
             </div>
           </div>
 
           <div class="qp-filter-group">
-            <label for="yearSelect">Year</label>
+            <label for="yearSelect">Academic Term / Year</label>
             <div class="qp-select-wrap">
               <select id="yearSelect" class="qp-select">
-                <option value="all">All</option>
+                <option value="all">All Available Terms</option>
                 <option value="2024">Term 2024 (Latest)</option>
                 <option value="2023">Term 2023</option>
                 <option value="assignments">Graded Assignments Only</option>
@@ -236,25 +350,21 @@
           </div>
         </div>
 
-        <p class="qp-filter-helper">
-          There may be some courses in different name. eg: You might see Economics (BSMS1201) and Financial Accounting (BSMS1202) listed. Each one will have different Question Papers.
-        </p>
-
         <!-- Environment & Question Count Sub-Bar -->
         <div class="qp-config-subbar">
           <div class="qp-mode-toggle">
             <button type="button" class="mode-btn active" data-mode="exam" id="modeBtnExam">
-              <span>⏱️ Exam Mode</span>
+              <span>⏱️ Timed Exam Mode</span>
             </button>
             <button type="button" class="mode-btn" data-mode="practice" id="modeBtnPractice">
-              <span>💡 Learning Mode</span>
+              <span>💡 Practice Mode</span>
             </button>
           </div>
 
           <div class="qp-count-toggle">
             <label for="countSelect">Question Count:</label>
             <select id="countSelect" class="qp-select-sm">
-              <option value="10">10 Questions (Blitz)</option>
+              <option value="10">10 Questions (Sprint)</option>
               <option value="15" selected>15 Questions (Standard)</option>
               <option value="20">20 Questions (Intensive)</option>
               <option value="30">30 Questions (Full Mock)</option>
