@@ -31,7 +31,7 @@ serviceAccount*.json
 
 # Admin Dashboard & Tools
 admin.html
-inmycontrol.html
+# inmycontrol.html
 createAdmin.js
 src/components/AdminDashboard.jsx
 src/components/AdminModal.jsx

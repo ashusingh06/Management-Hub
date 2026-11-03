@@ -1,0 +1,4401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | [Management Hub]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Caveat:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+  <script src="firebase-config.js?v=20260902_newtabfix"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; text-rendering: optimizeLegibility; }
+    body {
+      min-height: 100vh;
+      background-color: #fafafc;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #09090b;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #fafafc; }
+    ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(250, 250, 252, 0.96);
+      backdrop-filter: blur(20px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 18px;
+      padding: 36px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.16);
+      text-align: center;
+      animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #000000;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+    }
+
+    .auth-card h2 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .auth-card p {
+      font-size: 13.5px;
+      color: #71717a;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #71717a;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      color: #09090b;
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: #09090b;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .btn-auth-submit {
+      width: 100%;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #000000;
+      border: 1px solid #000000;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-auth-submit:hover {
+      background: #27272a;
+    }
+
+    .auth-error {
+      font-size: 12.5px;
+      color: #ef4444;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .admin-layout {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .admin-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid #e2e2e8;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-brand-title {
+      font-family: 'Caveat', 'Kalam', cursive, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #18181b;
+      text-decoration: underline;
+      text-decoration-color: #00cba0;
+      text-decoration-thickness: 2.5px;
+      text-underline-offset: 4px;
+    }
+
+    .admin-pill-tag {
+      font-size: 11px;
+      font-weight: 700;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: #52525b;
+    }
+
+    .admin-user-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .admin-email-badge {
+      font-size: 13px;
+      font-weight: 600;
+      color: #09090b;
+      background: #fafafc;
+      border: 1px solid #e2e2e8;
+      padding: 6px 14px;
+      border-radius: 9999px;
+    }
+
+    .btn-logout {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ef4444;
+      background: transparent;
+      border: 1px solid #fecaca;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-logout:hover {
+      background: #fef2f2;
+      border-color: #ef4444;
+    }
+
+    .admin-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 36px 24px 60px 24px;
+    }
+
+    .admin-tabs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid #e2e2e8;
+      padding-bottom: 12px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: #71717a;
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: #09090b;
+      background: #f4f4f5;
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: #000000;
+      border-color: #000000;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+      border-color: #09090b;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px -3px rgba(0, 0, 0, 0.10);
+    }
+
+    .stat-card .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #71717a;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+    }
+
+    .stat-card .stat-val {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #09090b;
+    }
+
+    .table-container {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    }
+
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .search-table-input {
+      width: 320px;
+      max-width: 100%;
+      padding: 9px 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      border: 1px solid #e2e2e8;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .btn-create-course {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #000000;
+      border: 1px solid #000000;
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-create-course:hover {
+      background: #27272a;
+    }
+
+    .data-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+
+    .data-table th {
+      background: #fafafc;
+      padding: 12px 16px;
+      font-weight: 700;
+      color: #52525b;
+      text-transform: uppercase;
+      font-size: 11.5px;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid #e2e2e8;
+    }
+
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f4f4f5;
+      color: #27272a;
+    }
+
+    .data-table tr:hover td {
+      background: #fafafc;
+    }
+
+    .code-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #09090b;
+      font-size: 12px;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .level-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .badge-foundation { background: #f4f4f5; color: #18181b; border: 1px solid #e4e4e7; }
+    .badge-diploma { background: #18181b; color: #ffffff; }
+    .badge-bs { background: #27272a; color: #ffffff; }
+    .badge-elective { background: #f4f4f5; color: #52525b; border: 1px solid #d4d4d8; }
+
+    .pdf-badge-attached {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #16a34a;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    .pdf-badge-none {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #a1a1aa;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm-pdf {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: #09090b;
+      background: #ffffff;
+      border: 1px solid #09090b;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-sm-pdf:hover {
+      background: #09090b;
+      color: #ffffff;
+    }
+
+    .btn-sm-edit {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: #09090b;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sm-edit:hover {
+      background: #09090b;
+      color: #ffffff;
+    }
+
+    .btn-sm-delete {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ef4444;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sm-delete:hover {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    .admin-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .admin-modal.active { display: flex; }
+
+    .admin-modal-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 18px;
+      padding: 28px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.28);
+    }
+
+    .admin-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .admin-modal-header h3 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .btn-modal-close {
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-primary-save {
+      width: 100%;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #000000;
+      border: 1px solid #000000;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .btn-primary-save:hover { background: #27272a; }
+
+    .upload-zone {
+      border: 2px dashed #d4d4d8;
+      background: #fafafc;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 16px;
+    }
+
+    .upload-zone:hover {
+      border-color: #000000;
+      background: #f4f4f5;
+    }
+
+    .upload-zone-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .btn-google-auth {
+      width: 100%;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #09090b;
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      margin-top: 14px;
+      margin-bottom: 4px;
+    }
+
+    .btn-google-auth:hover {
+      background: #fafafc;
+      border-color: #09090b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 16px 0;
+      color: #a1a1aa;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #e4e4e7;
+    }
+
+    .auth-divider span {
+      padding: 0 10px;
+    }
+
+    .quiz-type-selector {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      background: #f4f4f5;
+      padding: 4px;
+      border-radius: 10px;
+    }
+    .quiz-type-btn {
+      flex: 1;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #71717a;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .quiz-type-btn.active {
+      background: #ffffff;
+      color: #09090b;
+      border-color: #e4e4e7;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    .option-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      background: #fafafc;
+      border: 1px solid #e2e2e8;
+      border-radius: 10px;
+      padding: 6px 10px;
+      transition: all 0.15s ease;
+    }
+    .option-row.is-correct {
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+    .option-label-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 12.5px;
+      min-width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e4e4e7;
+      border-radius: 6px;
+      color: #09090b;
+    }
+    .option-row.is-correct .option-label-badge {
+      background: #10b981;
+      color: #ffffff;
+    }
+    .option-text-input {
+      flex: 1;
+      border: none !important;
+      background: transparent !important;
+      padding: 6px !important;
+      font-size: 13.5px !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .btn-remove-option {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+    .btn-remove-option:hover {
+      background: #fee2e2;
+    }
+    .btn-add-opt {
+      background: #f4f4f5;
+      border: 1px dashed #d4d4d8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      color: #52525b;
+      margin-top: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-add-opt:hover {
+      background: #e4e4e7;
+      border-color: #71717a;
+      color: #09090b;
+    }
+    .milestone-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-right: 4px;
+      margin-bottom: 2px;
+    }
+    .milestone-badge-quiz1 { background: #dbeafe; color: #1e40af; }
+    .milestone-badge-quiz2 { background: #fef3c7; color: #92400e; }
+    .milestone-badge-endterm { background: #f3e8ff; color: #6b21a8; }
+    .type-badge-mcq { background: #e0f2fe; color: #0369a1; }
+    .type-badge-msq { background: #fce7f3; color: #9d174d; }
+    .type-badge-nat { background: #ecfdf5; color: #047857; }
+    .quiz-filters-toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .quiz-filter-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .quiz-filter-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #71717a;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .quiz-filter-select, .quiz-filter-input {
+      padding: 8px 12px;
+      border: 1px solid #e2e2e8;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      font-family: inherit;
+      background: #fafafc;
+      color: #09090b;
+    }
+    .quiz-filter-select:focus, .quiz-filter-input:focus {
+      border-color: #09090b;
+      background: #ffffff;
+    }
+    .btn-secondary-action {
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      color: #09090b;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-secondary-action:hover {
+      background: #e4e4e7;
+    }
+    .preview-box {
+      border: 1px solid #e2e2e8;
+      border-radius: 10px;
+      background: #fafafc;
+      padding: 12px 14px;
+      margin-top: 8px;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    .custom-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 9, 11, 0.65);
+      backdrop-filter: blur(10px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+    .custom-modal-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e8;
+      border-radius: 18px;
+      padding: 28px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      animation: modalScaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalScaleUp {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .custom-modal-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+      font-size: 24px;
+      background: rgba(124, 58, 237, 0.1);
+      color: #7c3aed;
+    }
+    .custom-modal-icon-wrap.warning { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+    .custom-modal-icon-wrap.danger { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
+    .custom-modal-icon-wrap.info { background: rgba(37, 99, 235, 0.12); color: #2563eb; }
+    .custom-modal-icon-wrap.success { background: rgba(16, 185, 129, 0.12); color: #059669; }
+    .custom-modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #09090b;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .custom-modal-message {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #52525b;
+      margin-bottom: 24px;
+      white-space: pre-line;
+      text-align: left;
+      background: #fafafc;
+      border: 1px solid #e4e4e7;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .custom-modal-actions { display: flex; gap: 10px; }
+    .btn-custom-modal-cancel {
+      flex: 1;
+      padding: 11px 16px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #3f3f46;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-custom-modal-cancel:hover { background: #e4e4e7; color: #09090b; }
+    .btn-custom-modal-action {
+      flex: 1.2;
+      padding: 11px 16px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #7c3aed;
+      border: 1px solid #7c3aed;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-custom-modal-action:hover { background: #6d28d9; }
+    .btn-custom-modal-action.danger { background: #dc2626; border-color: #dc2626; }
+    .btn-custom-modal-action.danger:hover { background: #b91c1c; }
+
+    .app-toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+      max-width: 380px;
+      width: calc(100vw - 48px);
+    }
+    .app-toast {
+      pointer-events: auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.18);
+      animation: toastSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s ease;
+    }
+    @keyframes toastSlideIn {
+      from { opacity: 0; transform: translateX(24px) scale(0.96); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    .app-toast.removing { opacity: 0; transform: translateX(24px) scale(0.96); }
+    .app-toast-icon { font-size: 18px; line-height: 1; margin-top: 1px; }
+    .app-toast-body { flex: 1; }
+    .app-toast-title { font-size: 13px; font-weight: 800; color: #09090b; margin-bottom: 2px; }
+    .app-toast-msg { font-size: 12.5px; line-height: 1.45; color: #52525b; }
+    .app-toast-close {
+      background: none;
+      border: none;
+      color: #a1a1aa;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+    .app-toast-close:hover { color: #09090b; }
+    .app-toast.success { border-left: 4px solid #10b981; }
+    .app-toast.error { border-left: 4px solid #ef4444; }
+    .app-toast.warning { border-left: 4px solid #f59e0b; }
+    .app-toast.info { border-left: 4px solid #7c3aed; }
+  </style>
+</head>
+<body>
+
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-badge">Management Hub Admin</div>
+      <h2>Administrator Portal</h2>
+      <p>Authorized administrator access only</p>
+
+      <button type="button" class="btn-google-auth" id="adminGoogleSignInBtn">
+        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Sign In with Google (Admin)</span>
+      </button>
+
+      <div class="auth-divider">
+        <span>or use passcode</span>
+      </div>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="adminEmailInput" placeholder="name@example.com" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="adminPasswordInput" placeholder="••••••••" required autofocus />
+        </div>
+        <button type="submit" class="btn-auth-submit">Sign In to Dashboard</button>
+        <p class="auth-error" id="authErrorText">Access Denied</p>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-layout" id="adminLayout">
+    
+    <header class="admin-header">
+      <div class="admin-brand">
+        <span class="admin-brand-title">[Management Hub]</span>
+        <span class="admin-pill-tag">Admin Panel</span>
+        <a href="index.html" style="font-size: 13px; color: #71717a; text-decoration: none; font-weight: 600; margin-left: 12px;">← View Live Platform</a>
+      </div>
+
+      <div class="admin-user-nav">
+        <div class="admin-email-badge">
+          <span>👑</span> <span id="displayAdminEmail">Administrator</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn">Log Out</button>
+      </div>
+    </header>
+
+    <main class="admin-container">
+      
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="courses">Course Catalog (<span id="tabCourseCount">30</span>)</button>
+        <button class="tab-btn" data-tab="quiz-manager">🎯 Quiz Questions (<span id="tabQuizCount">0</span>)</button>
+        <button class="tab-btn" data-tab="pdf-manager">📄 PDF Notes Manager</button>
+        <button class="tab-btn" data-tab="links-manager">🔗 Portal Links (<span id="tabLinksCount">5</span>)</button>
+        <button class="tab-btn" data-tab="contributors-manager">👥 Contributors (<span id="tabContributorsCount">1</span>)</button>
+        <button class="tab-btn" data-tab="analytics">Search Trends & Analytics</button>
+        <button class="tab-btn" data-tab="system">Database Maintenance</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Catalog Courses</div>
+          <div class="stat-val" id="metricCourses">30</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">🎯 Quiz Questions Bank</div>
+          <div class="stat-val" id="metricQuizQuestions">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">PDF Notes Attached</div>
+          <div class="stat-val" id="metricPdfs">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Student Bookmarks</div>
+          <div class="stat-val" id="metricBookmarks">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Searches Logged</div>
+          <div class="stat-val" id="metricSearches">0</div>
+        </div>
+      </div>
+
+      <section id="tab-courses" class="tab-content">
+        <div class="table-container">
+          <div class="toolbar-row">
+            <input type="text" id="courseSearchInput" class="search-table-input" placeholder="Search by code (e.g. BSMA1001), title, or tier..." />
+            <button class="btn-create-course" id="openCreateCourseBtn">+ Add New Course</button>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Level</th>
+                  <th>Title</th>
+                  <th>Credits</th>
+                  <th>PDF Notes</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="courseTableBody">
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-pdf-manager" class="tab-content" style="display: none;">
+        <div class="table-container">
+          <div class="toolbar-row">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700;">Curriculum Study Notes & PDF Files</h3>
+              <p style="font-size: 13px; color: #71717a; margin-top: 2px;">Upload PDF files or attach Google Drive/Web document links to any course.</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button class="btn-create-course" id="syncToCloudBtn" style="background: #166534; border-color: #166534; font-size: 12.5px; padding: 7px 14px;">☁️ Sync Live to Mobile</button>
+              <input type="text" id="pdfSearchInput" class="search-table-input" placeholder="Filter courses for Notes or PYQs..." />
+            </div>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Title</th>
+                  <th>Study Notes</th>
+                  <th>PYQs Attached</th>
+                  <th>Manage Resources</th>
+                </tr>
+              </thead>
+              <tbody id="pdfManagerTableBody">
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-analytics" class="tab-content" style="display: none;">
+        <div class="table-container">
+          <div class="toolbar-row">
+            <h3 style="font-size: 16px; font-weight: 700;">Student Real-Time Search Trends</h3>
+            <button class="btn-sm-edit" id="refreshAnalyticsBtn">🔄 Refresh Logs</button>
+          </div>
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Search Query</th>
+                  <th>Results Found</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="searchLogsTableBody">
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-system" class="tab-content" style="display: none;">
+        <div class="table-container" style="max-width: 680px;">
+          <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 8px;">Database Maintenance & Diagnostics</h3>
+          <p style="font-size: 13.5px; color: #71717a; margin-bottom: 20px;">Manage SQLite hub.db backups and data structures synchronization.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: #fafafc; border: 1px solid #e2e2e8; border-radius: 12px; padding: 18px;">
+              <strong style="font-size: 14px; display: block; margin-bottom: 4px;">Re-Seed Standard 52-Course Curriculum</strong>
+              <span style="font-size: 12.5px; color: #71717a; display: block; margin-bottom: 12px;">Restore default IIT Madras BS Management & Data Science course catalog.</span>
+              <button class="btn-sm-edit" id="resetCoursesBtn">Restore Default 52 Courses</button>
+            </div>
+            
+            <div style="background: #fafafc; border: 1px solid #e2e2e8; border-radius: 12px; padding: 18px;">
+              <strong style="font-size: 14px; display: block; margin-bottom: 4px;">Export Database JSON Backup</strong>
+              <span style="font-size: 12.5px; color: #71717a; display: block; margin-bottom: 12px;">Download all courses, notes, and analytics as a standalone JSON backup.</span>
+              <button class="btn-sm-edit" id="exportDbBtn">Download JSON Backup</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-links-manager" class="tab-content" style="display: none;">
+        <div class="table-container">
+          <div class="toolbar-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700;">Official Ecosystem Portals & Resources</h3>
+              <p style="font-size: 12.5px; color: #71717a; margin-top: 2px;">Manage official external portal links displayed on the student home page and footer.</p>
+            </div>
+            <button class="btn-create-course" id="openAddLinkModalBtn">+ Add New Portal Link</button>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Portal Title</th>
+                  <th style="width: 25%;">Display Subtitle</th>
+                  <th style="width: 35%;">Destination URL</th>
+                  <th style="width: 15%;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="portalLinksTableBody">
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-contributors-manager" class="tab-content" style="display: none;">
+        <div class="table-container">
+          <div class="toolbar-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700;">Platform Contributors</h3>
+              <p style="font-size: 12.5px; color: #71717a; margin-top: 2px;">Manage students, creators & developers displayed on the main platform.</p>
+            </div>
+            <button class="btn-create-course" id="openAddContributorModalBtn">+ Add New Contributor</button>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Contributor Name</th>
+                  <th style="width: 25%;">Role / Contribution</th>
+                  <th style="width: 25%;">Branch / Affiliation</th>
+                  <th style="width: 15%;">Social Links</th>
+                  <th style="width: 10%;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="contributorsTableBody">
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-quiz-manager" class="tab-content" style="display: none;">
+        <div class="table-container">
+          
+          <div class="toolbar-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                <span>🎯 Quiz Questions &amp; Exam Simulator Bank</span>
+              </h3>
+              <p style="font-size: 13px; color: #71717a; margin-top: 3px;">
+                Create, organize, and bulk-import questions for weekly graded assignments, Quiz 1, Quiz 2, and End-Term practice.
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn-create-course" id="openAddQuestionBtn" style="background: #7c3aed; border-color: #7c3aed;">
+                <span>+ Add Question</span>
+              </button>
+              <button class="btn-secondary-action" id="openBulkImportBtn" title="Bulk Import JSON">
+                <span>⚡ Bulk Import JSON</span>
+              </button>
+              <button class="btn-secondary-action" id="btnExportQuestions" title="Download backup of questions">
+                <span>📥 Export JSON</span>
+              </button>
+              <a href="/quiz.html" target="_blank" class="btn-secondary-action" style="background: #fafafc;" title="Open Quiz Simulator in New Tab">
+                <span>🚀 Open Simulator ↗</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="quiz-filters-toolbar">
+            <div class="quiz-filter-item">
+              <span class="quiz-filter-label">Course:</span>
+              <select id="quizFilterCourse" class="quiz-filter-select">
+                <option value="all">All Courses</option>
+              </select>
+            </div>
+
+            <div class="quiz-filter-item">
+              <span class="quiz-filter-label">Milestone:</span>
+              <select id="quizFilterMilestone" class="quiz-filter-select">
+                <option value="all">All Milestones</option>
+                <option value="quiz1">Quiz 1 (W1-4)</option>
+                <option value="quiz2">Quiz 2 (W5-8)</option>
+                <option value="endterm">End Term (W1-12)</option>
+              </select>
+            </div>
+
+            <div class="quiz-filter-item">
+              <span class="quiz-filter-label">Week:</span>
+              <select id="quizFilterWeek" class="quiz-filter-select">
+                <option value="all">All Weeks</option>
+                <option value="1">Week 1</option>
+                <option value="2">Week 2</option>
+                <option value="3">Week 3</option>
+                <option value="4">Week 4</option>
+                <option value="5">Week 5</option>
+                <option value="6">Week 6</option>
+                <option value="7">Week 7</option>
+                <option value="8">Week 8</option>
+                <option value="9">Week 9</option>
+                <option value="10">Week 10</option>
+                <option value="11">Week 11</option>
+                <option value="12">Week 12</option>
+              </select>
+            </div>
+
+            <div class="quiz-filter-item">
+              <span class="quiz-filter-label">Type:</span>
+              <select id="quizFilterType" class="quiz-filter-select">
+                <option value="all">All Types</option>
+                <option value="mcq">MCQ (Single)</option>
+                <option value="msq">MSQ (Multi)</option>
+                <option value="nat">NAT (Numeric)</option>
+              </select>
+            </div>
+
+            <div class="quiz-filter-item" style="flex: 1; min-width: 200px;">
+              <input type="text" id="quizSearchInput" class="quiz-filter-input" style="width: 100%;" placeholder="Search keywords, question text, topic, or source..." />
+            </div>
+
+            <button type="button" class="btn-secondary-action" id="btnResetQuizFilters" style="padding: 7px 12px; font-size: 12px;">
+              Reset Filters
+            </button>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: #71717a;">
+            <div>Showing <strong id="quizFilteredCount" style="color: #09090b;">0</strong> of <strong id="quizTotalCount" style="color: #09090b;">0</strong> questions</div>
+            <div id="quizCourseSummaryBadge" style="font-size: 12px; color: #7c3aed; font-weight: 600;"></div>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 11%;">Course &amp; Wk</th>
+                  <th style="width: 8%;">Type</th>
+                  <th style="width: 43%;">Question Statement &amp; Topic</th>
+                  <th style="width: 16%;">Milestones &amp; Source</th>
+                  <th style="width: 8%;">Marks</th>
+                  <th style="width: 14%; text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="quizTableBody">
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="admin-modal" id="contributorModal" style="display: none;">
+    <div class="admin-modal-card" style="max-width: 520px;">
+      <div class="admin-modal-header">
+        <h3 id="contributorModalTitle">Add Contributor</h3>
+        <button class="btn-modal-close" id="closeContributorModalBtn">✕</button>
+      </div>
+
+      <form id="contributorForm">
+        <input type="hidden" id="contributorIdInput" />
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="contributorNameInput" placeholder="e.g. Aashish Singh" required />
+        </div>
+        <div class="form-group">
+          <label>Role / Badge (e.g. Lead Maintainer, Notes Creator, Developer) *</label>
+          <input type="text" id="contributorRoleInput" placeholder="e.g. Lead Maintainer & Notes Curator" required />
+        </div>
+        <div class="form-group">
+          <label>Branch / Affiliation</label>
+          <input type="text" id="contributorBranchInput" placeholder="e.g. IIT Madras BS Degree" />
+        </div>
+        <div class="form-group">
+          <label>Avatar Photo URL (Optional - leave blank for auto-initials)</label>
+          <input type="url" id="contributorAvatarInput" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>GitHub Profile URL (Optional)</label>
+          <input type="url" id="contributorGithubInput" placeholder="https://github.com/username" />
+        </div>
+        <div class="form-group">
+          <label>LinkedIn Profile URL (Optional)</label>
+          <input type="url" id="contributorLinkedinInput" placeholder="https://linkedin.com/in/username" />
+        </div>
+        <div class="form-group">
+          <label>Contact Email (Optional)</label>
+          <input type="email" id="contributorEmailInput" placeholder="e.g. name@example.com" />
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-sm-edit" id="cancelContributorBtn" style="padding: 10px 18px;">Cancel</button>
+          <button type="submit" class="btn-primary-save" id="saveContributorSubmitBtn" style="padding: 10px 20px;">Save Contributor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="portalLinkModal" style="display: none;">
+    <div class="admin-modal-card" style="max-width: 500px;">
+      <div class="admin-modal-header">
+        <h3 id="portalLinkModalTitle">Add Portal Link</h3>
+        <button class="btn-modal-close" id="closePortalLinkModalBtn">✕</button>
+      </div>
+
+      <form id="portalLinkForm">
+        <input type="hidden" id="portalLinkIdInput" />
+        <div class="form-group">
+          <label>Portal / Service Title *</label>
+          <input type="text" id="portalLinkTitleInput" placeholder="e.g. IITM Discourse Forum" required />
+        </div>
+        <div class="form-group">
+          <label>Display Subtitle / Hostname *</label>
+          <input type="text" id="portalLinkSubtitleInput" placeholder="e.g. discourse.onlinedegree.iitm.ac.in" required />
+        </div>
+        <div class="form-group">
+          <label>Destination Web URL *</label>
+          <input type="url" id="portalLinkUrlInput" placeholder="https://discourse.onlinedegree.iitm.ac.in" required />
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-sm-edit" id="cancelPortalLinkBtn" style="padding: 10px 18px;">Cancel</button>
+          <button type="submit" class="btn-primary-save" id="savePortalLinkSubmitBtn" style="padding: 10px 20px;">Save Portal Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="pdfUploadModal">
+    <div class="admin-modal-card" style="max-width: 540px;">
+      <div class="admin-modal-header">
+        <h3 id="pdfModalTitle">Manage Notes & PYQs</h3>
+        <button class="btn-modal-close" id="closePdfModalBtn">✕</button>
+      </div>
+
+      <form id="pdfUploadForm">
+        <input type="hidden" id="pdfCourseCodeInput" />
+        
+        <div class="form-group">
+          <label>Target Course</label>
+          <input type="text" id="pdfCourseDisplay" readonly style="background: #fafafc; font-weight: 700;" />
+        </div>
+
+        <div class="form-group">
+          <label>Select Resource Type</label>
+          <div style="display: flex; gap: 10px;">
+            <label style="flex: 1; display: flex; align-items: center; gap: 8px; background: #fafafc; border: 1px solid #e2e2e8; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 12.5px; font-weight: 700;">
+              <input type="radio" name="resourceType" value="notes" id="typeNotesRadio" checked style="width: auto; margin: 0;" />
+              <span>📄 Study Notes</span>
+            </label>
+            <label style="flex: 1; display: flex; align-items: center; gap: 8px; background: #fafafc; border: 1px solid #e2e2e8; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 12.5px; font-weight: 700;">
+              <input type="radio" name="resourceType" value="pyq" id="typePyqRadio" style="width: auto; margin: 0;" />
+              <span>📝 Previous Year (PYQ)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group" id="sectionGroup">
+          <label>Folder / Section Name (Optional)</label>
+          <input type="text" id="resourceSectionInput" placeholder="Enter folder or section name (optional)" list="sectionSuggestionsList" />
+          <datalist id="sectionSuggestionsList">
+            <option value="Comprehensive Notes"></option>
+            <option value="Lecture Slides"></option>
+            <option value="Handwritten Notes"></option>
+            <option value="Formula Sheets & Summary"></option>
+            <option value="Module 1"></option>
+            <option value="Module 2"></option>
+            <option value="Module 3"></option>
+            <option value="Module 4"></option>
+            <option value="Assignments & Solutions"></option>
+          </datalist>
+        </div>
+
+        <div class="form-group" id="titleGroup">
+          <label id="titleLabel">Document Title</label>
+          <input type="text" id="resourceTitleInput" placeholder="Enter document title" />
+        </div>
+
+        <div class="form-group" id="yearGroup" style="display: none;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <label style="margin: 0; font-weight: 700;">Examination Year / Session</label>
+            <span id="yearModeIndicator" style="font-size: 11px; color: #71717a; font-weight: 600;">Single Year</span>
+          </div>
+
+          <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+            <button type="button" class="btn-year-mode active" id="btnYearSingle" data-mode="single" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 700; border-radius: 8px; border: 1.5px solid #2563eb; background: #eff6ff; color: #1e40af; cursor: pointer; transition: all 0.15s ease;">
+              Single Year
+            </button>
+            <button type="button" class="btn-year-mode" id="btnYearRange" data-mode="range" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1.5px solid #e4e4e7; background: #ffffff; color: #52525b; cursor: pointer; transition: all 0.15s ease;">
+              Year Range
+            </button>
+            <button type="button" class="btn-year-mode" id="btnYearCustom" data-mode="custom" style="flex: 1; padding: 7px 10px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1.5px solid #e4e4e7; background: #ffffff; color: #52525b; cursor: pointer; transition: all 0.15s ease;">
+              Custom Text
+            </button>
+          </div>
+
+          <div id="yearBoxSingle">
+            <input type="number" id="resourceYearSingle" value="2025" min="2015" max="2035" placeholder="e.g. 2025" />
+          </div>
+
+          <div id="yearBoxRange" style="display: none;">
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center;">
+              <input type="number" id="resourceYearRangeStart" placeholder="From (e.g. 2021)" min="2015" max="2035" value="2021" />
+              <span style="font-weight: 700; color: #71717a; font-size: 12px;">to</span>
+              <input type="number" id="resourceYearRangeEnd" placeholder="To (e.g. 2024)" min="2015" max="2035" value="2024" />
+            </div>
+            <div id="yearRangePreviewBadge" style="margin-top: 6px; font-size: 11.5px; font-weight: 700; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 4px 10px; border-radius: 6px; display: inline-block;">
+              Preview: Year 2021 - 2024
+            </div>
+          </div>
+
+          <div id="yearBoxCustom" style="display: none;">
+            <input type="text" id="resourceYearCustom" placeholder="Enter custom year or session (e.g. 2021-2024, May 2024, Term 1)" />
+          </div>
+
+          <input type="hidden" id="resourceYearInput" value="2025" />
+        </div>
+
+        <div class="form-group">
+          <label>Upload PDF Document (.pdf)</label>
+          <div class="upload-zone" onclick="document.getElementById('pdfFileInput').click()">
+            <div class="upload-zone-icon">📄</div>
+            <strong style="font-size: 13.5px; display: block;" id="uploadZoneText">Click to select PDF file from your computer</strong>
+            <span style="font-size: 12px; color: #71717a;">Supports PDF study notes, question papers, and slides</span>
+          </div>
+          <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;" />
+        </div>
+
+        <div style="text-align: center; font-size: 12px; font-weight: 700; color: #a1a1aa; margin: 10px 0;">— OR —</div>
+
+        <div class="form-group">
+          <label>Online URL / Google Drive Link</label>
+          <input type="url" id="pdfUrlInput" placeholder="Paste PDF URL or Google Drive link" />
+        </div>
+
+        <div id="modalExistingNotesSection" style="margin-bottom: 14px; display: none;">
+          <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #166534; margin-bottom: 6px;">Attached Study Notes for this Course</label>
+          <div id="modalExistingNotesList" style="display: flex; flex-direction: column; gap: 6px; max-height: 160px; overflow-y: auto;"></div>
+        </div>
+
+        <div id="modalExistingPyqSection" style="margin-bottom: 14px; display: none;">
+          <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #71717a; margin-bottom: 6px;">Attached PYQs for this Course</label>
+          <div id="modalExistingPyqList" style="display: flex; flex-direction: column; gap: 6px; max-height: 160px; overflow-y: auto;"></div>
+        </div>
+
+        <button type="submit" class="btn-primary-save" id="savePdfSubmitBtn">Upload & Attach Resource</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="courseEditModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="modalFormTitle">Add New Course</h3>
+        <button class="btn-modal-close" id="closeCourseModalBtn">✕</button>
+      </div>
+
+      <form id="courseForm">
+        <input type="hidden" id="courseFormId" />
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Course Code</label>
+            <input type="text" id="courseCodeInput" placeholder="e.g. CS102" required />
+          </div>
+          <div class="form-group">
+            <label>Level / Tier</label>
+            <select id="courseLevelInput">
+              <option value="foundation">Foundation</option>
+              <option value="diploma">Diploma</option>
+              <option value="bs">BS</option>
+              <option value="elective">Elective</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Course Title</label>
+          <input type="text" id="courseTitleInput" placeholder="e.g. Advanced Data Structures" required />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Credits</label>
+            <input type="number" id="courseCreditsInput" value="4" min="1" max="8" required />
+          </div>
+          <div class="form-group">
+            <label>Prerequisites (Comma separated)</label>
+            <input type="text" id="coursePrereqsInput" placeholder="e.g. BSCS1001, BSMA1001" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="courseDescInput" rows="3" placeholder="Overview of course curriculum and core concepts..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary-save" id="saveCourseSubmitBtn">Save Course to Database</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="questionModal" style="display: none;">
+    <div class="admin-modal-card" style="max-width: 680px;">
+      <div class="admin-modal-header">
+        <h3 id="questionModalTitle">Add New Question</h3>
+        <button class="btn-modal-close" id="closeQuestionModalBtn">✕</button>
+      </div>
+
+      <form id="questionForm">
+        <input type="hidden" id="questionFormId" />
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Course *</label>
+            <select id="questionCourseSelect" required>
+              
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Week (1 - 12) *</label>
+            <select id="questionWeekSelect" required>
+              <option value="1">Week 1</option>
+              <option value="2">Week 2</option>
+              <option value="3">Week 3</option>
+              <option value="4">Week 4</option>
+              <option value="5">Week 5</option>
+              <option value="6">Week 6</option>
+              <option value="7">Week 7</option>
+              <option value="8">Week 8</option>
+              <option value="9">Week 9</option>
+              <option value="10">Week 10</option>
+              <option value="11">Week 11</option>
+              <option value="12">Week 12</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label style="display: flex; justify-content: space-between;">
+            <span>Exam Milestones Included</span>
+            <span style="font-size: 11px; color: #a1a1aa; text-transform: none; font-weight: normal;">(Auto-syncs with selected week)</span>
+          </label>
+          <div style="display: flex; gap: 16px; align-items: center; background: #fafafc; border: 1px solid #e2e2e8; border-radius: 10px; padding: 10px 14px;">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-transform: none; margin: 0;">
+              <input type="checkbox" id="msCheckQuiz1" value="quiz1" checked /> Quiz 1 (W1-4)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-transform: none; margin: 0;">
+              <input type="checkbox" id="msCheckQuiz2" value="quiz2" /> Quiz 2 (W5-8)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-transform: none; margin: 0;">
+              <input type="checkbox" id="msCheckEndterm" value="endterm" checked /> End Term (W1-12)
+            </label>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Topic / Concept</label>
+            <input type="text" id="questionTopicInput" placeholder="e.g. Scarcity &amp; Opportunity Cost" />
+          </div>
+          <div class="form-group">
+            <label>Assignment / Exam Source</label>
+            <input type="text" id="questionSourceInput" placeholder="e.g. Week 1 Graded Assignment" />
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Difficulty</label>
+            <select id="questionDifficultySelect">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Marks</label>
+            <input type="number" id="questionMarksInput" min="1" max="10" value="1" required />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 8px;">
+          <label>Question Type *</label>
+          <div class="quiz-type-selector">
+            <button type="button" class="quiz-type-btn active" data-type="mcq" id="typeBtnMcq">
+              <span>🔘 MCQ (Single Choice)</span>
+            </button>
+            <button type="button" class="quiz-type-btn" data-type="msq" id="typeBtnMsq">
+              <span>☑️ MSQ (Multiple Choice)</span>
+            </button>
+            <button type="button" class="quiz-type-btn" data-type="nat" id="typeBtnNat">
+              <span>🔢 NAT (Numerical Answer)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label style="margin: 0;">Question Statement *</label>
+            <button type="button" id="btnToggleMathPreview" style="background: none; border: none; font-size: 11.5px; color: #7c3aed; font-weight: 700; cursor: pointer;">
+              👁️ Preview Math/Formula
+            </button>
+          </div>
+          <textarea id="questionTextInput" rows="4" placeholder="Enter question statement. Supports KaTeX math ($Q_d = 200 - 4P$) and markdown..." required></textarea>
+          <div id="questionTextPreviewBox" class="preview-box" style="display: none;"></div>
+        </div>
+
+        <div id="sectionOptions">
+          <div class="form-group" style="margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label style="margin: 0;">Answer Options &amp; Correct Choice *</label>
+              <span id="optionsHelpText" style="font-size: 11.5px; color: #71717a;">Select the radio button for the single correct option</span>
+            </div>
+            <div id="optionsListContainer">
+              
+            </div>
+            <button type="button" class="btn-add-opt" id="btnAddOptionRow">+ Add Another Option</button>
+          </div>
+        </div>
+
+        <div id="sectionNat" style="display: none;">
+          <div class="form-grid-2" style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+            <div class="form-group" style="margin: 0;">
+              <label style="color: #065f46;">Correct Numerical Value *</label>
+              <input type="number" step="any" id="questionNatAnswer" placeholder="e.g. 25 or 2.0" />
+            </div>
+            <div class="form-group" style="margin: 0;">
+              <label style="color: #065f46;">Acceptable Tolerance (±)</label>
+              <input type="number" step="any" id="questionNatTolerance" value="0.1" placeholder="e.g. 0.1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Explanation &amp; Step-by-Step Solution (Shown to students after answering)</label>
+          <textarea id="questionExplanationInput" rows="3" placeholder="Explain the underlying principles, formula derivation, or reasons for the correct answer..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-secondary-action" id="btnCancelQuestionModal" style="flex: 1; justify-content: center;">Cancel</button>
+          <button type="button" class="btn-secondary-action" id="btnSaveAndAddAnother" style="flex: 1.5; justify-content: center; background: #e0e7ff; color: #3730a3; border-color: #c7d2fe;">
+            💾 Save &amp; Add Another
+          </button>
+          <button type="submit" class="btn-primary-save" id="btnSaveQuestionSubmit" style="flex: 1.5; margin: 0; background: #7c3aed; border-color: #7c3aed;">
+            Save Question
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="bulkImportModal" style="display: none;">
+    <div class="admin-modal-card" style="max-width: 620px;">
+      <div class="admin-modal-header">
+        <h3 style="display: flex; align-items: center; gap: 8px;">
+          <span>⚡ Bulk Import Questions via JSON</span>
+        </h3>
+        <button class="btn-modal-close" id="closeBulkImportModalBtn">✕</button>
+      </div>
+
+      <p style="font-size: 13px; color: #71717a; margin-bottom: 14px;">
+        Quickly import assignment questions by pasting a JSON array or uploading a <code>.json</code> file.
+      </p>
+
+      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        <button type="button" class="btn-secondary-action" id="btnLoadSampleJson" style="font-size: 12px; padding: 6px 12px;">
+          📋 Load Sample Format
+        </button>
+        <label class="btn-secondary-action" style="font-size: 12px; padding: 6px 12px; cursor: pointer;">
+          📁 Choose JSON File
+          <input type="file" id="bulkJsonFileInput" accept=".json" style="display: none;" />
+        </label>
+      </div>
+
+      <div class="form-group">
+        <textarea id="bulkJsonInput" rows="12" style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; background: #fafafc;" placeholder='[
+  {
+    "courseCode": "BSMS1201",
+    "week": 1,
+    "type": "mcq",
+    "questionText": "What is opportunity cost?",
+    "options": ["A", "B", "C", "D"],
+    "correctAnswer": 1,
+    "explanation": "Explanation here..."
+  }
+]'></textarea>
+      </div>
+
+      <div id="bulkValidationAlert" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 14px;"></div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="btn-secondary-action" id="btnCancelBulkModal" style="flex: 1; justify-content: center;">Cancel</button>
+        <button type="button" class="btn-primary-save" id="btnSubmitBulkJson" style="flex: 2; margin: 0; background: #7c3aed; border-color: #7c3aed;">
+          Import to Database
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="questionPreviewModal" style="display: none;">
+    <div class="admin-modal-card" style="max-width: 600px;">
+      <div class="admin-modal-header">
+        <h3 style="font-size: 16px; font-weight: 700;">Student View Preview</h3>
+        <button class="btn-modal-close" id="closeQuestionPreviewModalBtn">✕</button>
+      </div>
+      <div id="questionPreviewBody" style="font-size: 14.5px; line-height: 1.6;">
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-modal-overlay" id="customConfirmModal" style="display: none;">
+    <div class="custom-modal-card">
+      <div class="custom-modal-icon-wrap" id="customConfirmIconWrap">
+        <span id="customConfirmIcon">⚠️</span>
+      </div>
+      <h3 class="custom-modal-title" id="customConfirmTitle">Confirm Action</h3>
+      <div class="custom-modal-message" id="customConfirmMessage">Are you sure?</div>
+      <div class="custom-modal-actions">
+        <button type="button" class="btn-custom-modal-cancel" id="btnCustomConfirmCancel">Cancel</button>
+        <button type="button" class="btn-custom-modal-action" id="btnCustomConfirmAction">Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-toast-container" id="appToastContainer"></div>
+
+  <script>
+    const ADMIN_EMAIL = 'aashishsinghh06@gmail.com';
+
+    const appToastContainer = document.getElementById('appToastContainer');
+    const customConfirmModal = document.getElementById('customConfirmModal');
+    const customConfirmTitle = document.getElementById('customConfirmTitle');
+    const customConfirmMessage = document.getElementById('customConfirmMessage');
+    const customConfirmIcon = document.getElementById('customConfirmIcon');
+    const customConfirmIconWrap = document.getElementById('customConfirmIconWrap');
+    const btnCustomConfirmCancel = document.getElementById('btnCustomConfirmCancel');
+    const btnCustomConfirmAction = document.getElementById('btnCustomConfirmAction');
+
+    function showToast(message, type = 'info', title = null, duration = 3800) {
+      if (!appToastContainer) return;
+      const toast = document.createElement('div');
+      toast.className = `app-toast ${type}`;
+
+      let iconText = 'ℹ️';
+      if (type === 'success') iconText = '✓';
+      else if (type === 'error') iconText = '✕';
+      else if (type === 'warning') iconText = '⚠️';
+
+      let defaultTitle = 'Admin Portal';
+      if (type === 'success') defaultTitle = 'Success';
+      else if (type === 'error') defaultTitle = 'Alert';
+      else if (type === 'warning') defaultTitle = 'Attention';
+
+      toast.innerHTML = `
+        <div class="app-toast-icon">${iconText}</div>
+        <div class="app-toast-body">
+          <div class="app-toast-title">${escapeHtml(title || defaultTitle)}</div>
+          <div class="app-toast-msg">${escapeHtml(message).replace(/\n/g, '<br>')}</div>
+        </div>
+        <button type="button" class="app-toast-close" title="Dismiss">✕</button>
+      `;
+
+      toast.querySelector('.app-toast-close').addEventListener('click', () => {
+        toast.classList.add('removing');
+        setTimeout(() => toast.remove(), 250);
+      });
+
+      appToastContainer.appendChild(toast);
+
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.classList.add('removing');
+          setTimeout(() => toast.remove(), 250);
+        }
+      }, duration);
+    }
+
+    function showConfirmDialog({ title = 'Please Confirm', message = 'Are you sure?', confirmText = 'Confirm', cancelText = 'Cancel', type = 'warning' }) {
+      return new Promise((resolve) => {
+        if (!customConfirmModal) {
+          resolve(window.confirm(message));
+          return;
+        }
+
+        customConfirmTitle.textContent = title;
+        customConfirmMessage.textContent = message;
+        btnCustomConfirmAction.textContent = confirmText;
+        btnCustomConfirmCancel.textContent = cancelText;
+
+        customConfirmIconWrap.className = `custom-modal-icon-wrap ${type}`;
+        if (type === 'danger') {
+          customConfirmIcon.textContent = '🗑️';
+          btnCustomConfirmAction.className = 'btn-custom-modal-action danger';
+        } else if (type === 'success') {
+          customConfirmIcon.textContent = '✓';
+          btnCustomConfirmAction.className = 'btn-custom-modal-action';
+          btnCustomConfirmAction.style.background = '#10b981';
+          btnCustomConfirmAction.style.borderColor = '#10b981';
+        } else if (type === 'info') {
+          customConfirmIcon.textContent = 'ℹ️';
+          btnCustomConfirmAction.className = 'btn-custom-modal-action';
+          btnCustomConfirmAction.style.background = '#2563eb';
+          btnCustomConfirmAction.style.borderColor = '#2563eb';
+        } else {
+          customConfirmIcon.textContent = '⚠️';
+          btnCustomConfirmAction.className = 'btn-custom-modal-action';
+          btnCustomConfirmAction.style.background = '#7c3aed';
+          btnCustomConfirmAction.style.borderColor = '#7c3aed';
+        }
+
+        customConfirmModal.style.display = 'flex';
+
+        const handleConfirm = () => {
+          cleanup();
+          resolve(true);
+        };
+
+        const handleCancel = () => {
+          cleanup();
+          resolve(false);
+        };
+
+        const cleanup = () => {
+          customConfirmModal.style.display = 'none';
+          btnCustomConfirmAction.removeEventListener('click', handleConfirm);
+          btnCustomConfirmCancel.removeEventListener('click', handleCancel);
+        };
+
+        btnCustomConfirmAction.addEventListener('click', handleConfirm);
+        btnCustomConfirmCancel.addEventListener('click', handleCancel);
+      });
+    }
+
+    const INITIAL_COURSES_CATALOG = [
+      
+      { id: 1, code: "BSMA1001", level: "foundation", title: "Mathematics for Data Science I", credits: 4, prerequisites: [], description: "Linear algebra, matrix operations, calculus fundamentals, vector spaces, and mathematical foundations for analytics.", pdf_url: "" },
+      { id: 2, code: "BSMA1002", level: "foundation", title: "Statistics for Data Science I", credits: 4, prerequisites: [], description: "Probability theory, random variables, discrete and continuous distributions, hypothesis testing, and exploratory data analysis.", pdf_url: "" },
+      { id: 3, code: "BSCS1001", level: "foundation", title: "Computational Thinking", credits: 4, prerequisites: [], description: "Algorithm design, problem decomposition, logic formulation, pseudocode, iteration, and structured problem solving.", pdf_url: "" },
+      { id: 4, code: "BSHS1001", level: "foundation", title: "English I", credits: 4, prerequisites: [], description: "Professional communication, academic writing, presentation techniques, grammar, and executive business discourse.", pdf_url: "" },
+      { id: 5, code: "BSMS1201", level: "foundation", title: "Principles of Economics", credits: 4, prerequisites: [], description: "Microeconomic foundations, market equilibrium, supply-demand dynamics, price elasticity, and consumer theory.", pdf_url: "" },
+      { id: 6, code: "BSMS1202", level: "foundation", title: "Financial Accounting", credits: 4, prerequisites: [], description: "Balance sheets, ledger entries, income statements, cash flow statements, and corporate financial recordkeeping.", pdf_url: "" },
+      { id: 7, code: "BSMS1203", level: "foundation", title: "Business Statistics", credits: 4, prerequisites: ["BSMA1002"], description: "Regression models, time-series forecasting, variance analysis (ANOVA), and statistical decision-making frameworks.", pdf_url: "" },
+      { id: 8, code: "BSMS1204", level: "foundation", title: "Management Thought and Practice", credits: 4, prerequisites: [], description: "Classical & contemporary management theories, leadership frameworks, organizational design, and business strategy.", pdf_url: "" },
+
+      { id: 9, code: "BSMS2201", level: "diploma", title: "Python for Data Analytics", credits: 4, prerequisites: ["BSCS1001"], description: "Pandas, NumPy, Matplotlib, Seaborn, exploratory data analysis, web scraping, and data transformation pipelines.", pdf_url: "" },
+      { id: 10, code: "BSMS2202", level: "diploma", title: "Data Management", credits: 4, prerequisites: ["BSCS1001"], description: "Relational schema design, SQL querying, indexing, ACID transactions, database normalization, and data modeling.", pdf_url: "" },
+      { id: 11, code: "BSMS2203", level: "diploma", title: "Analysis of Economic Data", credits: 4, prerequisites: ["BSMS1201", "BSMA1002"], description: "Econometric techniques, empirical model evaluation, OLS regression, hypothesis testing on macroeconomic datasets.", pdf_url: "" },
+      { id: 12, code: "BSMS3201", level: "diploma", title: "Marketing Analytics", credits: 4, prerequisites: ["BSMS1203", "BSMS1204"], description: "Customer segmentation, Customer Lifetime Value (CLV), churn prediction, pricing optimization, and marketing mix modeling.", pdf_url: "" },
+      { id: 13, code: "BSMS3202", level: "diploma", title: "HR Analytics", credits: 4, prerequisites: ["BSMA1002", "BSMS1204"], description: "Workforce metrics, employee retention modeling, talent acquisition funnels, and organizational performance data.", pdf_url: "" },
+      { id: 14, code: "BSMS3203", level: "diploma", title: "Financial Analytics", credits: 4, prerequisites: ["BSMS1202", "BSMA1002"], description: "Asset pricing models (CAPM), portfolio risk metrics, Value at Risk (VaR), and quantitative financial time-series.", pdf_url: "" },
+      { id: 15, code: "BSMS2204", level: "diploma", title: "Operations Management", credits: 4, prerequisites: ["BSMA1001", "BSMS1204"], description: "Process optimization, queueing systems, inventory control (EOQ), capacity planning, and Lean Six Sigma principles.", pdf_url: "" },
+      { id: 16, code: "BSMS3204", level: "diploma", title: "Supply Chain Analytics", credits: 4, prerequisites: ["BSMS2204", "BSMS1203"], description: "Network design, logistics tracking, demand forecasting, multi-echelon inventory optimization, and bullwhip effect reduction.", pdf_url: "" },
+      { id: 17, code: "BSMS3901", level: "diploma", title: "Business Management Project", credits: 4, prerequisites: ["BSMS1204", "BSMS1202"], description: "Applied strategic research, business model evaluation, competitive landscape mapping, and executive execution planning.", pdf_url: "" },
+      { id: 18, code: "BSMS3902", level: "diploma", title: "Business Analytics Project", credits: 4, prerequisites: ["BSMS2201", "BSMS2202", "BSMS1203"], description: "End-to-end data pipeline construction, statistical model deployment, interactive dashboards, and actionable insight delivery.", pdf_url: "" },
+      { id: 19, code: "BSMS2205", level: "diploma", title: "Corporate Finance", credits: 4, prerequisites: ["BSMS1202"], description: "Capital budgeting (NPV/IRR), Weighted Average Cost of Capital (WACC), dividend decisions, and optimal capital structure.", pdf_url: "" },
+      { id: 20, code: "BSMS2206", level: "diploma", title: "Organizational Behaviour", credits: 4, prerequisites: ["BSMS1204"], description: "Team dynamics, workplace psychology, organizational culture, leadership influence, and cross-functional conflict resolution.", pdf_url: "" },
+      { id: 21, code: "BSMS3205", level: "diploma", title: "Money Banking and Financial Markets", credits: 4, prerequisites: ["BSMS1201", "BSMS1202"], description: "Monetary policy transmission mechanisms, commercial banking systems, bond markets, interest rates, and central banking.", pdf_url: "" },
+      { id: 22, code: "BSMS2207", level: "diploma", title: "Marketing Management", credits: 4, prerequisites: ["BSMS1204"], description: "Brand positioning, market research methodologies, omnichannel distribution strategy, and consumer touchpoint optimization.", pdf_url: "" },
+      { id: 23, code: "BSMS2208", level: "diploma", title: "Macroeconomics", credits: 4, prerequisites: ["BSMS1201"], description: "National income accounting (GDP), fiscal policy, inflation, unemployment, IS-LM frameworks, and international trade balance.", pdf_url: "" },
+      { id: 24, code: "BSMS3206", level: "diploma", title: "Managerial Economics", credits: 4, prerequisites: ["BSMS1201", "BSMA1001"], description: "Pricing strategy, oligopoly and game-theoretic market structures, cost analysis, and corporate decision theory.", pdf_url: "" },
+
+      { id: 25, code: "BSGN3001", level: "bs", title: "Strategies for Professional Growth", credits: 4, prerequisites: ["BSHS1001", "BSMS1204"], description: "Executive communication, career roadmap building, industry networking, personal branding, and professional leadership ethics.", pdf_url: "" },
+      { id: 26, code: "BSMS3207", level: "bs", title: "GenAI for Business", credits: 4, prerequisites: ["BSMS2201", "BSCS1001"], description: "LLM adoption frameworks, prompt engineering architectures, generative AI agent workflows, and measuring enterprise business ROI.", pdf_url: "" },
+      { id: 27, code: "BSMS3208", level: "bs", title: "Digital Business", credits: 4, prerequisites: ["BSMS1204", "BSMS2207"], description: "Platform business models, multi-sided market strategies, e-commerce architectures, network effects, and digital product scaling.", pdf_url: "" },
+      { id: 28, code: "BSMS3209", level: "bs", title: "Logistics and Supply Chain Management", credits: 4, prerequisites: ["BSMS3204"], description: "Multi-modal freight logistics, automated warehousing systems, port operations, and global supply resilience strategies.", pdf_url: "" },
+      { id: 29, code: "BSMS4201", level: "bs", title: "Applied Time Series Analysis", credits: 4, prerequisites: ["BSMS1203", "BSMS2201"], description: "ARIMA, SARIMA, GARCH volatility models, exponential smoothing, cointegration, stationarity, and financial forecasting.", pdf_url: "" },
+      { id: 30, code: "BSMS4202", level: "bs", title: "Market Intelligence", credits: 4, prerequisites: ["BSMS3201", "BSMS2201"], description: "Competitive intelligence frameworks, consumer trend scraping, sentiment tracking, NLP on market feeds, and actionable insight generation.", pdf_url: "" }
+    ];
+
+    let allCourses = Array.from(INITIAL_COURSES_CATALOG);
+
+    try {
+      const localPdfMap = JSON.parse(localStorage.getItem('mghub_local_pdfs') || '{}');
+      allCourses.forEach(c => {
+        if (localPdfMap[c.code]) {
+          c.pdf_url = localPdfMap[c.code];
+        }
+      });
+    } catch (e) {}
+
+    const authOverlay = document.getElementById('authOverlay');
+    const adminLayout = document.getElementById('adminLayout');
+    const authErrorText = document.getElementById('authErrorText');
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    async function checkAuth() {
+      try {
+        const token = localStorage.getItem('mghub_jwt');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+        
+        const res = await fetch('/api/auth/me', {
+          headers,
+          credentials: 'include'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user && data.user.role === 'admin') {
+            sessionStorage.setItem('mghub_admin_auth', 'true');
+            if (document.getElementById('displayAdminEmail')) {
+              document.getElementById('displayAdminEmail').textContent = data.user.email;
+            }
+            authOverlay.style.display = 'none';
+            adminLayout.style.display = 'block';
+            initAdminUI();
+            return;
+          }
+        }
+      } catch (e) {}
+
+      const isAuth = sessionStorage.getItem('mghub_admin_auth') === 'true';
+      if (isAuth) {
+        authOverlay.style.display = 'none';
+        adminLayout.style.display = 'block';
+        initAdminUI();
+      } else {
+        authOverlay.style.display = 'flex';
+        adminLayout.style.display = 'none';
+      }
+    }
+
+    function initAdminUI() {
+      
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+      loadDashboard();
+      loadQuizQuestions();
+    }
+
+    const adminGoogleSignInBtn = document.getElementById('adminGoogleSignInBtn');
+    if (adminGoogleSignInBtn) {
+      adminGoogleSignInBtn.addEventListener('click', async () => {
+        authErrorText.style.display = 'none';
+        adminGoogleSignInBtn.disabled = true;
+        adminGoogleSignInBtn.innerHTML = '<span>Signing in with Google...</span>';
+
+        try {
+          const user = await signInWithGoogle();
+          if (user.role === 'admin') {
+            sessionStorage.setItem('mghub_admin_auth', 'true');
+            sessionStorage.setItem('mghub_admin_email', user.email);
+            if (document.getElementById('displayAdminEmail')) {
+              document.getElementById('displayAdminEmail').textContent = user.email;
+            }
+            authOverlay.style.display = 'none';
+            adminLayout.style.display = 'block';
+            initAdminUI();
+          } else {
+            authErrorText.textContent = 'Access Denied';
+            authErrorText.style.display = 'block';
+            adminGoogleSignInBtn.disabled = false;
+            adminGoogleSignInBtn.innerHTML = `
+              <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Sign In with Google (Admin)</span>
+            `;
+          }
+        } catch (err) {
+          console.error(err);
+          authErrorText.textContent = 'Access Denied';
+          authErrorText.style.display = 'block';
+          adminGoogleSignInBtn.disabled = false;
+          adminGoogleSignInBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Sign In with Google (Admin)</span>
+          `;
+        }
+      });
+    }
+
+    adminLoginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('adminEmailInput').value.trim().toLowerCase();
+      const password = document.getElementById('adminPasswordInput').value.trim();
+
+      if (email !== ADMIN_EMAIL) {
+        authErrorText.textContent = `Access restricted to ${ADMIN_EMAIL}`;
+        authErrorText.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok && data.success && data.user?.role === 'admin') {
+          if (data.token) localStorage.setItem('mghub_jwt', data.token);
+          if (data.user) localStorage.setItem('mghub_user', JSON.stringify(data.user));
+          sessionStorage.setItem('mghub_admin_auth', 'true');
+          sessionStorage.setItem('mghub_admin_email', email);
+          authOverlay.style.display = 'none';
+          adminLayout.style.display = 'block';
+          initAdminUI();
+        } else {
+          authErrorText.textContent = data.message || data.error || 'Access Denied: Invalid admin passcode';
+          authErrorText.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Server login error:', err);
+        authErrorText.textContent = 'Connection to server failed. Please ensure the backend is running.';
+        authErrorText.style.display = 'block';
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      } catch (e) {}
+      sessionStorage.removeItem('mghub_admin_auth');
+      sessionStorage.removeItem('mghub_admin_email');
+      localStorage.removeItem('mghub_jwt');
+      localStorage.removeItem('mghub_user');
+      window.location.href = '/login.html';
+    });
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const targetTab = btn.getAttribute('data-tab');
+
+        tabContents.forEach(tc => {
+          tc.style.display = tc.id === `tab-${targetTab}` ? 'block' : 'none';
+        });
+
+        if (targetTab === 'analytics') loadAnalytics();
+        if (targetTab === 'links-manager') loadPortalLinks();
+        if (targetTab === 'quiz-manager') loadQuizQuestions();
+      });
+    });
+
+    function updateDashboardCounts() {
+      const total = allCourses.length;
+      let totalPdfs = 0;
+      allCourses.forEach(c => {
+        if (Array.isArray(c.notesList)) {
+          totalPdfs += c.notesList.filter(n => n && (n.fileUrl || n.pdf_url)).length;
+        } else if (c.pdf_url && c.pdf_url.trim().length > 0) {
+          totalPdfs += 1;
+        } else if (c.notes && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0 && c.notes.available !== false) {
+          totalPdfs += 1;
+        }
+        if (Array.isArray(c.pyqs)) {
+          totalPdfs += c.pyqs.filter(p => p && (p.fileUrl || p.url)).length;
+        }
+      });
+      document.getElementById('metricCourses').textContent = total;
+      document.getElementById('metricPdfs').textContent = totalPdfs;
+      document.getElementById('tabCourseCount').textContent = total;
+    }
+
+    function getAuthHeaders() {
+      const token = localStorage.getItem('mghub_jwt');
+      const headers = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      return headers;
+    }
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/admin/analytics', {
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const m = data.metrics;
+          if (m) {
+            document.getElementById('metricBookmarks').textContent = m.total_users || m.total_bookmarks || 0;
+            document.getElementById('metricSearches').textContent = m.total_search_queries || 0;
+          }
+        }
+      } catch (e) {}
+
+      loadCoursesFromApi();
+    }
+
+    function mergeWithMasterCatalog(loadedCourses) {
+      const map = new Map();
+      INITIAL_COURSES_CATALOG.forEach(c => map.set(c.code.toUpperCase(), { ...c }));
+      if (Array.isArray(loadedCourses)) {
+        loadedCourses.forEach(c => {
+          if (!c || !c.code) return;
+          const code = c.code.toUpperCase();
+          if (map.has(code)) {
+            const base = map.get(code);
+            map.set(code, {
+              ...base,
+              ...c,
+              title: c.title || base.title,
+              level: c.level || base.level,
+              pdf_url: c.pdf_url !== undefined ? c.pdf_url : '',
+              notes: c.notes !== undefined ? c.notes : { available: false, fileName: '', fileUrl: '' },
+              pyqs: Array.isArray(c.pyqs) ? c.pyqs : []
+            });
+          } else {
+            map.set(code, c);
+          }
+        });
+      }
+      return Array.from(map.values());
+    }
+
+    async function saveCoursesLocallyAndSync(updatedCourses) {
+      allCourses = updatedCourses;
+      try {
+        localStorage.setItem('mghub_courses', JSON.stringify(allCourses));
+        const pdfMap = {};
+        allCourses.forEach(c => {
+          if (c.pdf_url && c.pdf_url.trim().length > 0) {
+            pdfMap[c.code] = c.pdf_url;
+          } else if (c.notes && c.notes.fileUrl && c.notes.fileUrl.trim().length > 0 && c.notes.available !== false) {
+            pdfMap[c.code] = c.notes.fileUrl;
+          }
+        });
+        localStorage.setItem('mghub_local_pdfs', JSON.stringify(pdfMap));
+      } catch (e) {}
+
+      if (typeof saveCoursesToFirestore === 'function') {
+        try {
+          await saveCoursesToFirestore(allCourses);
+        } catch (e) {}
+      }
+    }
+
+    async function loadCoursesFromApi() {
+      
+      if (typeof fetchCoursesFromFirestore === 'function') {
+        try {
+          const cloudCourses = await fetchCoursesFromFirestore();
+          if (Array.isArray(cloudCourses) && cloudCourses.length > 0) {
+            allCourses = mergeWithMasterCatalog(cloudCourses);
+            try {
+              localStorage.setItem('mghub_courses', JSON.stringify(allCourses));
+            } catch(e){}
+            renderCourseTable(allCourses);
+            renderPdfManagerTable(allCourses);
+            updateDashboardCounts();
+            return;
+          }
+        } catch (e) {}
+      }
+
+      try {
+        const res = await fetch('/api/courses?level=all');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.courses && data.courses.length > 0) {
+            allCourses = mergeWithMasterCatalog(data.courses);
+            saveCoursesLocallyAndSync(allCourses);
+            renderCourseTable(allCourses);
+            renderPdfManagerTable(allCourses);
+            updateDashboardCounts();
+            return;
+          }
+        }
+      } catch (e) {}
+
+      try {
+        const saved = JSON.parse(localStorage.getItem('mghub_courses') || 'null');
+        if (Array.isArray(saved) && saved.length > 0) {
+          allCourses = mergeWithMasterCatalog(saved);
+          renderCourseTable(allCourses);
+          renderPdfManagerTable(allCourses);
+          updateDashboardCounts();
+          return;
+        }
+      } catch (e) {}
+
+      try {
+        const res = await fetch('data/courses.json');
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list) && list.length > 0) {
+            allCourses = mergeWithMasterCatalog(list);
+            renderCourseTable(allCourses);
+            renderPdfManagerTable(allCourses);
+            updateDashboardCounts();
+            return;
+          }
+        }
+      } catch (e) {}
+
+      allCourses = Array.from(INITIAL_COURSES_CATALOG);
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+    }
+
+    document.getElementById('syncToCloudBtn')?.addEventListener('click', async () => {
+      const btn = document.getElementById('syncToCloudBtn');
+      const orig = btn.textContent;
+      btn.textContent = 'Syncing...';
+      btn.disabled = true;
+      try {
+        if (typeof saveCoursesToFirestore === 'function') {
+          const ok = await saveCoursesToFirestore(allCourses);
+          if (ok) {
+            showToast('All courses & attached notes have been synced live to Cloud Firestore! Visible on all devices.', 'success');
+          } else {
+            showToast('Cloud sync attempted. Please verify your internet connection or Google login.', 'warning');
+          }
+        }
+      } catch (err) {
+        showToast('Sync error: ' + err.message, 'error');
+      } finally {
+        btn.textContent = orig;
+        btn.disabled = false;
+      }
+    });
+
+    function renderCourseTable(courses) {
+      const tbody = document.getElementById('courseTableBody');
+      if (!tbody) return;
+
+      if (!courses.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #a1a1aa; padding: 24px;">No matching courses found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = courses.map(c => {
+        const notesCount = Array.isArray(c.notesList) ? c.notesList.filter(n => n && (n.fileUrl || n.pdf_url)).length : (c.pdf_url ? 1 : 0);
+        const pyqCount = Array.isArray(c.pyqs) ? c.pyqs.filter(p => p && p.fileUrl).length : 0;
+        const totalPdfs = notesCount + pyqCount;
+        const safeTitle = (c.title || c.code).replace(/'/g, "\\'");
+        const pdfBadge = totalPdfs > 0 
+          ? `<span class="pdf-badge-attached" style="background:#f0fdf4; color:#166534; border: 1px solid #bbf7d0;">📄 ${totalPdfs} PDF${totalPdfs > 1 ? 's' : ''}</span>` 
+          : `<span class="pdf-badge-none">No PDF</span>`;
+
+        return `
+          <tr>
+            <td><span class="code-tag">${c.code}</span></td>
+            <td><span class="level-badge badge-${c.level}">${c.level}</span></td>
+            <td><strong>${c.title}</strong></td>
+            <td>${c.credits || 4}</td>
+            <td>${pdfBadge}</td>
+            <td>
+              <div class="action-btn-group">
+                <button class="btn-sm-pdf" onclick="openResourceModal('${c.code}', '${safeTitle}')">
+                  <span>📄</span> Manage PDFs (${totalPdfs})
+                </button>
+                <button class="btn-sm-edit" onclick="editCourseModal('${c.code}')">Edit</button>
+                <button class="btn-sm-delete" onclick="deleteCourse(${c.id || 0}, '${c.code}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderPdfManagerTable(courses) {
+      const tbody = document.getElementById('pdfManagerTableBody');
+      if (!tbody) return;
+
+      if (!courses.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #a1a1aa; padding: 24px;">No courses found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = courses.map(c => {
+        const notesList = Array.isArray(c.notesList) ? c.notesList.filter(n => n && (n.fileUrl || n.pdf_url)) : (c.pdf_url ? [{ fileUrl: c.pdf_url, title: 'Study Notes' }] : []);
+        const pyqs = Array.isArray(c.pyqs) ? c.pyqs.filter(p => p && p.fileUrl) : [];
+        const safeTitle = (c.title || c.code).replace(/'/g, "\\'");
+
+        const notesHtml = notesList.length > 0
+          ? `<span class="pdf-badge-attached" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;">📄 ${notesList.length} Note${notesList.length > 1 ? 's' : ''}</span>` 
+          : `<span class="pdf-badge-none">No Notes</span>`;
+
+        const pyqHtml = pyqs.length > 0
+          ? `<span class="pdf-badge-attached" style="background:#eef2ff; color:#4338ca; border-color:#c7d2fe;">📝 ${pyqs.length} PYQ Paper${pyqs.length > 1 ? 's' : ''}</span>`
+          : `<span class="pdf-badge-none">0 Papers</span>`;
+
+        return `
+          <tr>
+            <td><span class="code-tag">${c.code}</span></td>
+            <td><strong>${c.title}</strong></td>
+            <td>${notesHtml}</td>
+            <td>${pyqHtml}</td>
+            <td>
+              <button class="btn-sm-pdf" onclick="openResourceModal('${c.code}', '${c.title.replace(/'/g, "\\'")}')">
+                <span>⚡</span> Manage PDFs (${notesList.length + pyqs.length})
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Search filter in tables
+    document.getElementById('courseSearchInput')?.addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) {
+        renderCourseTable(allCourses);
+        return;
+      }
+      const filtered = allCourses.filter(c => 
+        (c.code && c.code.toLowerCase().includes(q)) || 
+        (c.title && c.title.toLowerCase().includes(q)) || 
+        (c.level && c.level.toLowerCase().includes(q)) ||
+        (c.description && c.description.toLowerCase().includes(q))
+      );
+      renderCourseTable(filtered);
+    });
+
+    document.getElementById('pdfSearchInput')?.addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) {
+        renderPdfManagerTable(allCourses);
+        return;
+      }
+      const filtered = allCourses.filter(c => 
+        (c.code && c.code.toLowerCase().includes(q)) || 
+        (c.title && c.title.toLowerCase().includes(q)) || 
+        (c.level && c.level.toLowerCase().includes(q))
+      );
+      renderPdfManagerTable(filtered);
+    });
+
+    // Resource (Notes & PYQs) Upload Modal Handlers
+    const pdfUploadModal = document.getElementById('pdfUploadModal');
+    const closePdfModalBtn = document.getElementById('closePdfModalBtn');
+    const pdfUploadForm = document.getElementById('pdfUploadForm');
+    const pdfFileInput = document.getElementById('pdfFileInput');
+    const uploadZoneText = document.getElementById('uploadZoneText');
+    const removePdfBtn = document.getElementById('removePdfBtn');
+    const typeNotesRadio = document.getElementById('typeNotesRadio');
+    const typePyqRadio = document.getElementById('typePyqRadio');
+    const sectionGroup = document.getElementById('sectionGroup');
+    const resourceSectionInput = document.getElementById('resourceSectionInput');
+    const titleLabel = document.getElementById('titleLabel');
+    const resourceTitleInput = document.getElementById('resourceTitleInput');
+    const yearGroup = document.getElementById('yearGroup');
+    const resourceYearInput = document.getElementById('resourceYearInput');
+    const modalExistingPyqSection = document.getElementById('modalExistingPyqSection');
+    const modalExistingPyqList = document.getElementById('modalExistingPyqList');
+
+    let pyqYearMode = 'single'; // 'single' | 'range' | 'custom'
+
+    function setPyqYearMode(mode) {
+      pyqYearMode = mode;
+      const btnSingle = document.getElementById('btnYearSingle');
+      const btnRange = document.getElementById('btnYearRange');
+      const btnCustom = document.getElementById('btnYearCustom');
+      const boxSingle = document.getElementById('yearBoxSingle');
+      const boxRange = document.getElementById('yearBoxRange');
+      const boxCustom = document.getElementById('yearBoxCustom');
+      const indicator = document.getElementById('yearModeIndicator');
+
+      [btnSingle, btnRange, btnCustom].forEach(btn => {
+        if (!btn) return;
+        btn.style.borderColor = '#e4e4e7';
+        btn.style.background = '#ffffff';
+        btn.style.color = '#52525b';
+        btn.style.fontWeight = '600';
+      });
+
+      if (boxSingle) boxSingle.style.display = 'none';
+      if (boxRange) boxRange.style.display = 'none';
+      if (boxCustom) boxCustom.style.display = 'none';
+
+      if (mode === 'range') {
+        if (btnRange) {
+          btnRange.style.borderColor = '#2563eb';
+          btnRange.style.background = '#eff6ff';
+          btnRange.style.color = '#1e40af';
+          btnRange.style.fontWeight = '700';
+        }
+        if (boxRange) boxRange.style.display = 'block';
+        if (indicator) indicator.textContent = 'Year Range';
+        updateRangePreview();
+      } else if (mode === 'custom') {
+        if (btnCustom) {
+          btnCustom.style.borderColor = '#2563eb';
+          btnCustom.style.background = '#eff6ff';
+          btnCustom.style.color = '#1e40af';
+          btnCustom.style.fontWeight = '700';
+        }
+        if (boxCustom) boxCustom.style.display = 'block';
+        if (indicator) indicator.textContent = 'Custom Text';
+      } else {
+        pyqYearMode = 'single';
+        if (btnSingle) {
+          btnSingle.style.borderColor = '#2563eb';
+          btnSingle.style.background = '#eff6ff';
+          btnSingle.style.color = '#1e40af';
+          btnSingle.style.fontWeight = '700';
+        }
+        if (boxSingle) boxSingle.style.display = 'block';
+        if (indicator) indicator.textContent = 'Single Year';
+      }
+    }
+
+    function updateRangePreview() {
+      const start = document.getElementById('resourceYearRangeStart')?.value?.trim() || '';
+      const end = document.getElementById('resourceYearRangeEnd')?.value?.trim() || '';
+      const previewBadge = document.getElementById('yearRangePreviewBadge');
+      if (previewBadge) {
+        if (start && end) previewBadge.textContent = `Preview: Year ${start} - ${end}`;
+        else if (start) previewBadge.textContent = `Preview: Year ${start}`;
+        else if (end) previewBadge.textContent = `Preview: Year ${end}`;
+        else previewBadge.textContent = `Preview: Year (enter start & end)`;
+      }
+    }
+
+    function getSelectedPyqYear() {
+      if (pyqYearMode === 'range') {
+        const start = document.getElementById('resourceYearRangeStart')?.value?.trim() || '';
+        const end = document.getElementById('resourceYearRangeEnd')?.value?.trim() || '';
+        if (start && end) return `${start} - ${end}`;
+        if (start) return start;
+        if (end) return end;
+        return String(new Date().getFullYear());
+      }
+      if (pyqYearMode === 'custom') {
+        const custom = document.getElementById('resourceYearCustom')?.value?.trim() || '';
+        return custom || String(new Date().getFullYear());
+      }
+      const single = document.getElementById('resourceYearSingle')?.value?.trim() || '';
+      return single || String(new Date().getFullYear());
+    }
+
+    const btnYearSingle = document.getElementById('btnYearSingle');
+    const btnYearRange = document.getElementById('btnYearRange');
+    const btnYearCustom = document.getElementById('btnYearCustom');
+    if (btnYearSingle) btnYearSingle.addEventListener('click', () => setPyqYearMode('single'));
+    if (btnYearRange) btnYearRange.addEventListener('click', () => setPyqYearMode('range'));
+    if (btnYearCustom) btnYearCustom.addEventListener('click', () => setPyqYearMode('custom'));
+
+    const startInput = document.getElementById('resourceYearRangeStart');
+    const endInput = document.getElementById('resourceYearRangeEnd');
+    if (startInput) startInput.addEventListener('input', updateRangePreview);
+    if (endInput) endInput.addEventListener('input', updateRangePreview);
+
+    function updateResourceTypeUI() {
+      const isPyq = typePyqRadio.checked;
+      if (isPyq) {
+        titleLabel.textContent = 'Paper Title (Optional)';
+        resourceTitleInput.placeholder = 'Enter paper title (e.g. End-Term Exam, Quiz 1)';
+        yearGroup.style.display = 'block';
+        if (sectionGroup) sectionGroup.style.display = 'none';
+        document.getElementById('savePdfSubmitBtn').textContent = 'Upload & Attach PYQ Paper';
+      } else {
+        titleLabel.textContent = 'Document Title';
+        resourceTitleInput.placeholder = 'Enter document title (e.g. Complete Notes)';
+        yearGroup.style.display = 'none';
+        if (sectionGroup) sectionGroup.style.display = 'block';
+        document.getElementById('savePdfSubmitBtn').textContent = 'Upload & Attach Study Notes';
+      }
+    }
+
+    if (typeNotesRadio) typeNotesRadio.addEventListener('change', updateResourceTypeUI);
+    if (typePyqRadio) typePyqRadio.addEventListener('change', updateResourceTypeUI);
+
+    window.openResourceModal = function(code, title) {
+      const course = allCourses.find(c => c.code === code) || {};
+      
+      // Normalize notesList array
+      if (!Array.isArray(course.notesList)) {
+        course.notesList = [];
+        if (course.notes && course.notes.fileUrl && course.notes.available !== false) {
+          course.notesList.push({
+            id: Date.now(),
+            section: course.notes.section || 'General Study Notes',
+            title: course.notes.title || course.notes.fileName || 'Study Notes',
+            fileName: course.notes.fileName || 'Notes.pdf',
+            fileUrl: course.notes.fileUrl
+          });
+        } else if (course.pdf_url && course.pdf_url.trim().length > 0) {
+          course.notesList.push({
+            id: Date.now(),
+            section: 'General Study Notes',
+            title: 'Study Notes',
+            fileName: 'Notes.pdf',
+            fileUrl: course.pdf_url
+          });
+        }
+      }
+
+      const notesList = course.notesList;
+      const pyqs = Array.isArray(course.pyqs) ? course.pyqs : [];
+
+      document.getElementById('pdfModalTitle').textContent = `Manage Resources: ${code}`;
+      document.getElementById('pdfCourseCodeInput').value = code;
+      document.getElementById('pdfCourseDisplay').value = `${code} - ${title || course.title || ''}`;
+      document.getElementById('pdfUrlInput').value = '';
+      document.getElementById('pdfFileInput').value = '';
+      uploadZoneText.textContent = 'Click to select PDF file from your computer';
+
+      typeNotesRadio.checked = true;
+      if (resourceSectionInput) resourceSectionInput.value = '';
+      resourceTitleInput.value = '';
+      setPyqYearMode('single');
+      const curYear = new Date().getFullYear();
+      if (document.getElementById('resourceYearSingle')) document.getElementById('resourceYearSingle').value = curYear;
+      if (document.getElementById('resourceYearRangeStart')) document.getElementById('resourceYearRangeStart').value = curYear - 3;
+      if (document.getElementById('resourceYearRangeEnd')) document.getElementById('resourceYearRangeEnd').value = curYear;
+      if (document.getElementById('resourceYearCustom')) document.getElementById('resourceYearCustom').value = '';
+      updateRangePreview();
+      updateResourceTypeUI();
+
+      // Existing Attached Notes List
+      const modalExistingNotesSection = document.getElementById('modalExistingNotesSection');
+      const modalExistingNotesList = document.getElementById('modalExistingNotesList');
+
+      if (notesList.length > 0) {
+        modalExistingNotesSection.style.display = 'block';
+        modalExistingNotesList.innerHTML = notesList.map((n, idx) => `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+            <div style="min-width: 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span style="font-size: 14px;">📄</span>
+              <strong style="color: #166534;">${n.title || n.fileName || `Notes #${idx + 1}`}</strong>
+              <span style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-size: 10.5px; padding: 1px 7px; border-radius: 9999px; font-weight: 700;">📁 ${n.section || 'General'}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <a href="${n.fileUrl || '#'}" target="_blank" style="color: #166534; font-weight: 700; text-decoration: underline;">View ↗</a>
+              <button type="button" onclick="deleteNote('${code}', ${idx})" style="background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer;">✕ Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        modalExistingNotesSection.style.display = 'none';
+        modalExistingNotesList.innerHTML = '';
+      }
+
+      // Existing Attached PYQs List
+      const modalExistingPyqSection = document.getElementById('modalExistingPyqSection');
+      const modalExistingPyqList = document.getElementById('modalExistingPyqList');
+
+      if (pyqs.length > 0) {
+        modalExistingPyqSection.style.display = 'block';
+        modalExistingPyqList.innerHTML = pyqs.map((p, idx) => `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #fafafc; border: 1px solid #e4e4e7; padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+            <div style="min-width: 0; display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 14px;">📝</span>
+              <strong>${p.title || `${code} — PYQ ${p.year}`}</strong>
+              <span style="color: #71717a; margin-left: 4px;">(${p.year || 'Exam'})</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <a href="${p.fileUrl || '#'}" target="_blank" style="color: #166534; font-weight: 700; text-decoration: underline;">View ↗</a>
+              <button type="button" onclick="deletePyq('${code}', ${idx})" style="background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer;">✕ Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        modalExistingPyqSection.style.display = 'none';
+        modalExistingPyqList.innerHTML = '';
+      }
+
+      pdfUploadModal.classList.add('active');
+    };
+
+    window.openPdfModal = window.openResourceModal;
+
+    window.deleteNote = async function(code, idx) {
+      const confirmed = await showConfirmDialog({
+        title: 'Delete Study Note',
+        message: `Delete this study note from ${code}?`,
+        confirmText: 'Delete Note',
+        type: 'danger'
+      });
+      if (!confirmed) return;
+      const target = allCourses.find(c => c.code === code);
+      if (target) {
+        if (!Array.isArray(target.notesList)) {
+          target.notesList = [];
+          if (target.notes && target.notes.fileUrl) target.notesList.push({ ...target.notes });
+        }
+        target.notesList.splice(idx, 1);
+        if (target.notesList.length > 0) {
+          target.notes = target.notesList[0];
+          target.pdf_url = target.notesList[0].fileUrl;
+        } else {
+          target.notes = { available: false, fileName: '', fileUrl: '' };
+          target.pdf_url = '';
+        }
+        await saveCoursesLocallyAndSync(allCourses);
+        renderCourseTable(allCourses);
+        renderPdfManagerTable(allCourses);
+        openResourceModal(code, target.title);
+      }
+    };
+
+    window.deletePyq = async function(code, idx) {
+      const confirmed = await showConfirmDialog({
+        title: 'Delete PYQ Paper',
+        message: `Delete this PYQ paper from ${code}?`,
+        confirmText: 'Delete PYQ',
+        type: 'danger'
+      });
+      if (!confirmed) return;
+      const target = allCourses.find(c => c.code === code);
+      if (target && Array.isArray(target.pyqs)) {
+        target.pyqs.splice(idx, 1);
+        await saveCoursesLocallyAndSync(allCourses);
+        renderCourseTable(allCourses);
+        renderPdfManagerTable(allCourses);
+        openResourceModal(code, target.title);
+      }
+    };
+
+    closePdfModalBtn.addEventListener('click', () => pdfUploadModal.classList.remove('active'));
+
+    pdfFileInput.addEventListener('change', () => {
+      if (pdfFileInput.files && pdfFileInput.files[0]) {
+        uploadZoneText.textContent = `Selected: ${pdfFileInput.files[0].name}`;
+      }
+    });
+
+    pdfUploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = document.getElementById('pdfCourseCodeInput').value;
+      const resourceType = typePyqRadio.checked ? 'pyq' : 'notes';
+      const sectionName = (resourceSectionInput ? resourceSectionInput.value.trim() : '') || 'General Study Notes';
+      const title = resourceTitleInput.value.trim();
+      const year = getSelectedPyqYear();
+      const file = pdfFileInput.files[0];
+      const rawUrl = document.getElementById('pdfUrlInput').value.trim();
+      const url = typeof normalizePdfUrl === 'function' ? normalizePdfUrl(rawUrl) : rawUrl;
+
+      if (!file && !url) {
+        showToast('Please select a PDF file or enter an online URL / Google Drive link.', 'warning');
+        return;
+      }
+
+      const submitBtn = document.getElementById('savePdfSubmitBtn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Uploading PDF...';
+      submitBtn.disabled = true;
+
+      try {
+        let cloudFileUrl = '';
+
+        if (file) {
+          if (typeof uploadPdfToCloudinary === 'function') {
+            cloudFileUrl = await uploadPdfToCloudinary(file, code, (percent) => {
+              submitBtn.textContent = `Uploading: ${percent}%...`;
+            });
+          } else if (typeof uploadPdfToFirebaseStorage === 'function') {
+            cloudFileUrl = await uploadPdfToFirebaseStorage(file, code, (percent) => {
+              submitBtn.textContent = `Uploading: ${percent}%...`;
+            });
+          }
+
+          if (!cloudFileUrl) {
+            throw new Error('Could not get upload URL from Cloudinary. Please check file and try again.');
+          }
+        }
+
+        submitBtn.textContent = 'Saving to Database...';
+
+        const target = allCourses.find(c => c.code === code);
+        if (target) {
+          const resolvedFileUrl = cloudFileUrl || url || '#';
+          const resolvedFileName = file ? file.name : (title ? `${title}.pdf` : `${code}_Notes.pdf`);
+          const customTitle = title || (resourceType === 'pyq' ? `${code} — PYQ ${year}` : `${code} Study Notes`);
+
+          if (resourceType === 'pyq') {
+            if (!Array.isArray(target.pyqs)) target.pyqs = [];
+            target.pyqs.unshift({
+              id: Date.now(),
+              year: year,
+              title: customTitle,
+              fileName: resolvedFileName,
+              fileUrl: resolvedFileUrl,
+              uploadedAt: new Date().toISOString()
+            });
+          } else {
+            // Study Notes - Support multiple notes list with Section Name
+            if (!Array.isArray(target.notesList)) {
+              target.notesList = [];
+              if (target.notes && target.notes.fileUrl && target.notes.available !== false) {
+                target.notesList.push({
+                  id: Date.now() - 1000,
+                  section: target.notes.section || 'General Study Notes',
+                  title: target.notes.title || target.notes.fileName || 'Study Notes',
+                  fileName: target.notes.fileName || 'Notes.pdf',
+                  fileUrl: target.notes.fileUrl
+                });
+              } else if (target.pdf_url && target.pdf_url.trim().length > 0) {
+                target.notesList.push({
+                  id: Date.now() - 1000,
+                  section: 'General Study Notes',
+                  title: 'Study Notes',
+                  fileName: 'Notes.pdf',
+                  fileUrl: target.pdf_url
+                });
+              }
+            }
+
+            target.notesList.unshift({
+              id: Date.now(),
+              section: sectionName,
+              title: customTitle,
+              fileName: resolvedFileName,
+              fileUrl: resolvedFileUrl,
+              uploadedAt: new Date().toISOString()
+            });
+
+            target.pdf_url = resolvedFileUrl;
+            target.notes = {
+              available: true,
+              section: sectionName,
+              title: customTitle,
+              fileName: resolvedFileName,
+              fileUrl: resolvedFileUrl
+            };
+          }
+
+          if (typeof saveCourseToFirestore === 'function') {
+            try {
+              await saveCourseToFirestore(target);
+            } catch (e) {
+              console.warn('saveCourseToFirestore non-blocking error:', e);
+            }
+          }
+        }
+
+        await saveCoursesLocallyAndSync(allCourses);
+        renderCourseTable(allCourses);
+        renderPdfManagerTable(allCourses);
+        updateDashboardCounts();
+
+        pdfUploadForm.reset();
+        pdfFileInput.value = '';
+        uploadZoneText.textContent = 'Click to select PDF file from your computer';
+        pdfUploadModal.classList.remove('active');
+        showToast(`${resourceType === 'pyq' ? 'PYQ Paper' : `[${sectionName}] Study Notes`} attached to ${code} successfully!`, 'success');
+      } catch (err) {
+        console.error('Error attaching resource:', err);
+        showToast('Upload failed: ' + (err.message || 'Please check your connection and try again.'), 'error');
+      } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Course Create / Edit Modal logic
+    const courseEditModal = document.getElementById('courseEditModal');
+    const openCreateCourseBtn = document.getElementById('openCreateCourseBtn');
+    const closeCourseModalBtn = document.getElementById('closeCourseModalBtn');
+    const courseForm = document.getElementById('courseForm');
+
+    openCreateCourseBtn.addEventListener('click', () => {
+      document.getElementById('modalFormTitle').textContent = 'Add New Course';
+      document.getElementById('courseFormId').value = '';
+      document.getElementById('courseCodeInput').value = '';
+      document.getElementById('courseCodeInput').readOnly = false;
+      document.getElementById('courseTitleInput').value = '';
+      document.getElementById('courseCreditsInput').value = '4';
+      document.getElementById('coursePrereqsInput').value = '';
+      document.getElementById('courseDescInput').value = '';
+      courseEditModal.classList.add('active');
+    });
+
+    closeCourseModalBtn.addEventListener('click', () => {
+      courseEditModal.classList.remove('active');
+    });
+
+    window.editCourseModal = function(courseCode) {
+      const course = allCourses.find(c => c.code === courseCode);
+      if (!course) return;
+
+      document.getElementById('modalFormTitle').textContent = `Edit Course (${course.code})`;
+      document.getElementById('courseFormId').value = course.id || '';
+      document.getElementById('courseCodeInput').value = course.code;
+      document.getElementById('courseCodeInput').readOnly = true;
+      document.getElementById('courseLevelInput').value = course.level;
+      document.getElementById('courseTitleInput').value = course.title;
+      document.getElementById('courseCreditsInput').value = course.credits || 4;
+      document.getElementById('coursePrereqsInput').value = Array.isArray(course.prerequisites) ? course.prerequisites.join(', ') : '';
+      document.getElementById('courseDescInput').value = course.description || '';
+      courseEditModal.classList.add('active');
+    };
+
+    window.deleteCourse = async function(courseId, code) {
+      const confirmed = await showConfirmDialog({
+        title: 'Delete Course',
+        message: `Are you sure you want to permanently delete course ${code}?`,
+        confirmText: 'Delete Course',
+        type: 'danger'
+      });
+      if (!confirmed) return;
+
+      allCourses = allCourses.filter(c => c.code !== code);
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+      saveCoursesLocallyAndSync(allCourses);
+
+      try {
+        if (courseId) {
+          await fetch(`/api/admin/courses/delete/${courseId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+            credentials: 'include'
+          });
+        }
+      } catch (e) {}
+    };
+
+    courseForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('courseFormId').value;
+      const isEdit = Boolean(id);
+
+      const code = document.getElementById('courseCodeInput').value.trim().toUpperCase();
+      const level = document.getElementById('courseLevelInput').value;
+      const title = document.getElementById('courseTitleInput').value.trim();
+      const credits = parseInt(document.getElementById('courseCreditsInput').value) || 4;
+      const prereqs = document.getElementById('coursePrereqsInput').value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+      const desc = document.getElementById('courseDescInput').value.trim();
+
+      if (isEdit) {
+        const item = allCourses.find(c => c.code === code);
+        if (item) {
+          item.title = title;
+          item.level = level;
+          item.credits = credits;
+          item.prerequisites = prereqs;
+          item.description = desc;
+        }
+      } else {
+        allCourses.unshift({
+          id: Date.now(),
+          code,
+          level,
+          title,
+          credits,
+          prerequisites: prereqs,
+          description: desc,
+          pdf_url: ""
+        });
+      }
+
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+      saveCoursesLocallyAndSync(allCourses);
+      courseEditModal.classList.remove('active');
+
+      const payload = { code, level, title, credits, prerequisites: prereqs, description: desc };
+      try {
+        const url = isEdit ? `/api/admin/courses/update/${id}` : '/api/admin/courses/create';
+        const method = isEdit ? 'PUT' : 'POST';
+        await fetch(url, {
+          method,
+          headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {}
+    });
+
+    // Search Analytics
+    async function loadAnalytics() {
+      const tbody = document.getElementById('searchLogsTableBody');
+      try {
+        const res = await fetch('/api/admin/analytics', {
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const logs = data.search_logs || [];
+          if (!logs.length) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #a1a1aa; padding: 20px;">No search queries recorded yet.</td></tr>`;
+            return;
+          }
+          tbody.innerHTML = logs.map(l => `
+            <tr>
+              <td><strong>${l.query}</strong></td>
+              <td>${l.results_count} results</td>
+              <td style="color: #71717a; font-size: 12.5px;">${l.created_at ? new Date(l.created_at).toLocaleTimeString() : 'Recently'}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {}
+    }
+
+    document.getElementById('refreshAnalyticsBtn')?.addEventListener('click', loadAnalytics);
+
+    // Database Reset
+    document.getElementById('resetCoursesBtn')?.addEventListener('click', async () => {
+      const confirmed = await showConfirmDialog({
+        title: 'Reset Course Catalog',
+        message: 'Restore default clean course catalog? All unattached sample notes & PYQs will be cleared.',
+        confirmText: 'Reset Catalog',
+        type: 'danger'
+      });
+      if (!confirmed) return;
+      allCourses = INITIAL_COURSES_CATALOG.map(c => ({
+        ...c,
+        pdf_url: '',
+        notes: { available: false, fileName: '', fileUrl: '' },
+        pyqs: []
+      }));
+      renderCourseTable(allCourses);
+      renderPdfManagerTable(allCourses);
+      updateDashboardCounts();
+      try {
+        localStorage.setItem('mghub_courses', JSON.stringify(allCourses));
+        localStorage.removeItem('mghub_local_pdfs');
+        if (typeof saveCoursesToFirestore === 'function') {
+          await saveCoursesToFirestore(allCourses);
+        }
+        showToast('Curriculum reset to clean 30 courses successfully.', 'success');
+      } catch (e) {}
+    });
+
+    // =========================================================================
+    // 5. Official Ecosystem Portal Links Management
+    // =========================================================================
+    const DEFAULT_PORTAL_LINKS = [
+      { id: 'iitm-portal', title: 'Official Degree Website', subtitle: 'study.iitm.ac.in/mg', url: 'https://study.iitm.ac.in/mg/index.html' },
+      { id: 'iitm-discourse', title: 'IITM Discourse Forum', subtitle: 'discourse.onlinedegree.iitm.ac.in', url: 'https://discourse.onlinedegree.iitm.ac.in' },
+      { id: 'iitm-handbook', title: 'MG Student Handbook', subtitle: 'Official Program Handbook', url: 'https://docs.google.com/document/u/1/d/e/2PACX-1vTnw4G6smKsm_EJqeksqBE2qX9tFcn2PYkC2b4QH_TTInjUCQg5-jZjW-paQ4L3g6CLdTKj_zyyDs31/pub' },
+      { id: 'iitm-looker', title: 'Looker Studio Dashboard', subtitle: 'Student Grade Insights', url: 'https://lookerstudio.google.com/u/0/reporting/d02dac13-665b-49cc-8d51-0451268a6a3e/page/5sgkE' },
+      { id: 'iitm-scorechecker', title: 'Score Checker App', subtitle: 'Official Criteria Engine', url: 'https://score-checker-379619009600.asia-south1.run.app/' }
+    ];
+
+    let allPortalLinks = Array.from(DEFAULT_PORTAL_LINKS);
+
+    async function loadPortalLinks() {
+      if (typeof fetchPortalLinksFromFirestore === 'function') {
+        try {
+          const cloudLinks = await fetchPortalLinksFromFirestore();
+          if (Array.isArray(cloudLinks) && cloudLinks.length > 0) {
+            allPortalLinks = cloudLinks;
+            try { localStorage.setItem('mghub_portal_links', JSON.stringify(allPortalLinks)); } catch(e){}
+            renderPortalLinksTable(allPortalLinks);
+            return;
+          }
+        } catch (e) {}
+      }
+
+      try {
+        const local = localStorage.getItem('mghub_portal_links');
+        if (local) {
+          allPortalLinks = JSON.parse(local);
+        }
+      } catch (e) {}
+
+      renderPortalLinksTable(allPortalLinks);
+    }
+
+    function renderPortalLinksTable(links) {
+      const tbody = document.getElementById('portalLinksTableBody');
+      const countEl = document.getElementById('tabLinksCount');
+      if (countEl) countEl.textContent = links.length;
+      if (!tbody) return;
+
+      if (!links.length) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #a1a1aa; padding: 24px;">No portal links found. Click "+ Add New Portal Link" to create one.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = links.map(link => `
+        <tr>
+          <td><strong>${link.title}</strong></td>
+          <td><span style="color: #71717a; font-size: 13px;">${link.subtitle}</span></td>
+          <td>
+            <a href="${link.url}" target="_blank" rel="noopener noreferrer" style="color: #09090b; font-weight: 600; text-decoration: underline; font-size: 13px; word-break: break-all;">
+              ${link.url} ↗
+            </a>
+          </td>
+          <td>
+            <div class="action-btn-group">
+              <button class="btn-sm-edit" onclick="openEditPortalLinkModal('${link.id}')">✏️ Edit</button>
+              <button class="btn-sm-edit" style="color: #ef4444; border-color: #fecaca;" onclick="deletePortalLink('${link.id}')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    const portalLinkModal = document.getElementById('portalLinkModal');
+    const portalLinkForm = document.getElementById('portalLinkForm');
+
+    document.getElementById('openAddLinkModalBtn')?.addEventListener('click', () => {
+      document.getElementById('portalLinkModalTitle').textContent = 'Add New Portal Link';
+      document.getElementById('portalLinkIdInput').value = '';
+      document.getElementById('portalLinkTitleInput').value = '';
+      document.getElementById('portalLinkSubtitleInput').value = '';
+      document.getElementById('portalLinkUrlInput').value = '';
+      portalLinkModal.style.display = 'flex';
+      document.getElementById('portalLinkTitleInput').focus();
+    });
+
+    document.getElementById('closePortalLinkModalBtn')?.addEventListener('click', () => {
+      portalLinkModal.style.display = 'none';
+    });
+
+    document.getElementById('cancelPortalLinkBtn')?.addEventListener('click', () => {
+      portalLinkModal.style.display = 'none';
+    });
+
+    window.openEditPortalLinkModal = function(id) {
+      const link = allPortalLinks.find(l => l.id === id);
+      if (!link) return;
+
+      document.getElementById('portalLinkModalTitle').textContent = `Edit Portal Link (${link.title})`;
+      document.getElementById('portalLinkIdInput').value = link.id;
+      document.getElementById('portalLinkTitleInput').value = link.title;
+      document.getElementById('portalLinkSubtitleInput').value = link.subtitle;
+      document.getElementById('portalLinkUrlInput').value = link.url;
+      portalLinkModal.style.display = 'flex';
+    };
+
+    window.deletePortalLink = async function(id) {
+      const link = allPortalLinks.find(l => l.id === id);
+      if (!link) return;
+      const confirmed = await showConfirmDialog({
+        title: 'Delete Portal Link',
+        message: `Delete portal link "${link.title}"? This will immediately remove it from the student home page.`,
+        confirmText: 'Delete Link',
+        type: 'danger'
+      });
+      if (!confirmed) return;
+
+      allPortalLinks = allPortalLinks.filter(l => l.id !== id);
+      renderPortalLinksTable(allPortalLinks);
+
+      try {
+        localStorage.setItem('mghub_portal_links', JSON.stringify(allPortalLinks));
+        if (typeof savePortalLinksToFirestore === 'function') {
+          await savePortalLinksToFirestore(allPortalLinks);
+        }
+      } catch (e) {}
+    };
+
+    portalLinkForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('portalLinkIdInput').value.trim();
+      const title = document.getElementById('portalLinkTitleInput').value.trim();
+      const subtitle = document.getElementById('portalLinkSubtitleInput').value.trim();
+      const url = document.getElementById('portalLinkUrlInput').value.trim();
+
+      if (!title || !subtitle || !url) return;
+
+      if (id) {
+        const item = allPortalLinks.find(l => l.id === id);
+        if (item) {
+          item.title = title;
+          item.subtitle = subtitle;
+          item.url = url;
+        }
+      } else {
+        allPortalLinks.push({
+          id: 'link-' + Date.now(),
+          title,
+          subtitle,
+          url
+        });
+      }
+
+      renderPortalLinksTable(allPortalLinks);
+      portalLinkModal.style.display = 'none';
+
+      try {
+        localStorage.setItem('mghub_portal_links', JSON.stringify(allPortalLinks));
+        if (typeof savePortalLinksToFirestore === 'function') {
+          await savePortalLinksToFirestore(allPortalLinks);
+        }
+      } catch (e) {}
+    });
+
+    // ==========================================
+    // Contributors Management Logic
+    // ==========================================
+    const DEFAULT_CONTRIBUTORS = [];
+
+    let allContributors = [];
+
+    async function loadContributors() {
+      if (typeof fetchContributorsFromFirestore === 'function') {
+        try {
+          const cloudContributors = await fetchContributorsFromFirestore();
+          if (Array.isArray(cloudContributors)) {
+            allContributors = cloudContributors;
+            try { localStorage.setItem('mghub_contributors', JSON.stringify(allContributors)); } catch(e){}
+            renderContributorsTable(allContributors);
+            return;
+          }
+        } catch (e) {}
+      }
+
+      try {
+        const local = localStorage.getItem('mghub_contributors');
+        if (local !== null) {
+          allContributors = JSON.parse(local);
+        }
+      } catch (e) {}
+
+      renderContributorsTable(allContributors);
+    }
+
+    function getInitials(name) {
+      if (!name) return 'MG';
+      return name.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
+    }
+
+    function renderContributorsTable(contributors) {
+      const tbody = document.getElementById('contributorsTableBody');
+      const countEl = document.getElementById('tabContributorsCount');
+      if (countEl) countEl.textContent = contributors.length;
+      if (!tbody) return;
+
+      if (!contributors.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #a1a1aa; padding: 24px;">No contributors added yet. Click "+ Add New Contributor" to acknowledge contributors.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = contributors.map(c => {
+        const avatarHtml = c.avatar && c.avatar.trim()
+          ? `<img src="${c.avatar}" alt="${c.name}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />`
+          : `<div style="width: 32px; height: 32px; border-radius: 50%; background: #09090b; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;">${getInitials(c.name)}</div>`;
+
+        const socialLinks = [];
+        if (c.github) socialLinks.push(`<a href="${c.github}" target="_blank" style="color: #09090b; text-decoration: underline;">GitHub</a>`);
+        if (c.linkedin) socialLinks.push(`<a href="${c.linkedin}" target="_blank" style="color: #0284c7; text-decoration: underline;">LinkedIn</a>`);
+        if (c.email) socialLinks.push(`<a href="mailto:${c.email}" style="color: #166534; text-decoration: underline;">Email</a>`);
+
+        return `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                ${avatarHtml}
+                <strong style="color: #09090b;">${c.name}</strong>
+              </div>
+            </td>
+            <td><span class="level-badge badge-diploma" style="background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd;">${c.role}</span></td>
+            <td><span style="color: #71717a; font-size: 13px;">${c.branch || 'IIT Madras'}</span></td>
+            <td><span style="font-size: 12.5px; display: flex; gap: 8px;">${socialLinks.length ? socialLinks.join(' • ') : '—'}</span></td>
+            <td>
+              <div class="action-btn-group">
+                <button class="btn-sm-edit" onclick="openEditContributorModal('${c.id}')">✏️ Edit</button>
+                <button class="btn-sm-edit" style="color: #ef4444; border-color: #fecaca;" onclick="deleteContributor('${c.id}')">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    const contributorModal = document.getElementById('contributorModal');
+    const contributorForm = document.getElementById('contributorForm');
+
+    document.getElementById('openAddContributorModalBtn')?.addEventListener('click', () => {
+      document.getElementById('contributorModalTitle').textContent = 'Add Contributor';
+      document.getElementById('contributorIdInput').value = '';
+      document.getElementById('contributorNameInput').value = '';
+      document.getElementById('contributorRoleInput').value = '';
+      document.getElementById('contributorBranchInput').value = 'IIT Madras BS Degree';
+      document.getElementById('contributorAvatarInput').value = '';
+      document.getElementById('contributorGithubInput').value = '';
+      document.getElementById('contributorLinkedinInput').value = '';
+      document.getElementById('contributorEmailInput').value = '';
+      contributorModal.style.display = 'flex';
+      document.getElementById('contributorNameInput').focus();
+    });
+
+    document.getElementById('closeContributorModalBtn')?.addEventListener('click', () => {
+      contributorModal.style.display = 'none';
+    });
+
+    document.getElementById('cancelContributorBtn')?.addEventListener('click', () => {
+      contributorModal.style.display = 'none';
+    });
+
+    window.openEditContributorModal = function(id) {
+      const c = allContributors.find(item => String(item.id) === String(id));
+      if (!c) return;
+
+      document.getElementById('contributorModalTitle').textContent = `Edit Contributor (${c.name})`;
+      document.getElementById('contributorIdInput').value = c.id;
+      document.getElementById('contributorNameInput').value = c.name;
+      document.getElementById('contributorRoleInput').value = c.role;
+      document.getElementById('contributorBranchInput').value = c.branch || '';
+      document.getElementById('contributorAvatarInput').value = c.avatar || '';
+      document.getElementById('contributorGithubInput').value = c.github || '';
+      document.getElementById('contributorLinkedinInput').value = c.linkedin || '';
+      document.getElementById('contributorEmailInput').value = c.email || '';
+      contributorModal.style.display = 'flex';
+    };
+
+    window.deleteContributor = async function(id) {
+      const c = allContributors.find(item => String(item.id) === String(id));
+      if (!c) return;
+      const confirmed = await showConfirmDialog({
+        title: 'Delete Contributor',
+        message: `Delete contributor "${c.name}"? This will immediately remove them from the student home page.`,
+        confirmText: 'Delete Contributor',
+        type: 'danger'
+      });
+      if (!confirmed) return;
+
+      allContributors = allContributors.filter(item => String(item.id) !== String(id));
+      renderContributorsTable(allContributors);
+
+      try {
+        localStorage.setItem('mghub_contributors', JSON.stringify(allContributors));
+        if (typeof saveContributorsToFirestore === 'function') {
+          await saveContributorsToFirestore(allContributors);
+        }
+      } catch (e) {}
+    };
+
+    contributorForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('contributorIdInput').value.trim();
+      const name = document.getElementById('contributorNameInput').value.trim();
+      const role = document.getElementById('contributorRoleInput').value.trim();
+      const branch = document.getElementById('contributorBranchInput').value.trim();
+      const avatar = document.getElementById('contributorAvatarInput').value.trim();
+      const github = document.getElementById('contributorGithubInput').value.trim();
+      const linkedin = document.getElementById('contributorLinkedinInput').value.trim();
+      const email = document.getElementById('contributorEmailInput').value.trim();
+
+      if (!name || !role) return;
+
+      if (id) {
+        const item = allContributors.find(c => String(c.id) === String(id));
+        if (item) {
+          item.name = name;
+          item.role = role;
+          item.branch = branch;
+          item.avatar = avatar;
+          item.github = github;
+          item.linkedin = linkedin;
+          item.email = email;
+        }
+      } else {
+        allContributors.push({
+          id: 'contrib-' + Date.now(),
+          name,
+          role,
+          branch,
+          avatar,
+          github,
+          linkedin,
+          email
+        });
+      }
+
+      renderContributorsTable(allContributors);
+      contributorModal.style.display = 'none';
+
+      try {
+        localStorage.setItem('mghub_contributors', JSON.stringify(allContributors));
+        if (typeof saveContributorsToFirestore === 'function') {
+          await saveContributorsToFirestore(allContributors);
+        }
+      } catch (e) {}
+    });
+
+    // ==============================================================================
+    // 7. Quiz Question Bank & Exam Simulator Manager
+    // ==============================================================================
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      })[m]);
+    }
+
+    let allQuizQuestions = [];
+    let currentQuizType = 'mcq';
+    let editingQuizQuestionId = null;
+
+    // DOM Elements - Quiz Tab
+    const tabQuizCount = document.getElementById('tabQuizCount');
+    const metricQuizQuestions = document.getElementById('metricQuizQuestions');
+    const quizTableBody = document.getElementById('quizTableBody');
+    const quizFilteredCount = document.getElementById('quizFilteredCount');
+    const quizTotalCount = document.getElementById('quizTotalCount');
+    const quizCourseSummaryBadge = document.getElementById('quizCourseSummaryBadge');
+
+    // Filters
+    const quizFilterCourse = document.getElementById('quizFilterCourse');
+    const quizFilterMilestone = document.getElementById('quizFilterMilestone');
+    const quizFilterWeek = document.getElementById('quizFilterWeek');
+    const quizFilterType = document.getElementById('quizFilterType');
+    const quizSearchInput = document.getElementById('quizSearchInput');
+    const btnResetQuizFilters = document.getElementById('btnResetQuizFilters');
+
+    // Question Modal
+    const questionModal = document.getElementById('questionModal');
+    const questionModalTitle = document.getElementById('questionModalTitle');
+    const questionForm = document.getElementById('questionForm');
+    const openAddQuestionBtn = document.getElementById('openAddQuestionBtn');
+    const closeQuestionModalBtn = document.getElementById('closeQuestionModalBtn');
+    const btnCancelQuestionModal = document.getElementById('btnCancelQuestionModal');
+    const btnSaveAndAddAnother = document.getElementById('btnSaveAndAddAnother');
+    const questionFormId = document.getElementById('questionFormId');
+
+    const questionCourseSelect = document.getElementById('questionCourseSelect');
+    const questionWeekSelect = document.getElementById('questionWeekSelect');
+    const msCheckQuiz1 = document.getElementById('msCheckQuiz1');
+    const msCheckQuiz2 = document.getElementById('msCheckQuiz2');
+    const msCheckEndterm = document.getElementById('msCheckEndterm');
+    const questionTopicInput = document.getElementById('questionTopicInput');
+    const questionSourceInput = document.getElementById('questionSourceInput');
+    const questionDifficultySelect = document.getElementById('questionDifficultySelect');
+    const questionMarksInput = document.getElementById('questionMarksInput');
+
+    const typeBtnMcq = document.getElementById('typeBtnMcq');
+    const typeBtnMsq = document.getElementById('typeBtnMsq');
+    const typeBtnNat = document.getElementById('typeBtnNat');
+    const questionTextInput = document.getElementById('questionTextInput');
+    const btnToggleMathPreview = document.getElementById('btnToggleMathPreview');
+    const questionTextPreviewBox = document.getElementById('questionTextPreviewBox');
+
+    const sectionOptions = document.getElementById('sectionOptions');
+    const optionsListContainer = document.getElementById('optionsListContainer');
+    const btnAddOptionRow = document.getElementById('btnAddOptionRow');
+    const optionsHelpText = document.getElementById('optionsHelpText');
+
+    const sectionNat = document.getElementById('sectionNat');
+    const questionNatAnswer = document.getElementById('questionNatAnswer');
+    const questionNatTolerance = document.getElementById('questionNatTolerance');
+    const questionExplanationInput = document.getElementById('questionExplanationInput');
+
+    // Bulk Import Modal
+    const bulkImportModal = document.getElementById('bulkImportModal');
+    const openBulkImportBtn = document.getElementById('openBulkImportBtn');
+    const closeBulkImportModalBtn = document.getElementById('closeBulkImportModalBtn');
+    const btnCancelBulkModal = document.getElementById('btnCancelBulkModal');
+    const bulkJsonInput = document.getElementById('bulkJsonInput');
+    const btnLoadSampleJson = document.getElementById('btnLoadSampleJson');
+    const bulkJsonFileInput = document.getElementById('bulkJsonFileInput');
+    const bulkValidationAlert = document.getElementById('bulkValidationAlert');
+    const btnSubmitBulkJson = document.getElementById('btnSubmitBulkJson');
+
+    // Preview Modal
+    const questionPreviewModal = document.getElementById('questionPreviewModal');
+    const closeQuestionPreviewModalBtn = document.getElementById('closeQuestionPreviewModalBtn');
+    const questionPreviewBody = document.getElementById('questionPreviewBody');
+    const btnExportQuestions = document.getElementById('btnExportQuestions');
+
+    // 1. Load Quiz Questions from Backend
+    async function loadQuizQuestions() {
+      try {
+        const res = await fetch('/api/admin/quiz/questions', {
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          allQuizQuestions = Array.isArray(data.questions) ? data.questions : [];
+          updateQuizDashboardCounts();
+          populateQuizCourseDropdowns();
+          renderQuizTable();
+          return;
+        }
+      } catch (e) {
+        console.warn('Admin quiz API fetch failed, trying public/fallback:', e);
+      }
+
+      // Public / Local Fallback
+      try {
+        const fallbackRes = await fetch('/api/quiz/questions?limit=10000');
+        if (fallbackRes.ok) {
+          const fbData = await fallbackRes.json();
+          allQuizQuestions = Array.isArray(fbData.questions) ? fbData.questions : [];
+          updateQuizDashboardCounts();
+          populateQuizCourseDropdowns();
+          renderQuizTable();
+          return;
+        }
+      } catch (e) {}
+
+      // Static JSON fallback
+      try {
+        const staticRes = await fetch('data/questions.json');
+        if (staticRes.ok) {
+          allQuizQuestions = await staticRes.json();
+          updateQuizDashboardCounts();
+          populateQuizCourseDropdowns();
+          renderQuizTable();
+        }
+      } catch (e) {
+        console.error('Failed to load questions from all sources:', e);
+      }
+    }
+
+    function updateQuizDashboardCounts() {
+      const count = allQuizQuestions.length;
+      if (tabQuizCount) tabQuizCount.textContent = count;
+      if (metricQuizQuestions) metricQuizQuestions.textContent = count;
+      if (quizTotalCount) quizTotalCount.textContent = count;
+    }
+
+    // Populate Course Selects (Filter & Modal)
+    function populateQuizCourseDropdowns() {
+      const coursesMap = new Map();
+
+      // Gather catalog courses
+      if (Array.isArray(allCourses) && allCourses.length > 0) {
+        allCourses.forEach(c => coursesMap.set(c.code.toUpperCase(), c.title || c.code));
+      } else if (typeof INITIAL_COURSES_CATALOG !== 'undefined') {
+        INITIAL_COURSES_CATALOG.forEach(c => coursesMap.set(c.code.toUpperCase(), c.title || c.code));
+      }
+
+      // Merge courses found in questions
+      allQuizQuestions.forEach(q => {
+        if (q.courseCode && !coursesMap.has(q.courseCode.toUpperCase())) {
+          coursesMap.set(q.courseCode.toUpperCase(), q.courseTitle || q.courseCode.toUpperCase());
+        }
+      });
+
+      const sortedEntries = Array.from(coursesMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+
+      // Populate Filter
+      if (quizFilterCourse) {
+        const currentFilterVal = quizFilterCourse.value || 'all';
+        quizFilterCourse.innerHTML = '<option value="all">All Courses</option>' + 
+          sortedEntries.map(([code, title]) => `<option value="${code}">${code} — ${title}</option>`).join('');
+        if (coursesMap.has(currentFilterVal)) {
+          quizFilterCourse.value = currentFilterVal;
+        }
+      }
+
+      // Populate Form Select
+      if (questionCourseSelect) {
+        questionCourseSelect.innerHTML = sortedEntries.map(([code, title]) => 
+          `<option value="${code}" data-title="${escapeHtml(title)}">${code} — ${escapeHtml(title)}</option>`
+        ).join('');
+      }
+    }
+
+    // 2. Render Quiz Table
+    function renderQuizTable() {
+      if (!quizTableBody) return;
+
+      const courseFilter = quizFilterCourse ? quizFilterCourse.value : 'all';
+      const milestoneFilter = quizFilterMilestone ? quizFilterMilestone.value : 'all';
+      const weekFilter = quizFilterWeek ? quizFilterWeek.value : 'all';
+      const typeFilter = quizFilterType ? quizFilterType.value : 'all';
+      const searchQuery = quizSearchInput ? quizSearchInput.value.toLowerCase().trim() : '';
+
+      let filtered = allQuizQuestions.filter(q => {
+        // Course Filter
+        if (courseFilter !== 'all' && (!q.courseCode || q.courseCode.toUpperCase() !== courseFilter.toUpperCase())) {
+          return false;
+        }
+
+        // Milestone Filter
+        if (milestoneFilter !== 'all') {
+          const ms = q.examMilestones || [];
+          if (!ms.includes(milestoneFilter)) {
+            // week based fallback
+            if (milestoneFilter === 'quiz1' && (!q.week || q.week > 4)) return false;
+            if (milestoneFilter === 'quiz2' && (!q.week || q.week > 8)) return false;
+            if (milestoneFilter === 'endterm' && (!q.week || q.week > 12)) return false;
+          }
+        }
+
+        // Week Filter
+        if (weekFilter !== 'all') {
+          const w = parseInt(weekFilter);
+          if (q.week !== w) return false;
+        }
+
+        // Type Filter
+        if (typeFilter !== 'all') {
+          if (!q.type || q.type.toLowerCase() !== typeFilter.toLowerCase()) return false;
+        }
+
+        // Search Query
+        if (searchQuery) {
+          const qText = (q.questionText || '').toLowerCase();
+          const qTopic = (q.topic || '').toLowerCase();
+          const qSource = (q.source || '').toLowerCase();
+          const qCode = (q.courseCode || '').toLowerCase();
+          if (!qText.includes(searchQuery) && !qTopic.includes(searchQuery) && !qSource.includes(searchQuery) && !qCode.includes(searchQuery)) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      if (quizFilteredCount) quizFilteredCount.textContent = filtered.length;
+      if (quizTotalCount) quizTotalCount.textContent = allQuizQuestions.length;
+
+      if (quizCourseSummaryBadge) {
+        if (courseFilter !== 'all') {
+          quizCourseSummaryBadge.textContent = `Filtered to ${courseFilter}`;
+        } else {
+          quizCourseSummaryBadge.textContent = '';
+        }
+      }
+
+      if (filtered.length === 0) {
+        quizTableBody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 48px 20px; color: #71717a;">
+              <div style="font-size: 32px; margin-bottom: 8px;">🎯</div>
+              <div style="font-size: 15px; font-weight: 700; color: #09090b; margin-bottom: 4px;">No Questions Found</div>
+              <div style="font-size: 13px;">No questions match your current filters. Click <strong>+ Add Question</strong> or <strong>⚡ Bulk Import JSON</strong> to get started!</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      quizTableBody.innerHTML = filtered.map(q => {
+        const typeBadge = q.type === 'msq'
+          ? '<span class="milestone-badge type-badge-msq">MSQ</span>'
+          : q.type === 'nat'
+          ? '<span class="milestone-badge type-badge-nat">NAT</span>'
+          : '<span class="milestone-badge type-badge-mcq">MCQ</span>';
+
+        const milestoneBadges = (q.examMilestones || []).map(m => {
+          if (m === 'quiz1') return '<span class="milestone-badge milestone-badge-quiz1">Quiz 1</span>';
+          if (m === 'quiz2') return '<span class="milestone-badge milestone-badge-quiz2">Quiz 2</span>';
+          if (m === 'endterm') return '<span class="milestone-badge milestone-badge-endterm">End-Term</span>';
+          return `<span class="milestone-badge">${escapeHtml(m)}</span>`;
+        }).join('');
+
+        const previewText = q.questionText && q.questionText.length > 130 
+          ? q.questionText.substring(0, 130) + '...' 
+          : (q.questionText || '');
+
+        return `
+          <tr data-question-id="${escapeHtml(q.id)}">
+            <td>
+              <strong style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #09090b;">${escapeHtml(q.courseCode || 'GEN')}</strong>
+              <div style="font-size: 11.5px; color: #71717a; margin-top: 2px;">Week ${q.week || 1}</div>
+            </td>
+            <td>${typeBadge}</td>
+            <td>
+              <div class="question-text-snippet" style="font-weight: 600; font-size: 13.5px; line-height: 1.45; color: #09090b; margin-bottom: 4px;">
+                ${escapeHtml(previewText)}
+              </div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 11.5px; color: #71717a;">
+                ${q.topic ? `<span style="background: #f4f4f5; padding: 1px 6px; border-radius: 4px;">🏷️ ${escapeHtml(q.topic)}</span>` : ''}
+                ${q.source ? `<span>📝 ${escapeHtml(q.source)}</span>` : ''}
+              </div>
+            </td>
+            <td>
+              <div style="margin-bottom: 2px;">${milestoneBadges || '<span style="color: #a1a1aa; font-size: 11px;">—</span>'}</div>
+            </td>
+            <td>
+              <strong style="font-size: 13px; color: #09090b;">${q.marks || 1} M</strong>
+              <div style="font-size: 11px; color: #71717a; text-transform: capitalize;">${escapeHtml(q.difficulty || 'medium')}</div>
+            </td>
+            <td style="text-align: right;">
+              <div style="display: inline-flex; gap: 5px; justify-content: flex-end;">
+                <button type="button" class="btn-secondary-action" style="padding: 5px 8px; font-size: 11.5px;" onclick="previewQuizQuestion('${escapeHtml(q.id)}')" title="Preview Question">
+                  👁️
+                </button>
+                <button type="button" class="btn-secondary-action" style="padding: 5px 8px; font-size: 11.5px;" onclick="editQuizQuestion('${escapeHtml(q.id)}')" title="Edit Question">
+                  ✏️ Edit
+                </button>
+                <button type="button" class="btn-secondary-action" style="padding: 5px 8px; font-size: 11.5px; color: #ef4444;" onclick="deleteQuizQuestion('${escapeHtml(q.id)}')" title="Delete Question">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Render math formulas in snippets if KaTeX is loaded
+      if (typeof renderMathInElement === 'function') {
+        try {
+          renderMathInElement(quizTableBody, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false }
+            ],
+            throwOnError: false
+          });
+        } catch (e) {}
+      }
+    }
+
+    // 3. Question Form & Modal Management
+    function setQuizType(type) {
+      currentQuizType = type;
+      typeBtnMcq.classList.toggle('active', type === 'mcq');
+      typeBtnMsq.classList.toggle('active', type === 'msq');
+      typeBtnNat.classList.toggle('active', type === 'nat');
+
+      if (type === 'nat') {
+        sectionOptions.style.display = 'none';
+        sectionNat.style.display = 'block';
+        questionMarksInput.value = '2';
+      } else {
+        sectionOptions.style.display = 'block';
+        sectionNat.style.display = 'none';
+        questionMarksInput.value = type === 'mcq' ? '1' : '2';
+        optionsHelpText.textContent = type === 'mcq'
+          ? 'Select the radio button for the single correct option'
+          : 'Check ALL checkboxes that are correct answers for this question';
+
+        const currentOpts = getCurrentOptionsFromDOM();
+        const currentAns = getCurrentCorrectAnswersFromDOM();
+        renderOptionRows(currentOpts.length >= 2 ? currentOpts : ['', '', '', ''], currentAns);
+      }
+    }
+
+    function renderOptionRows(options = ['', '', '', ''], correctAnswer = 0) {
+      if (!optionsListContainer) return;
+      const isMsq = currentQuizType === 'msq';
+      optionsListContainer.innerHTML = '';
+
+      options.forEach((optText, idx) => {
+        const letter = String.fromCharCode(65 + idx);
+        let isChecked = false;
+        if (isMsq) {
+          isChecked = Array.isArray(correctAnswer) && correctAnswer.includes(idx);
+        } else {
+          isChecked = (correctAnswer === idx);
+        }
+
+        const row = document.createElement('div');
+        row.className = `option-row ${isChecked ? 'is-correct' : ''}`;
+        row.setAttribute('data-index', idx);
+        row.innerHTML = `
+          <span class="option-label-badge">${letter}</span>
+          <input type="${isMsq ? 'checkbox' : 'radio'}" 
+                 name="optionCorrectChoice" 
+                 class="option-correct-choice-input" 
+                 value="${idx}" 
+                 ${isChecked ? 'checked' : ''} 
+                 title="Mark as correct answer" />
+          <input type="text" class="option-text-input" placeholder="Option ${letter} statement..." value="${escapeHtml(optText)}" required />
+          ${options.length > 2 ? `<button type="button" class="btn-remove-option" onclick="removeOptionRow(${idx})" title="Remove Option">✕</button>` : ''}
+        `;
+        optionsListContainer.appendChild(row);
+      });
+
+      // Attach change listeners to update green highlights
+      optionsListContainer.querySelectorAll('.option-correct-choice-input').forEach(input => {
+        input.addEventListener('change', updateOptionRowHighlights);
+      });
+    }
+
+    function updateOptionRowHighlights() {
+      const rows = optionsListContainer.querySelectorAll('.option-row');
+      rows.forEach(r => {
+        const input = r.querySelector('.option-correct-choice-input');
+        if (input && input.checked) {
+          r.classList.add('is-correct');
+        } else {
+          r.classList.remove('is-correct');
+        }
+      });
+    }
+
+    function getCurrentOptionsFromDOM() {
+      if (!optionsListContainer) return [];
+      const inputs = optionsListContainer.querySelectorAll('.option-text-input');
+      return Array.from(inputs).map(inp => inp.value);
+    }
+
+    function getCurrentCorrectAnswersFromDOM() {
+      if (!optionsListContainer) return 0;
+      const inputs = optionsListContainer.querySelectorAll('.option-correct-choice-input');
+      if (currentQuizType === 'msq') {
+        const selected = [];
+        inputs.forEach(inp => {
+          if (inp.checked) selected.push(parseInt(inp.value));
+        });
+        return selected;
+      } else {
+        let selectedIdx = 0;
+        inputs.forEach(inp => {
+          if (inp.checked) selectedIdx = parseInt(inp.value);
+        });
+        return selectedIdx;
+      }
+    }
+
+    window.removeOptionRow = function(index) {
+      let opts = getCurrentOptionsFromDOM();
+      let ans = getCurrentCorrectAnswersFromDOM();
+      if (opts.length <= 2) return;
+
+      opts.splice(index, 1);
+      if (currentQuizType === 'msq') {
+        if (Array.isArray(ans)) {
+          ans = ans.filter(i => i !== index).map(i => i > index ? i - 1 : i);
+        }
+      } else {
+        if (ans === index) ans = 0;
+        else if (ans > index) ans = ans - 1;
+      }
+      renderOptionRows(opts, ans);
+    };
+
+    if (btnAddOptionRow) {
+      btnAddOptionRow.addEventListener('click', () => {
+        const opts = getCurrentOptionsFromDOM();
+        if (opts.length >= 8) {
+          showToast('Maximum 8 options supported per question.', 'warning', 'Limit Reached');
+          return;
+        }
+        opts.push('');
+        const ans = getCurrentCorrectAnswersFromDOM();
+        renderOptionRows(opts, ans);
+      });
+    }
+
+    // Auto-sync milestone checkboxes on week change
+    if (questionWeekSelect) {
+      questionWeekSelect.addEventListener('change', () => {
+        const w = parseInt(questionWeekSelect.value) || 1;
+        if (w <= 4) {
+          if (msCheckQuiz1) msCheckQuiz1.checked = true;
+          if (msCheckQuiz2) msCheckQuiz2.checked = false;
+          if (msCheckEndterm) msCheckEndterm.checked = true;
+        } else if (w <= 8) {
+          if (msCheckQuiz1) msCheckQuiz1.checked = false;
+          if (msCheckQuiz2) msCheckQuiz2.checked = true;
+          if (msCheckEndterm) msCheckEndterm.checked = true;
+        } else {
+          if (msCheckQuiz1) msCheckQuiz1.checked = false;
+          if (msCheckQuiz2) msCheckQuiz2.checked = false;
+          if (msCheckEndterm) msCheckEndterm.checked = true;
+        }
+      });
+    }
+
+    // Type Selector Buttons
+    if (typeBtnMcq) typeBtnMcq.addEventListener('click', () => setQuizType('mcq'));
+    if (typeBtnMsq) typeBtnMsq.addEventListener('click', () => setQuizType('msq'));
+    if (typeBtnNat) typeBtnNat.addEventListener('click', () => setQuizType('nat'));
+
+    // KaTeX Math Preview
+    if (btnToggleMathPreview && questionTextPreviewBox) {
+      btnToggleMathPreview.addEventListener('click', () => {
+        const isHidden = questionTextPreviewBox.style.display === 'none';
+        if (isHidden) {
+          questionTextPreviewBox.style.display = 'block';
+          updateMathPreview();
+        } else {
+          questionTextPreviewBox.style.display = 'none';
+        }
+      });
+    }
+
+    function updateMathPreview() {
+      if (!questionTextPreviewBox || questionTextPreviewBox.style.display === 'none') return;
+      const text = questionTextInput.value.trim() || '<em>(Enter question text above to preview math formulas...)</em>';
+      questionTextPreviewBox.innerHTML = text.replace(/\n/g, '<br>');
+      if (typeof renderMathInElement === 'function') {
+        try {
+          renderMathInElement(questionTextPreviewBox, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false }
+            ],
+            throwOnError: false
+          });
+        } catch (e) {}
+      }
+    }
+
+    if (questionTextInput) {
+      questionTextInput.addEventListener('input', updateMathPreview);
+    }
+
+    // Open Add Question Modal
+    function openAddQuestionModal(preCourseCode = null, preWeek = null) {
+      editingQuizQuestionId = null;
+      if (questionFormId) questionFormId.value = '';
+      if (questionModalTitle) questionModalTitle.textContent = 'Add New Question';
+
+      // Pre-select course and week
+      if (preCourseCode && questionCourseSelect) questionCourseSelect.value = preCourseCode;
+      if (preWeek && questionWeekSelect) {
+        questionWeekSelect.value = String(preWeek);
+        questionWeekSelect.dispatchEvent(new Event('change'));
+      } else if (questionWeekSelect) {
+        questionWeekSelect.dispatchEvent(new Event('change'));
+      }
+
+      if (questionTopicInput) questionTopicInput.value = '';
+      if (questionSourceInput) questionSourceInput.value = '';
+      if (questionDifficultySelect) questionDifficultySelect.value = 'medium';
+      if (questionMarksInput) questionMarksInput.value = '1';
+      if (questionTextInput) questionTextInput.value = '';
+      if (questionTextPreviewBox) questionTextPreviewBox.style.display = 'none';
+      if (questionNatAnswer) questionNatAnswer.value = '';
+      if (questionNatTolerance) questionNatTolerance.value = '0.1';
+      if (questionExplanationInput) questionExplanationInput.value = '';
+
+      setQuizType('mcq');
+      renderOptionRows(['', '', '', ''], 0);
+
+      questionModal.style.display = 'flex';
+      setTimeout(() => questionTextInput?.focus(), 100);
+    }
+
+    if (openAddQuestionBtn) {
+      openAddQuestionBtn.addEventListener('click', () => {
+        const currentCourseFilter = quizFilterCourse ? quizFilterCourse.value : null;
+        const currentWeekFilter = quizFilterWeek ? quizFilterWeek.value : null;
+        openAddQuestionModal(
+          currentCourseFilter && currentCourseFilter !== 'all' ? currentCourseFilter : null,
+          currentWeekFilter && currentWeekFilter !== 'all' ? parseInt(currentWeekFilter) : 1
+        );
+      });
+    }
+
+    if (closeQuestionModalBtn) {
+      closeQuestionModalBtn.addEventListener('click', () => questionModal.style.display = 'none');
+    }
+    if (btnCancelQuestionModal) {
+      btnCancelQuestionModal.addEventListener('click', () => questionModal.style.display = 'none');
+    }
+
+    // Edit Question
+    window.editQuizQuestion = function(qId) {
+      const q = allQuizQuestions.find(item => item.id === qId);
+      if (!q) return;
+
+      editingQuizQuestionId = qId;
+      if (questionFormId) questionFormId.value = qId;
+      if (questionModalTitle) questionModalTitle.textContent = `Edit Question (${q.courseCode || 'GEN'})`;
+
+      if (questionCourseSelect) questionCourseSelect.value = q.courseCode || '';
+      if (questionWeekSelect) questionWeekSelect.value = String(q.week || 1);
+
+      // Milestones
+      const ms = q.examMilestones || [];
+      if (msCheckQuiz1) msCheckQuiz1.checked = ms.includes('quiz1');
+      if (msCheckQuiz2) msCheckQuiz2.checked = ms.includes('quiz2');
+      if (msCheckEndterm) msCheckEndterm.checked = ms.includes('endterm');
+
+      if (questionTopicInput) questionTopicInput.value = q.topic || '';
+      if (questionSourceInput) questionSourceInput.value = q.source || '';
+      if (questionDifficultySelect) questionDifficultySelect.value = q.difficulty || 'medium';
+      if (questionMarksInput) questionMarksInput.value = q.marks || 1;
+      if (questionTextInput) questionTextInput.value = q.questionText || '';
+      if (questionTextPreviewBox) questionTextPreviewBox.style.display = 'none';
+
+      const type = (q.type || 'mcq').toLowerCase();
+      setQuizType(type);
+
+      if (type === 'nat') {
+        if (questionNatAnswer) questionNatAnswer.value = q.correctAnswer !== undefined ? q.correctAnswer : '';
+        if (questionNatTolerance) questionNatTolerance.value = q.tolerance !== undefined ? q.tolerance : 0.1;
+      } else {
+        const opts = Array.isArray(q.options) && q.options.length >= 2 ? q.options : ['', '', '', ''];
+        renderOptionRows(opts, q.correctAnswer);
+      }
+
+      if (questionExplanationInput) questionExplanationInput.value = q.explanation || '';
+
+      questionModal.style.display = 'flex';
+      setTimeout(() => questionTextInput?.focus(), 100);
+    };
+
+    // Save Question Handler
+    async function saveQuizQuestion(continueAdding = false) {
+      const courseCode = questionCourseSelect ? questionCourseSelect.value.trim().toUpperCase() : 'GEN';
+      const selectedOption = questionCourseSelect?.options[questionCourseSelect.selectedIndex];
+      const courseTitle = selectedOption ? (selectedOption.getAttribute('data-title') || courseCode) : courseCode;
+      const week = parseInt(questionWeekSelect ? questionWeekSelect.value : '1') || 1;
+
+      // Milestones
+      const examMilestones = [];
+      if (msCheckQuiz1 && msCheckQuiz1.checked) examMilestones.push('quiz1');
+      if (msCheckQuiz2 && msCheckQuiz2.checked) examMilestones.push('quiz2');
+      if (msCheckEndterm && msCheckEndterm.checked) examMilestones.push('endterm');
+      if (examMilestones.length === 0) examMilestones.push('endterm');
+
+      const topic = questionTopicInput ? questionTopicInput.value.trim() : '';
+      const source = questionSourceInput ? questionSourceInput.value.trim() : '';
+      const difficulty = questionDifficultySelect ? questionDifficultySelect.value : 'medium';
+      const marks = parseInt(questionMarksInput ? questionMarksInput.value : '1') || 1;
+      const questionText = questionTextInput ? questionTextInput.value.trim() : '';
+      const explanation = questionExplanationInput ? questionExplanationInput.value.trim() : '';
+
+      if (!questionText) {
+        showToast('Please enter the question statement.', 'warning', 'Missing Statement');
+        questionTextInput?.focus();
+        return;
+      }
+
+      let payload = {
+        courseCode,
+        courseTitle,
+        week,
+        examMilestones,
+        topic,
+        source,
+        difficulty,
+        marks,
+        type: currentQuizType,
+        questionText,
+        explanation
+      };
+
+      if (currentQuizType === 'nat') {
+        const numVal = parseFloat(questionNatAnswer.value);
+        if (isNaN(numVal)) {
+          showToast('Please enter a valid numerical answer for NAT question.', 'warning', 'Numerical Value Required');
+          questionNatAnswer?.focus();
+          return;
+        }
+        payload.correctAnswer = numVal;
+        payload.tolerance = parseFloat(questionNatTolerance.value) || 0;
+      } else {
+        const opts = getCurrentOptionsFromDOM();
+        if (opts.some(o => !o.trim())) {
+          showToast('Please fill out all option statements.', 'warning', 'Incomplete Options');
+          return;
+        }
+        const ans = getCurrentCorrectAnswersFromDOM();
+        if (currentQuizType === 'msq') {
+          if (!Array.isArray(ans) || ans.length === 0) {
+            showToast('Please check at least one correct option checkbox for MSQ.', 'warning', 'Selection Required');
+            return;
+          }
+        }
+        payload.options = opts;
+        payload.correctAnswer = ans;
+      }
+
+      const isEdit = !!editingQuizQuestionId;
+      const endpoint = isEdit ? `/api/admin/quiz/questions/${editingQuizQuestionId}` : '/api/admin/quiz/questions';
+      const method = isEdit ? 'PUT' : 'POST';
+
+      try {
+        const res = await fetch(endpoint, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders()
+          },
+          credentials: 'include',
+          body: JSON.stringify(isEdit ? payload : { questions: [payload] })
+        });
+
+        if (res.ok) {
+          // Success
+          await loadQuizQuestions();
+
+          if (continueAdding) {
+            // Keep course and week, clear text and inputs
+            questionTextInput.value = '';
+            if (questionTextPreviewBox) questionTextPreviewBox.style.display = 'none';
+            if (questionTopicInput) questionTopicInput.value = '';
+            if (questionNatAnswer) questionNatAnswer.value = '';
+            if (questionExplanationInput) questionExplanationInput.value = '';
+            renderOptionRows(['', '', '', ''], 0);
+            questionTextInput.focus();
+
+            // Flash temporary feedback
+            const toast = document.createElement('div');
+            toast.textContent = '✓ Question saved! Ready for next question.';
+            toast.style.cssText = 'position: fixed; bottom: 24px; right: 24px; background: #10b981; color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 700; z-index: 99999; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+          } else {
+            questionModal.style.display = 'none';
+          }
+          return;
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          showToast(errData.error || errData.message || 'Failed to save question to server.', 'error', 'Save Failed');
+        }
+      } catch (err) {
+        console.error('Error saving question:', err);
+        showToast('Could not connect to backend server. Make sure the local Express server is running.', 'error', 'Connection Error');
+      }
+    }
+
+    if (questionForm) {
+      questionForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await saveQuizQuestion(false);
+      });
+    }
+
+    if (btnSaveAndAddAnother) {
+      btnSaveAndAddAnother.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await saveQuizQuestion(true);
+      });
+    }
+
+    // 4. Delete Question
+    window.deleteQuizQuestion = async function(qId) {
+      const q = allQuizQuestions.find(item => item.id === qId);
+      const title = q ? `"${q.questionText.substring(0, 40)}..."` : 'this question';
+      const confirmed = await showConfirmDialog({
+        title: 'Delete Question?',
+        message: `Are you sure you want to permanently delete ${title} from the question bank?`,
+        confirmText: 'Delete Question',
+        cancelText: 'Cancel',
+        type: 'danger'
+      });
+      if (!confirmed) return;
+
+      try {
+        const res = await fetch(`/api/admin/quiz/questions/${qId}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders(),
+          credentials: 'include'
+        });
+
+        if (res.ok) {
+          allQuizQuestions = allQuizQuestions.filter(item => item.id !== qId);
+          updateQuizDashboardCounts();
+          renderQuizTable();
+          showToast('Question deleted successfully from the bank.', 'info', 'Question Removed');
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast(err.error || 'Failed to delete question.', 'error', 'Delete Failed');
+        }
+      } catch (e) {
+        console.error('Delete error:', e);
+        showToast('Server connection error. Could not delete question.', 'error', 'Connection Error');
+      }
+    };
+
+    // 5. Preview Question (Student View)
+    window.previewQuizQuestion = function(qId) {
+      const q = allQuizQuestions.find(item => item.id === qId);
+      if (!q || !questionPreviewBody) return;
+
+      let optionsMarkup = '';
+      if (q.type === 'nat') {
+        optionsMarkup = `
+          <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 14px; margin: 16px 0;">
+            <div style="font-size: 12px; font-weight: 700; color: #166534; text-transform: uppercase;">Correct Numerical Answer</div>
+            <div style="font-size: 20px; font-weight: 800; color: #15803d; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">
+              ${q.correctAnswer} <span style="font-size: 13px; font-weight: 500; color: #166534;">(± ${q.tolerance || 0})</span>
+            </div>
+          </div>
+        `;
+      } else if (Array.isArray(q.options)) {
+        optionsMarkup = `<div style="display: flex; flex-direction: column; gap: 8px; margin: 16px 0;">` +
+          q.options.map((opt, idx) => {
+            const letter = String.fromCharCode(65 + idx);
+            const isCorrect = q.type === 'msq'
+              ? (Array.isArray(q.correctAnswer) && q.correctAnswer.includes(idx))
+              : (q.correctAnswer === idx);
+
+            return `
+              <div style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1.5px solid ${isCorrect ? '#10b981' : '#e2e2e8'}; background: ${isCorrect ? '#ecfdf5' : '#ffffff'};">
+                <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: ${isCorrect ? '#10b981' : '#f4f4f5'}; color: ${isCorrect ? '#fff' : '#09090b'};">
+                  ${letter}
+                </span>
+                <span style="flex: 1; font-size: 14px; color: #09090b;">${escapeHtml(opt)}</span>
+                ${isCorrect ? '<span style="font-size: 12px; font-weight: 700; color: #047857;">✓ Correct</span>' : ''}
+              </div>
+            `;
+          }).join('') +
+        `</div>`;
+      }
+
+      questionPreviewBody.innerHTML = `
+        <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 12px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; background: #000; color: #fff; padding: 2px 8px; border-radius: 6px;">${escapeHtml(q.courseCode || 'GEN')}</span>
+          <span style="font-size: 12px; font-weight: 600; color: #71717a;">Week ${q.week || 1}</span>
+          <span class="milestone-badge type-badge-${q.type}">${(q.type || 'MCQ').toUpperCase()}</span>
+          <span style="font-size: 12px; margin-left: auto; font-weight: 700; color: #7c3aed;">${q.marks || 1} Mark(s)</span>
+        </div>
+
+        <div style="font-size: 15px; font-weight: 600; line-height: 1.6; color: #09090b; margin-bottom: 8px;">
+          ${escapeHtml(q.questionText).replace(/\n/g, '<br>')}
+        </div>
+
+        ${optionsMarkup}
+
+        ${q.explanation ? `
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-top: 14px;">
+            <div style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 4px;">Detailed Solution &amp; Explanation</div>
+            <div style="font-size: 13.5px; color: #1e293b; line-height: 1.5;">${escapeHtml(q.explanation).replace(/\n/g, '<br>')}</div>
+          </div>
+        ` : ''}
+      `;
+
+      if (typeof renderMathInElement === 'function') {
+        try {
+          renderMathInElement(questionPreviewBody, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false }
+            ],
+            throwOnError: false
+          });
+        } catch (e) {}
+      }
+
+      questionPreviewModal.style.display = 'flex';
+    };
+
+    if (closeQuestionPreviewModalBtn) {
+      closeQuestionPreviewModalBtn.addEventListener('click', () => questionPreviewModal.style.display = 'none');
+    }
+
+    // 6. Bulk JSON Importer
+    if (openBulkImportBtn) {
+      openBulkImportBtn.addEventListener('click', () => {
+        if (bulkJsonInput) bulkJsonInput.value = '';
+        if (bulkValidationAlert) bulkValidationAlert.style.display = 'none';
+        bulkImportModal.style.display = 'flex';
+      });
+    }
+
+    if (closeBulkImportModalBtn) closeBulkImportModalBtn.addEventListener('click', () => bulkImportModal.style.display = 'none');
+    if (btnCancelBulkModal) btnCancelBulkModal.addEventListener('click', () => bulkImportModal.style.display = 'none');
+
+    if (btnLoadSampleJson && bulkJsonInput) {
+      btnLoadSampleJson.addEventListener('click', () => {
+        const sample = [
+          {
+            courseCode: "BSMS1201",
+            courseTitle: "Principles of Economics",
+            week: 1,
+            source: "Week 1 Graded Assignment",
+            examMilestones: ["quiz1", "endterm"],
+            type: "mcq",
+            marks: 1,
+            difficulty: "easy",
+            topic: "Opportunity Cost",
+            questionText: "Which of the following best defines **Opportunity Cost**?",
+            options: [
+              "The explicit cash expenditure on goods.",
+              "The value of the next best alternative forgone.",
+              "The average fixed cost of production.",
+              "The accounting cost minus economic profit."
+            ],
+            correctAnswer: 1,
+            explanation: "Opportunity cost is the loss of potential gain from other alternatives when one alternative is chosen."
+          },
+          {
+            courseCode: "BSMS1201",
+            courseTitle: "Principles of Economics",
+            week: 2,
+            source: "Week 2 Graded Assignment",
+            examMilestones: ["quiz1", "endterm"],
+            type: "nat",
+            marks: 2,
+            difficulty: "medium",
+            topic: "Market Equilibrium",
+            questionText: "If $Q_d = 200 - 4P$ and $Q_s = 50 + 2P$, find equilibrium price $P^*$.",
+            correctAnswer: 25,
+            tolerance: 0.1,
+            explanation: "Equilibrium is reached where $Q_d = Q_s \\implies 200 - 4P = 50 + 2P \\implies 6P = 150 \\implies P = 25$."
+          }
+        ];
+        bulkJsonInput.value = JSON.stringify(sample, null, 2);
+        validateBulkJson();
+      });
+    }
+
+    if (bulkJsonFileInput && bulkJsonInput) {
+      bulkJsonFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          bulkJsonInput.value = evt.target.result;
+          validateBulkJson();
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    function validateBulkJson() {
+      if (!bulkValidationAlert || !bulkJsonInput) return null;
+      const text = bulkJsonInput.value.trim();
+      if (!text) {
+        bulkValidationAlert.style.display = 'none';
+        return null;
+      }
+
+      try {
+        const parsed = JSON.parse(text);
+        const arr = Array.isArray(parsed) ? parsed : [parsed];
+        const validCount = arr.filter(q => q && q.questionText && q.courseCode).length;
+
+        if (validCount === 0) {
+          bulkValidationAlert.style.display = 'block';
+          bulkValidationAlert.style.background = '#fef2f2';
+          bulkValidationAlert.style.color = '#991b1b';
+          bulkValidationAlert.style.border = '1px solid #fecaca';
+          bulkValidationAlert.textContent = '⚠️ Valid JSON array found, but no objects contain required fields (courseCode, questionText).';
+          return null;
+        }
+
+        bulkValidationAlert.style.display = 'block';
+        bulkValidationAlert.style.background = '#ecfdf5';
+        bulkValidationAlert.style.color = '#065f46';
+        bulkValidationAlert.style.border = '1px solid #a7f3d0';
+        bulkValidationAlert.textContent = `✓ Detected ${validCount} valid question(s) ready for import.`;
+        return arr;
+      } catch (e) {
+        bulkValidationAlert.style.display = 'block';
+        bulkValidationAlert.style.background = '#fef2f2';
+        bulkValidationAlert.style.color = '#991b1b';
+        bulkValidationAlert.style.border = '1px solid #fecaca';
+        bulkValidationAlert.textContent = `✕ JSON Syntax Error: ${e.message}`;
+        return null;
+      }
+    }
+
+    if (bulkJsonInput) {
+      bulkJsonInput.addEventListener('input', validateBulkJson);
+    }
+
+    if (btnSubmitBulkJson) {
+      btnSubmitBulkJson.addEventListener('click', async () => {
+        const questionsToImport = validateBulkJson();
+        if (!questionsToImport || questionsToImport.length === 0) {
+          showToast('Please provide valid questions JSON before importing', 'warning');
+          return;
+        }
+
+        try {
+          btnSubmitBulkJson.disabled = true;
+          btnSubmitBulkJson.textContent = 'Importing...';
+
+          const res = await fetch('/api/admin/quiz/questions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...getAuthHeaders()
+            },
+            credentials: 'include',
+            body: JSON.stringify({ questions: questionsToImport })
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            showToast(data.message || 'Questions imported successfully!', 'success');
+            bulkImportModal.style.display = 'none';
+            await loadQuizQuestions();
+          } else {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || 'Import failed on server', 'error');
+          }
+        } catch (e) {
+          console.error('Bulk import error:', e);
+          showToast('Server connection error during import', 'error');
+        } finally {
+          btnSubmitBulkJson.disabled = false;
+          btnSubmitBulkJson.textContent = 'Import to Database';
+        }
+      });
+    }
+
+    // 7. Export Questions JSON Backup
+    if (btnExportQuestions) {
+      btnExportQuestions.addEventListener('click', () => {
+        if (!allQuizQuestions || allQuizQuestions.length === 0) {
+          showToast('No questions available to export', 'warning');
+          return;
+        }
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allQuizQuestions, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", `management_hub_questions_backup_${new Date().toISOString().slice(0, 10)}.json`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+      });
+    }
+
+    // 8. Filters Event Listeners
+    if (quizFilterCourse) quizFilterCourse.addEventListener('change', renderQuizTable);
+    if (quizFilterMilestone) quizFilterMilestone.addEventListener('change', renderQuizTable);
+    if (quizFilterWeek) quizFilterWeek.addEventListener('change', renderQuizTable);
+    if (quizFilterType) quizFilterType.addEventListener('change', renderQuizTable);
+    if (quizSearchInput) quizSearchInput.addEventListener('input', renderQuizTable);
+
+    if (btnResetQuizFilters) {
+      btnResetQuizFilters.addEventListener('click', () => {
+        if (quizFilterCourse) quizFilterCourse.value = 'all';
+        if (quizFilterMilestone) quizFilterMilestone.value = 'all';
+        if (quizFilterWeek) quizFilterWeek.value = 'all';
+        if (quizFilterType) quizFilterType.value = 'all';
+        if (quizSearchInput) quizSearchInput.value = '';
+        renderQuizTable();
+      });
+    }
+
+    // Init auth check & immediate render
+    checkAuth();
+    loadPortalLinks();
+    loadContributors();
+    loadQuizQuestions();
+  </script>
+</body>
+</html>
