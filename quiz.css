@@ -2777,8 +2777,72 @@ body.dark-theme .btn-qp-nav.primary {
   flex-shrink: 0;
 }
 
-.btn-theme-toggle svg {
-  width: 16px;
-  height: 16px;
-  display: block;
+/* Pro Launch Actions & Preview Banner */
+.qp-launch-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-qp-preview {
+  padding: 12px 20px;
+  background: #ffffff;
+  color: #4f46e5;
+  border: 1.5px solid #c7d2fe;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-qp-preview:hover {
+  background: #eef2ff;
+  border-color: #818cf8;
+  color: #4338ca;
+}
+
+.qp-preview-banner {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1.5px solid #fde68a;
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.preview-banner-text {
+  font-size: 13px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.preview-banner-text strong {
+  font-weight: 700;
+}
+
+.btn-preview-upgrade {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+  transition: all 0.15s ease;
+}
+
+.btn-preview-upgrade:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-1px);
 }

@@ -53,11 +53,11 @@ const PRO_PLANS = {
     amount: 14900, // in paise (₹149)
     currency: 'INR',
     durationDays: 120, // 4 months
-    description: 'Complete End-Term Simulator & Full Authentic PYQs for Current Term',
+    description: 'Complete Quiz Simulator (Quiz 1, 2 & End-Term) & Full Authentic PYQs for Current Term',
     features: [
-      'Full 45-min & 2.5-hour Timed End-Term Exam Simulators',
+      'Full 45-min & 2.5-hour Timed Exam Simulators for All Milestones',
       'All Authentic Previous Year Exam Papers (Quiz 1, 2 & End-Term)',
-      'Step-by-step Explanations & KaTeX Formulas',
+      'Step-by-step Detailed Explanations & Solutions',
       'Personalized Attempt Tracking & Detailed Performance Reports'
     ]
   },
@@ -73,7 +73,7 @@ const PRO_PLANS = {
     features: [
       'Everything in Term Pro Pass for 3 consecutive terms',
       'Priority access to newly solved PYQ papers',
-      'Downloadable PDF Solution Keys & LaTeX Formula Cheatsheets',
+      'Downloadable PDF Solution Keys & Detailed Formula Cheatsheets',
       'Special Pro Scholar Badge on Student Dashboard'
     ]
   }
@@ -673,11 +673,11 @@ app.get('/api/quiz/questions', (req, res) => {
   }
 
   const proStatus = checkIfUserIsPro(req);
-  const isEndTerm = (phase && phase.toLowerCase().trim() === 'endterm');
 
-  // Freemium rule: If requesting full End-Term mock simulator without Pro Pass, provide 3 sample preview questions
+  // Pro Pass Rule: The whole Quiz Simulator is an exclusive Management Hub Pro feature.
+  // Non-Pro students get a 2-question preview of the authentic interface.
   let isPreviewOnly = false;
-  if (isEndTerm && !proStatus.isPro) {
+  if (!proStatus.isPro) {
     isPreviewOnly = true;
   }
 
@@ -687,7 +687,7 @@ app.get('/api/quiz/questions', (req, res) => {
     [questions[i], questions[j]] = [questions[j], questions[i]];
   }
 
-  const maxLimit = isPreviewOnly ? 3 : (parseInt(limit) || questions.length);
+  const maxLimit = isPreviewOnly ? 2 : (parseInt(limit) || questions.length);
   const result = questions.slice(0, maxLimit);
 
   res.json({
@@ -696,7 +696,7 @@ app.get('/api/quiz/questions', (req, res) => {
     isPro: proStatus.isPro,
     isPreviewOnly,
     message: isPreviewOnly
-      ? 'Preview mode: 3 sample questions unlocked. Upgrade to Pro Pass (₹149) for full mock papers & step-by-step solutions.'
+      ? 'The Quiz Simulator is an exclusive Management Hub Pro feature. Upgrade to Pro Pass (₹149) for full access to all authentic papers & step-by-step solutions.'
       : undefined,
     questions: result
   });

@@ -73,7 +73,7 @@
         </nav>
       </div>
 
-      <!-- Right Header Actions (Pro, Theme Toggle & Exit Exam) -->
+      <!-- Right Header Actions (Pro Pass & Exit Exam) -->
       <div class="header-right" id="headerAuthBox">
         <button type="button" class="btn-pro-upgrade" id="btnHeaderPro">
           <svg class="svg-header-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg>
@@ -82,9 +82,6 @@
         <div class="pro-badge-active" id="proBadgeActive" style="display: none;">
           <span class="pro-crown"><svg viewBox="0 0 24 24" style="width: 12px; height: 12px;" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg></span> PRO PASS
         </div>
-        <button type="button" class="btn-theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
-          <span id="themeToggleIcon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
-        </button>
         <button type="button" class="btn-exit-portal" id="btnHeaderExit" style="display: none;">
           <span>← Exit Exam</span>
         </button>
@@ -105,7 +102,7 @@
       <div class="mh-alert-banner">
         <div class="mh-alert-pill">
           <span class="mh-pulse-dot"></span>
-          <span><strong>Term Exam Simulator :</strong> Real-paper countdown, KaTeX equations &amp; verified step-by-step solutions for IITM BS scholars.</span>
+          <span><strong>Exclusive Pro Simulator :</strong> Real-paper countdown, authentic PYQs &amp; verified step-by-step solutions for IITM BS scholars.</span>
         </div>
       </div>
 
@@ -184,17 +181,21 @@
       <section class="mh-hero-arena">
         <div class="mh-hero-badge-tag">
           <span class="mh-icon-sparkle">✦</span>
-          <span>MANAGEMENT HUB EXAM ARENA</span>
+          <span>MANAGEMENT HUB PRO EXAM ARENA</span>
         </div>
         <h1 class="mh-hero-title">
           Master Your IITM BS Degree with <span class="mh-text-gradient">Authentic Timed Mocks</span>
         </h1>
         <p class="mh-hero-lead">
-          Prepare under authentic exam hall conditions: exact countdown timers, KaTeX mathematical formulas, single &amp; multiple choice evaluation, and verified step-by-step solutions.
+          Prepare under authentic exam hall conditions: exact countdown timers, authentic previous year questions, single &amp; multiple choice evaluation, and verified step-by-step solutions.
         </p>
 
         <!-- Feature Highlight Chips -->
         <div class="mh-feature-chips">
+          <div class="mh-chip">
+            <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg>
+            <span>Pro Pass Exclusive</span>
+          </div>
           <div class="mh-chip">
             <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span>45m &amp; 2.5h Exam Timers</span>
@@ -202,10 +203,6 @@
           <div class="mh-chip">
             <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
             <span>37+ Verified PYQ Papers</span>
-          </div>
-          <div class="mh-chip">
-            <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            <span>KaTeX Mathematics &amp; Code</span>
           </div>
           <div class="mh-chip">
             <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -224,10 +221,10 @@
         </div>
 
         <div class="mh-milestone-grid">
-          <div class="mh-milestone-card milestone-pill-btn active" data-phase="quiz1" id="pillQuiz1">
+          <div class="mh-milestone-card milestone-pill-btn active pro-card" data-phase="quiz1" id="pillQuiz1">
             <div class="mh-mc-top">
               <span class="mh-mc-badge">WEEKS 1–4</span>
-              <span class="mh-mc-time"><svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 45 Mins</span>
+              <span class="pill-pro-tag"><svg viewBox="0 0 24 24" style="width: 10px; height: 10px;" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg> PRO PASS</span>
             </div>
             <h4 class="mh-mc-title">Quiz 1 Exam</h4>
             <p class="mh-mc-desc">Foundational concepts &amp; core computational practice.</p>
@@ -237,10 +234,10 @@
             </div>
           </div>
 
-          <div class="mh-milestone-card milestone-pill-btn" data-phase="quiz2" id="pillQuiz2">
+          <div class="mh-milestone-card milestone-pill-btn pro-card" data-phase="quiz2" id="pillQuiz2">
             <div class="mh-mc-top">
               <span class="mh-mc-badge">WEEKS 5–8</span>
-              <span class="mh-mc-time"><svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 45 Mins</span>
+              <span class="pill-pro-tag"><svg viewBox="0 0 24 24" style="width: 10px; height: 10px;" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg> PRO PASS</span>
             </div>
             <h4 class="mh-mc-title">Quiz 2 Exam</h4>
             <p class="mh-mc-desc">Intermediate problem solving &amp; analytical applications.</p>
@@ -263,10 +260,10 @@
             </div>
           </div>
 
-          <div class="mh-milestone-card milestone-pill-btn" data-phase="all" id="pillAll">
+          <div class="mh-milestone-card milestone-pill-btn pro-card" data-phase="all" id="pillAll">
             <div class="mh-mc-top">
               <span class="mh-mc-badge">ALL MODULES</span>
-              <span class="mh-mc-time"><svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Mixed</span>
+              <span class="pill-pro-tag"><svg viewBox="0 0 24 24" style="width: 10px; height: 10px;" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg> PRO PASS</span>
             </div>
             <h4 class="mh-mc-title">Mixed Question Drill</h4>
             <p class="mh-mc-desc">Cross-topic practice sets shuffled from all course weeks.</p>
@@ -427,9 +424,15 @@
             <div class="qp-launch-title" id="launchPaperTitle">BSMS1201 — Principles of Economics • Quiz 1 Paper</div>
             <div class="qp-launch-meta" id="availableQHint">Loading questions dataset...</div>
           </div>
-          <button type="button" class="btn-qp-start" id="btnStartQuiz">
-            <span>Start Practice ↗</span>
-          </button>
+          <div class="qp-launch-actions">
+            <button type="button" class="btn-qp-preview" id="btnPreviewQuiz" title="Test Simulator interface with sample questions">
+              <span>Free Preview (2 Qs)</span>
+            </button>
+            <button type="button" class="btn-qp-start" id="btnStartQuiz">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none" style="vertical-align: -1px; margin-right: 4px;"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg>
+              <span id="btnStartQuizText">Start Practice (Pro Pass) ↗</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -510,6 +513,14 @@
 
       <!-- Right Column: Question Content Pane (Image 1) -->
       <section class="qp-content-pane">
+        <!-- Pro Simulator Preview Alert Banner -->
+        <div class="qp-preview-banner" id="examPreviewBanner" style="display: none;">
+          <div class="preview-banner-text">
+            <span>✦ <strong>Pro Simulator Preview:</strong> Viewing 2 sample questions. Upgrade to Pro Pass to unlock all 15+ authentic questions, full timer &amp; solutions.</span>
+          </div>
+          <button type="button" class="btn-preview-upgrade" id="btnPreviewBannerUpgrade">Unlock Full Paper (₹149)</button>
+        </div>
+
         <!-- Question Item Card -->
         <div class="qp-question-card">
           <!-- Top Question Bar (Image 1) -->
@@ -632,7 +643,7 @@
     <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg>
   </div>
           <h2 class="pro-modal-title">Upgrade to Management Hub Pro</h2>
-          <p class="pro-modal-subtitle">Unlock authentic IITM End-Term exam simulators, all 37+ PYQs, and detailed step-by-step solutions.</p>
+          <p class="pro-modal-subtitle">Unlock the complete Quiz Simulator (Quiz 1, Quiz 2 &amp; End-Term), all 37+ PYQs, and detailed step-by-step solutions.</p>
         </div>
 
         <!-- Plan Selection Cards -->
@@ -648,7 +659,7 @@
               <span class="plan-amount">149</span>
               <span class="plan-period">/ term</span>
             </div>
-            <p class="plan-desc">Full End-Term Exam Simulators & authentic PYQs for the ongoing term.</p>
+            <p class="plan-desc">Full Quiz Simulator access (Quiz 1, 2 &amp; End-Term) &amp; authentic PYQs for the ongoing term.</p>
           </div>
 
           <div class="pro-plan-box" data-plan="annual_pass" id="planBoxAnnual">
@@ -662,7 +673,7 @@
               <span class="plan-amount">299</span>
               <span class="plan-period">/ year</span>
             </div>
-            <p class="plan-desc">Unlimited access across all Foundation, Diploma & Degree courses.</p>
+            <p class="plan-desc">Unlimited access across all Foundation, Diploma &amp; Degree courses.</p>
           </div>
         </div>
 
@@ -672,7 +683,7 @@
           <div class="pro-features-list">
             <div class="pro-feature-item">
               <span class="feat-check">✓</span>
-              <span><strong>Full Timed End-Term Exam Simulator</strong> (45-min / 2.5-hr authentic interface)</span>
+              <span><strong>Full Timed Quiz Simulator (Quiz 1, 2 &amp; End-Term)</strong> with authentic exam hall countdowns</span>
             </div>
             <div class="pro-feature-item">
               <span class="feat-check">✓</span>
@@ -680,11 +691,11 @@
             </div>
             <div class="pro-feature-item">
               <span class="feat-check">✓</span>
-              <span><strong>KaTeX Math & Code Syntax</strong> identical to the official exam portal</span>
+              <span><strong>Formulas &amp; Code Syntax</strong> identical to the official exam portal</span>
             </div>
             <div class="pro-feature-item">
               <span class="feat-check">✓</span>
-              <span><strong>Detailed Performance Analytics</strong> with weakness detection & retake history</span>
+              <span><strong>Detailed Performance Analytics</strong> with weakness detection &amp; retake history</span>
             </div>
           </div>
         </div>

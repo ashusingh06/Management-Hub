@@ -6,8 +6,9 @@
  * - 2-Column TCS iON Style Exam Mode & Instant Learning Mode
  * - Timer with Pause & Reset
  * - Question Menu with Vibrant Green Answered Indicators
- * - KaTeX Math & Data Tables
- * - Dark / Light Mode Theme Switching
+ * - Formula Notation & Data Tables
+ * - Management Hub Pro Pass Simulator Access Gating
+ * - Permanent Clean Management Hub Aesthetic
  * ==============================================================================
  */
 
@@ -43,9 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const screenExam = document.getElementById('screenExam');
   const screenResult = document.getElementById('screenResult');
 
-  // DOM Elements - Header & Theme
-  const themeToggleBtn = document.getElementById('themeToggleBtn');
-  const themeToggleIcon = document.getElementById('themeToggleIcon');
+  // DOM Elements - Header & Exit
   const btnHeaderExit = document.getElementById('btnHeaderExit');
 
   // DOM Elements - Landing & Setup
@@ -61,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const availableQHint = document.getElementById('availableQHint');
   const launchPaperTitle = document.getElementById('launchPaperTitle');
   const btnStartQuiz = document.getElementById('btnStartQuiz');
+  const btnStartQuizText = document.getElementById('btnStartQuizText');
+  const btnPreviewQuiz = document.getElementById('btnPreviewQuiz');
+  const examPreviewBanner = document.getElementById('examPreviewBanner');
+  const btnPreviewBannerUpgrade = document.getElementById('btnPreviewBannerUpgrade');
 
   // DOM Elements - Exam Sidebar (Image 1)
   const metaExam = document.getElementById('metaExam');
@@ -216,29 +219,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. Initialization
   // ==============================================================================
   async function init() {
-    initTheme();
+    // Permanent clean light aesthetic matching Management Hub main theme
+    document.body.classList.remove('dark-theme');
+    try {
+      localStorage.removeItem('mh_quiz_theme');
+    } catch (e) {}
+
     setupEventListeners();
     await loadCoursesAndStats();
     loadUserProgressDashboard();
-  }
-
-  // Dark / Light Theme
-  function initTheme() {
-    const savedTheme = localStorage.getItem('mh_quiz_theme');
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark-theme');
-      if (themeToggleIcon) themeToggleIcon.textContent = '☀️';
-    } else {
-      document.body.classList.remove('dark-theme');
-      if (themeToggleIcon) themeToggleIcon.textContent = '🌙';
-    }
-
-    themeToggleBtn?.addEventListener('click', () => {
-      document.body.classList.toggle('dark-theme');
-      const isDark = document.body.classList.contains('dark-theme');
-      localStorage.setItem('mh_quiz_theme', isDark ? 'dark' : 'light');
-      if (themeToggleIcon) themeToggleIcon.innerHTML = isDark ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>' : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
-    });
+    initProStatus();
   }
 
   // Course Dataset Loader
@@ -319,10 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
       pill.classList.toggle('active', pill.getAttribute('data-phase') === phaseName);
     });
 
-    if (phaseName === 'endterm' && !isUserPro) {
-      showToast('End-Term exam papers require Pro Pass. Previewing 3 sample questions.', 'warning', 'Pro Feature');
-    }
-
     // Update section heading (Image 3)
     if (selectedPhaseHeading) {
       if (phaseName === 'quiz1') selectedPhaseHeading.textContent = 'QUIZ 1 - QUESTION PAPERS';
@@ -393,11 +379,19 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyProUi() {
     if (btnHeaderPro) btnHeaderPro.style.display = 'none';
     if (proBadgeActive) proBadgeActive.style.display = 'inline-flex';
-    const pillTag = document.querySelector('.pill-pro-tag');
-    if (pillTag) {
-      pillTag.textContent = 'UNLOCKED';
-      pillTag.style.background = '#10b981';
-      pillTag.style.color = '#fff';
+    document.querySelectorAll('.pill-pro-tag').forEach(tag => {
+      tag.innerHTML = '✓ PRO UNLOCKED';
+      tag.style.background = '#10b981';
+      tag.style.color = '#fff';
+    });
+    if (btnStartQuizText) {
+      btnStartQuizText.textContent = 'Start Exam Simulation ↗';
+    }
+    if (btnPreviewQuiz) {
+      btnPreviewQuiz.style.display = 'none';
+    }
+    if (examPreviewBanner) {
+      examPreviewBanner.style.display = 'none';
     }
   }
 
@@ -633,8 +627,10 @@ document.addEventListener('DOMContentLoaded', () => {
       syncSideMode();
     });
 
-    // Launch Quiz
-    btnStartQuiz?.addEventListener('click', startQuiz);
+    // Launch Quiz & Pro Gating
+    btnStartQuiz?.addEventListener('click', () => startQuiz(false));
+    btnPreviewQuiz?.addEventListener('click', () => startQuiz(true));
+    btnPreviewBannerUpgrade?.addEventListener('click', () => openProModal('term_pass'));
 
     // Sidebar Action Buttons (Image 1)
     btnSideSummary?.addEventListener('click', () => {
@@ -753,12 +749,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==============================================================================
   // 3. Quiz Launch & Transition
   // ==============================================================================
-  async function startQuiz() {
+  async function startQuiz(isExplicitPreview = false) {
+    if (!isUserPro && !isExplicitPreview) {
+      openProModal('term_pass');
+      showToast('The Quiz Simulator is an exclusive Management Hub Pro feature. Upgrade to Pro Pass to start your full exam session.', 'warning', 'Pro Pass Required');
+      return;
+    }
+
     btnStartQuiz.disabled = true;
-    btnStartQuiz.innerHTML = '<span>Loading Simulator...</span>';
+    if (btnStartQuizText) btnStartQuizText.textContent = 'Loading Simulator...';
+    if (btnPreviewQuiz) btnPreviewQuiz.disabled = true;
 
     try {
       let qList = [];
+      let isPreviewSession = false;
       const queryParams = new URLSearchParams({
         course: quizConfig.courseCode,
         phase: quizConfig.phase,
@@ -771,8 +775,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (res.ok) {
           const data = await res.json();
           qList = data.questions || [];
-          if (data.isPreviewOnly) {
-            showToast(data.message || 'Pro Preview: 3 questions unlocked. Upgrade to Pro for the full paper.', 'info', 'Pro Preview');
+          if (data.isPreviewOnly || !data.isPro) {
+            isPreviewSession = true;
+            showToast(data.message || 'Pro Preview: 2 sample questions unlocked. Upgrade to Pro Pass for the full paper.', 'info', 'Pro Preview Mode');
           }
         }
       } catch (e) {}
@@ -791,13 +796,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         qList.sort(() => 0.5 - Math.random());
-        qList = qList.slice(0, quizConfig.questionCount);
+        const maxLimit = (!isUserPro) ? 2 : quizConfig.questionCount;
+        qList = qList.slice(0, maxLimit);
+        if (!isUserPro) isPreviewSession = true;
       }
 
       if (qList.length === 0) {
         showToast('No questions found for the selected scope. Please try another course or milestone.', 'warning', 'No Questions Found');
-        btnStartQuiz.disabled = false;
-        btnStartQuiz.innerHTML = '<span>Start Practice ↗</span>';
         return;
       }
 
@@ -815,6 +820,11 @@ document.addEventListener('DOMContentLoaded', () => {
       screenResult.style.display = 'none';
       screenExam.style.display = 'grid';
       btnHeaderExit.style.display = 'inline-flex';
+
+      // Show/hide preview banner
+      if (examPreviewBanner) {
+        examPreviewBanner.style.display = (isPreviewSession && !isUserPro) ? 'flex' : 'none';
+      }
 
       // Update Sidebar Metadata (Image 1)
       const selectedCourse = availableCourses.find(c => c.code === quizConfig.courseCode);
@@ -840,7 +850,10 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Could not initialize quiz session. Please verify connection and try again.', 'error', 'Error Starting Quiz');
     } finally {
       btnStartQuiz.disabled = false;
-      btnStartQuiz.innerHTML = '<span>Start Practice ↗</span>';
+      if (btnPreviewQuiz) btnPreviewQuiz.disabled = false;
+      if (btnStartQuizText) {
+        btnStartQuizText.textContent = isUserPro ? 'Start Exam Simulation ↗' : 'Start Practice (Pro Pass) ↗';
+      }
     }
   }
 
