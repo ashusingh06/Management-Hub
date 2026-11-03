@@ -52,13 +52,14 @@
       <!-- Right: Header Controls & Theme Toggle -->
       <div class="qp-header-right">
         <button type="button" class="btn-pro-upgrade" id="btnHeaderPro">
-          <span>👑 Get Pro Pass</span>
+          <svg class="svg-header-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg>
+          <span>Get Pro Pass</span>
         </button>
         <div class="pro-badge-active" id="proBadgeActive" style="display: none;">
-          <span class="pro-crown">👑</span> PRO PASS
+          <span class="pro-crown"><svg viewBox="0 0 24 24" style="width: 12px; height: 12px;" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg></span> PRO PASS
         </div>
         <button type="button" class="btn-theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
-          <span id="themeToggleIcon">🌙</span>
+          <span id="themeToggleIcon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
         </button>
         <button type="button" class="btn-exit-portal" id="btnHeaderExit" style="display: none;">
           <span>← Exit Exam</span>
@@ -88,7 +89,7 @@
       <div class="qp-progress-dashboard" id="userProgressDashboard" style="display: none;">
         <div class="qp-progress-header">
           <div class="qp-progress-title-wrap">
-            <span class="qp-progress-badge">🎯 My Practice &amp; Mock Exam Progress</span>
+            <span class="qp-progress-badge"><svg class="svg-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> My Practice &amp; Mock Exam Progress</span>
             <span class="qp-progress-sub">Track your scores and progress across past exam papers</span>
           </div>
           <button type="button" class="btn-toggle-history" id="btnToggleHistory">
@@ -115,10 +116,12 @@
             </div>
             <div class="last-test-actions">
               <button type="button" class="btn-review-attempt" id="btnReviewLastAttempt">
-                <span>👁️ Review Solutions</span>
+                <svg class="svg-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Review Solutions</span>
               </button>
               <button type="button" class="btn-retake-attempt" id="btnRetakeLastAttempt">
-                <span>↺ Retake Paper</span>
+                <svg class="svg-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                <span>Retake Paper</span>
               </button>
             </div>
           </div>
@@ -169,19 +172,19 @@
         <!-- Feature Highlight Chips -->
         <div class="mh-feature-chips">
           <div class="mh-chip">
-            <span class="mh-chip-icon">⏱️</span>
+            <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span>45m &amp; 2.5h Exam Timers</span>
           </div>
           <div class="mh-chip">
-            <span class="mh-chip-icon">📚</span>
+            <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
             <span>37+ Verified PYQ Papers</span>
           </div>
           <div class="mh-chip">
-            <span class="mh-chip-icon">📐</span>
+            <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
             <span>KaTeX Mathematics &amp; Code</span>
           </div>
           <div class="mh-chip">
-            <span class="mh-chip-icon">🎯</span>
+            <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             <span>MCQ • MSQ • NAT Evaluation</span>
           </div>
         </div>
@@ -200,7 +203,7 @@
           <div class="mh-milestone-card milestone-pill-btn active" data-phase="quiz1" id="pillQuiz1">
             <div class="mh-mc-top">
               <span class="mh-mc-badge">WEEKS 1–4</span>
-              <span class="mh-mc-time">⏱️ 45 Mins</span>
+              <span class="mh-mc-time"><svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 45 Mins</span>
             </div>
             <h4 class="mh-mc-title">Quiz 1 Exam</h4>
             <p class="mh-mc-desc">Foundational concepts &amp; core computational practice.</p>
@@ -213,7 +216,7 @@
           <div class="mh-milestone-card milestone-pill-btn" data-phase="quiz2" id="pillQuiz2">
             <div class="mh-mc-top">
               <span class="mh-mc-badge">WEEKS 5–8</span>
-              <span class="mh-mc-time">⏱️ 45 Mins</span>
+              <span class="mh-mc-time"><svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 45 Mins</span>
             </div>
             <h4 class="mh-mc-title">Quiz 2 Exam</h4>
             <p class="mh-mc-desc">Intermediate problem solving &amp; analytical applications.</p>
@@ -226,7 +229,7 @@
           <div class="mh-milestone-card milestone-pill-btn pro-card" data-phase="endterm" id="pillEndterm">
             <div class="mh-mc-top">
               <span class="mh-mc-badge pro">WEEKS 1–12</span>
-              <span class="pill-pro-tag">👑 PRO</span>
+              <span class="pill-pro-tag"><svg viewBox="0 0 24 24" style="width: 10px; height: 10px;" fill="currentColor" stroke="none"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg> PRO PASS</span>
             </div>
             <h4 class="mh-mc-title">End-Term Simulator</h4>
             <p class="mh-mc-desc">Full 2.5-hour complete curriculum comprehensive simulation.</p>
@@ -239,7 +242,7 @@
           <div class="mh-milestone-card milestone-pill-btn" data-phase="all" id="pillAll">
             <div class="mh-mc-top">
               <span class="mh-mc-badge">ALL MODULES</span>
-              <span class="mh-mc-time">⚡ Sprint</span>
+              <span class="mh-mc-time"><svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Mixed</span>
             </div>
             <h4 class="mh-mc-title">Mixed Question Drill</h4>
             <p class="mh-mc-desc">Cross-topic practice sets shuffled from all course weeks.</p>
@@ -262,7 +265,9 @@
 
         <div class="mh-courses-grid">
           <div class="mh-course-card active" data-course="BSMS1201">
-            <div class="mh-cc-icon-wrap" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">📈</div>
+            <div class="mh-cc-icon-wrap" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
+              <svg class="course-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
             <div class="mh-cc-body">
               <div class="mh-cc-code">BSMS1201</div>
               <h4 class="mh-cc-title">Principles of Economics</h4>
@@ -272,7 +277,9 @@
           </div>
 
           <div class="mh-course-card" data-course="BSMS1202">
-            <div class="mh-cc-icon-wrap" style="background: rgba(79, 70, 229, 0.12); color: #6366f1;">📑</div>
+            <div class="mh-cc-icon-wrap" style="background: rgba(79, 70, 229, 0.12); color: #6366f1;">
+              <svg class="course-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
             <div class="mh-cc-body">
               <div class="mh-cc-code">BSMS1202</div>
               <h4 class="mh-cc-title">Financial Accounting</h4>
@@ -282,7 +289,9 @@
           </div>
 
           <div class="mh-course-card" data-course="BSMS1203">
-            <div class="mh-cc-icon-wrap" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">📊</div>
+            <div class="mh-cc-icon-wrap" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">
+              <svg class="course-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
             <div class="mh-cc-body">
               <div class="mh-cc-code">BSMS1203</div>
               <h4 class="mh-cc-title">Business Statistics</h4>
@@ -292,7 +301,9 @@
           </div>
 
           <div class="mh-course-card" data-course="BSMA1001">
-            <div class="mh-cc-icon-wrap" style="background: rgba(236, 72, 153, 0.12); color: #ec4899;">∫dx</div>
+            <div class="mh-cc-icon-wrap" style="background: rgba(236, 72, 153, 0.12); color: #ec4899;">
+              <svg class="course-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.5 21.5-6.5-6.5"/><circle cx="10" cy="10" r="7"/><line x1="10" y1="7" x2="10" y2="13"/><line x1="7" y1="10" x2="13" y2="10"/></svg>
+            </div>
             <div class="mh-cc-body">
               <div class="mh-cc-code">BSMA1001</div>
               <h4 class="mh-cc-title">Mathematics for Data Science I</h4>
@@ -302,7 +313,9 @@
           </div>
 
           <div class="mh-course-card" data-course="BSCS1001">
-            <div class="mh-cc-icon-wrap" style="background: rgba(6, 182, 212, 0.12); color: #06b6d4;">&lt;/&gt;</div>
+            <div class="mh-cc-icon-wrap" style="background: rgba(6, 182, 212, 0.12); color: #06b6d4;">
+              <svg class="course-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
             <div class="mh-cc-body">
               <div class="mh-cc-code">BSCS1001</div>
               <h4 class="mh-cc-title">Programming in Python</h4>
@@ -354,10 +367,12 @@
         <div class="qp-config-subbar">
           <div class="qp-mode-toggle">
             <button type="button" class="mode-btn active" data-mode="exam" id="modeBtnExam">
-              <span>⏱️ Timed Exam Mode</span>
+              <svg class="mode-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Timed Exam Mode</span>
             </button>
             <button type="button" class="mode-btn" data-mode="practice" id="modeBtnPractice">
-              <span>💡 Practice Mode</span>
+              <svg class="mode-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <span>Practice Mode</span>
             </button>
           </div>
 
@@ -589,7 +604,9 @@
       <div class="custom-modal-card pro-modal-card">
         <button type="button" class="pro-modal-close" id="btnCloseProModal" aria-label="Close">&times;</button>
         <div class="pro-modal-header">
-          <div class="pro-crown-badge">👑</div>
+          <div class="pro-crown-badge">
+    <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15 8 21 9 17 14 18 20 12 17 6 20 7 14 3 9 9 8 12 2"/></svg>
+  </div>
           <h2 class="pro-modal-title">Upgrade to Management Hub Pro</h2>
           <p class="pro-modal-subtitle">Unlock authentic IITM End-Term exam simulators, all 37+ PYQs, and detailed step-by-step solutions.</p>
         </div>
@@ -652,7 +669,7 @@
         <div class="pro-modal-actions">
           <button type="button" class="btn-checkout-rzp" id="btnProceedCheckout">
             <span id="checkoutBtnText">Pay ₹149 via Razorpay (UPI / Cards)</span>
-            <span class="rzp-lock-icon">🔒</span>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align:-2px;"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </button>
         </div>
 

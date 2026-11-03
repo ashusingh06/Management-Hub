@@ -65,32 +65,29 @@ body.dark-theme {
 body {
   font-family: var(--font-sans);
   background-color: #f8fafc;
-  /* Management Hub Multi-Color Ambient Mesh + Precision Grid Pattern */
+  /* Management Hub Pure Multi-Color Aurora Mesh (No Dots) */
   background-image:
     /* Top-Left Indigo Nebula Glow */
-    radial-gradient(ellipse 70% 50% at 8% 2%, rgba(99, 102, 241, 0.16), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 8% 2%, rgba(99, 102, 241, 0.14), transparent 60%),
     /* Top-Right Emerald Aurora Glow */
-    radial-gradient(ellipse 65% 48% at 92% 10%, rgba(16, 185, 129, 0.15), transparent 60%),
+    radial-gradient(ellipse 65% 48% at 92% 10%, rgba(16, 185, 129, 0.13), transparent 60%),
     /* Center Warm Amber Horizon */
-    radial-gradient(ellipse 55% 45% at 50% 36%, rgba(245, 158, 11, 0.10), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 50% 36%, rgba(245, 158, 11, 0.09), transparent 60%),
     /* Mid-Right Rose Accent Glow */
-    radial-gradient(ellipse 60% 50% at 85% 72%, rgba(244, 63, 94, 0.10), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 72%, rgba(244, 63, 94, 0.09), transparent 60%),
     /* Bottom-Left Cyan Lagoon Glow */
-    radial-gradient(ellipse 55% 45% at 14% 86%, rgba(6, 182, 212, 0.14), transparent 60%),
-    /* High-Precision Blueprint Tech Grid */
-    linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
-    /* Soft Starlight Matrix Dots */
-    radial-gradient(rgba(99, 102, 241, 0.18) 1.2px, transparent 1.2px);
+    radial-gradient(ellipse 55% 45% at 14% 86%, rgba(6, 182, 212, 0.12), transparent 60%),
+    /* Subtle Precision Architecture Grid (Clean Lines, Zero Dots) */
+    linear-gradient(to right, rgba(99, 102, 241, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.035) 1px, transparent 1px);
   background-size:
     100% 100%,
     100% 100%,
     100% 100%,
     100% 100%,
     100% 100%,
-    36px 36px,
-    36px 36px,
-    18px 18px;
+    44px 44px,
+    44px 44px;
   background-attachment: fixed;
   color: var(--text-main);
   line-height: 1.5;
@@ -100,34 +97,31 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Dark Theme Colorful Cyber-Mesh Background */
+/* Dark Theme Pure Colorful Cyber-Mesh (No Dots) */
 body.dark-theme {
   background-color: #090d16;
   background-image:
     /* Top-Left Electric Violet Glow */
-    radial-gradient(ellipse 75% 55% at 8% 2%, rgba(99, 102, 241, 0.28), transparent 60%),
+    radial-gradient(ellipse 75% 55% at 8% 2%, rgba(99, 102, 241, 0.24), transparent 60%),
     /* Top-Right Neon Emerald Glow */
-    radial-gradient(ellipse 65% 50% at 92% 10%, rgba(16, 185, 129, 0.22), transparent 60%),
+    radial-gradient(ellipse 65% 50% at 92% 10%, rgba(16, 185, 129, 0.19), transparent 60%),
     /* Center Radiant Amber Glow */
-    radial-gradient(ellipse 55% 45% at 50% 36%, rgba(245, 158, 11, 0.16), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 50% 36%, rgba(245, 158, 11, 0.13), transparent 60%),
     /* Mid-Right Cyber Rose Glow */
-    radial-gradient(ellipse 60% 50% at 85% 72%, rgba(244, 63, 94, 0.18), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 72%, rgba(244, 63, 94, 0.15), transparent 60%),
     /* Bottom-Left Electric Cyan Glow */
-    radial-gradient(ellipse 55% 45% at 14% 86%, rgba(6, 182, 212, 0.22), transparent 60%),
-    /* Precision Dark Matrix Grid */
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    /* Bright Starlight Dots */
-    radial-gradient(rgba(255, 255, 255, 0.16) 1.2px, transparent 1.2px);
+    radial-gradient(ellipse 55% 45% at 14% 86%, rgba(6, 182, 212, 0.18), transparent 60%),
+    /* Subtle Dark Architecture Grid (Clean Lines, Zero Dots) */
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   background-size:
     100% 100%,
     100% 100%,
     100% 100%,
     100% 100%,
     100% 100%,
-    36px 36px,
-    36px 36px,
-    18px 18px;
+    44px 44px,
+    44px 44px;
   background-attachment: fixed;
 }
 
@@ -2592,4 +2586,53 @@ body.dark-theme .btn-qp-nav.primary {
 .mh-milestone-card[data-phase="all"]:hover {
   border-color: #8b5cf6;
   box-shadow: 0 10px 24px rgba(139, 92, 246, 0.18);
+}
+
+
+/* ==========================================================================
+   Professional Minimalist SVG Icons
+   ========================================================================== */
+.svg-inline-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: -2px;
+  flex-shrink: 0;
+}
+
+.chip-svg {
+  width: 13.5px;
+  height: 13.5px;
+  display: inline-block;
+  vertical-align: -2px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.course-svg-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.mode-svg-icon {
+  width: 13.5px;
+  height: 13.5px;
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 5px;
+}
+
+.svg-header-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: -2px;
+  flex-shrink: 0;
+}
+
+.btn-theme-toggle svg {
+  width: 16px;
+  height: 16px;
+  display: block;
 }
